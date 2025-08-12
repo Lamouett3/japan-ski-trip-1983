@@ -1,0 +1,115 @@
+/* ============ Tokens & thèmes ============ */
+:root{
+  --maxw:1200px; --radius:18px; --shadow:0 12px 40px rgba(0,0,0,.35);
+  --focus: 0 0 0 3px rgba(76,201,240,.5);
+  --slide-h: 100svh; --slide-pad: clamp(24px, 4vw, 56px); --content-w: min(860px, 92vw);
+}
+[data-theme="light"]{
+  --bg:#fafafa; --panel:#ffffff; --text:#0e1116; --muted:#4b5563; --line:#e5e7eb;
+  --accent:#111827; --pill:#f5f5f5;
+  --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(0,0,0,.06), transparent),
+               radial-gradient(800px 200px at 10% 0%, rgba(234,179,8,.15), transparent);
+}
+[data-theme="dark"]{
+  --bg:#0b0f14; --panel:#11161e; --text:#e8edf5; --muted:#a8b3c7; --line:rgba(255,255,255,.08);
+  --accent:#4cc9f0; --pill:rgba(255,255,255,.06);
+  --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(76,201,240,.15), transparent),
+               radial-gradient(800px 200px at 10% 0%, rgba(255,238,0,.08), transparent);
+}
+
+/* ============ Base ============ */
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+*{box-sizing:border-box}
+a{color:var(--accent);text-decoration:none}
+img{max-width:100%;height:auto;display:block;border-radius:var(--radius)}
+.container{max-width:var(--maxw);margin:auto;padding:0 20px}
+
+/* ============ Nav ============ */
+.nav{position:sticky;top:0;z-index:1000;background:rgba(14,17,22,.6);backdrop-filter:saturate(120%) blur(10px);border-bottom:1px solid var(--line)}
+[data-theme="light"] .nav{background:rgba(255,255,255,.65)}
+.nav .inner{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:10px 20px}
+.brand{font-weight:800;letter-spacing:.2px}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.links a{padding:8px 10px;border-radius:10px}
+.links a:hover{background:var(--pill)}
+.cta{background:var(--accent);color:#0b0f14;font-weight:700;padding:10px 14px;border-radius:12px;box-shadow:var(--shadow)}
+.btn{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:12px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+
+/* ============ Slides layout (centré + parallax) ============ */
+.slides{scroll-snap-type:y proximity}
+.slide{
+  position:relative; min-height:var(--slide-h);
+  display:grid; place-items:center; padding:var(--slide-pad);
+  border-top:1px solid var(--line); scroll-snap-align:start; isolation:isolate; overflow:hidden;
+  background:var(--hero-grad);
+}
+.slide-inner{width:var(--content-w); text-align:center; display:grid; gap:12px}
+.slide h1{margin:0 0 8px; font-size:clamp(32px,6vw,64px); line-height:1.07}
+.slide h2{margin:0 0 8px; font-size:clamp(28px,3.6vw,44px)}
+.slide p{margin:0 auto; color:var(--muted)}
+.kicker{display:inline-block;background:var(--pill);padding:6px 10px;border-radius:999px;color:var(--muted);font-weight:600}
+
+/* Background parallax par slide */
+.slide-bg, .slide-overlay{position:absolute; inset:0; z-index:-2; background-size:cover; background-position:center}
+.slide-bg{transform:translate3d(0,0,0) scale(1.12); will-change:transform}
+.slide-overlay{z-index:-1; background: radial-gradient(80% 60% at 50% 30%, transparent, rgba(0,0,0,.35))}
+
+/* Timeline centrée */
+.timeline.centered{width:var(--content-w); margin:0 auto; text-align:left}
+.timeline{position:relative}
+.timeline::before{content:"";position:absolute;left:12px;top:0;bottom:0;width:2px;background:var(--line)}
+.step{display:grid;grid-template-columns:28px 1fr;gap:12px;margin:10px 0}
+.dot{width:24px;height:24px;border-radius:50%;background:var(--pill);display:grid;place-items:center;border:1px solid var(--line);font-weight:700}
+
+/* ============ Footer & Toolbar ============ */
+footer{padding:40px 0; color:var(--muted)}
+.toolbar{position:fixed;right:16px;bottom:16px;z-index:1001;display:flex;gap:8px}
+
+/* ============ Responsive ============ */
+@media (max-width:960px){
+  .nav .links{display:none}
+  .slides{scroll-snap-type:y proximity}
+}
+
+
+/* ============ Hero vidéo (plein écran) ============ */
+.hero.slide{align-items:end}
+.hero-video{position:absolute; inset:0; overflow:hidden; z-index:-1}
+.hero-video-el{width:100%; height:100%; object-fit:cover; transform:scale(1.03)}
+.hero-overlay{position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,.45), rgba(0,0,0,.15) 35%, rgba(0,0,0,0)); pointer-events:none}
+@keyframes slow-zoom{from{transform:scale(1.03)} to{transform:scale(1.07)}}
+.hero-video-el{animation:slow-zoom 18s ease-in-out infinite alternate}
+@media (prefers-reduced-motion: reduce){ .hero-video-el{animation:none; transform:none} }
+
+
+/* === Readability boost on HERO video === */
+.hero .slide-inner { 
+  position: relative;
+}
+/* Stronger bottom gradient for video */
+.hero-overlay{
+  background: linear-gradient(to top, rgba(0,0,0,0.60), rgba(0,0,0,0.25) 38%, rgba(0,0,0,0));
+}
+/* Text shadow for titles and lead over video */
+.hero .slide-inner h1,
+.hero .slide-inner .lead,
+.hero .slide-inner p {
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.55), 0 6px 20px rgba(0,0,0,0.35);
+}
+/* Optional: subtle frosted vignette behind the hero text (no HTML change) */
+.hero .slide-inner::after{
+  content: "";
+  position: absolute;
+  inset: -8px -12px;
+  border-radius: 24px;
+  background: radial-gradient(70% 60% at 50% 35%, rgba(0,0,0,0.35), rgba(0,0,0,0.22) 60%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+/* Make primary CTA pop more over video */
+.hero .cta{
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
