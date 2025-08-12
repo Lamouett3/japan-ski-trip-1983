@@ -52,6 +52,26 @@
   }
   </script>
 </head>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const v = document.querySelector('.hero-video-el');
+  if (!v) return;
+
+  const tryPlay = () => v.play().catch(() => {});
+  v.addEventListener('canplay', tryPlay, { once: true });
+  tryPlay();
+
+  const arm = () => {
+    tryPlay();
+    window.removeEventListener('touchstart', arm);
+    window.removeEventListener('click', arm);
+    window.removeEventListener('scroll', arm);
+  };
+  window.addEventListener('touchstart', arm, { passive: true });
+  window.addEventListener('click', arm, { passive: true });
+  window.addEventListener('scroll', arm, { passive: true });
+});
+</script>
 <body>
   <!-- NAV -->
   <nav class="nav" aria-label="Navigation principale">
@@ -81,22 +101,33 @@
   <!-- SLIDES -->
   <main class="slides">
     <!-- HERO (image; tu remettras la vidéo plus tard si tu veux) -->
-    <header class="hero slide" id="top">
+  <header class="hero slide" id="top">
   <div class="hero-video" aria-hidden="true">
-    <video class="hero-video-el" autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg">
-      <source src="video/homepage_video.mp4" type="video/mp4">
-      <img src="images/hero-poster.jpg" alt="Montagne enneigée au Japon et Tokyo la nuit">
+    <video
+      class="hero-video-el"
+      autoplay
+      muted
+      loop
+      playsinline
+      webkit-playsinline
+      preload="metadata"
+      poster="images/hero-poster.jpg"
+    >
+      <source src="video/homepage_video.mp4" type="video/mp4" />
+      <img src="images/hero-poster.jpg" alt="Montagne enneigée au Japon et Tokyo la nuit" />
     </video>
     <div class="hero-overlay"></div>
   </div>
+
   <div class="container slide-inner">
-        <span class="kicker">Ski & Culture — 8 jours / 7 nuits</span>
-        <h1>Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
-        <p class="lead">Tokyo (traditions, gastronomie, quartiers iconiques) + Hakuba (poudreuse & stations JO 1998). Encadrement par <strong>Jérôme Noviant</strong> (ex‑Rossignol).</p>
-        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-          <a class="cta" href="#devis">Devis sur mesure</a>
-          <a class="btn" href="#sommaire">Voir le programme</a>
-        </div>
+    <span class="kicker">Ski & Culture — 8 jours / 7 nuits</span>
+    <h1>Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
+    <p class="lead">Tokyo (traditions, gastronomie, quartiers iconiques) + Hakuba (poudreuse & stations JO 1998). Encadrement par <strong>Jérôme Noviant</strong> (ex‑Rossignol).</p>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+      <a class="cta" href="#devis">Devis sur mesure</a>
+      <a class="btn" href="#sommaire">Voir le programme</a>
+    </div>
+  </div>
 </header>
 
     <!-- Présentation -->
