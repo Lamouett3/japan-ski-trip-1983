@@ -17,61 +17,7 @@
 
   <link rel="canonical" href="https://exemple.com/" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- JSON‑LD : l’agence + le trip (SEO) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Séjour Ski Japon — Tokyo × Hakuba",
-    "url": "https://exemple.com/",
-    "email": "noviant.jerome@gmail.com"
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "TouristTrip",
-    "name": "Tokyo × Hakuba — Ski & Culture au Japon",
-    "description": "8 jours/7 nuits : Tokyo (Asakusa, Tsukiji, Ginza, Shibuya) et Hakuba (Happo-One JO 1998, backcountry Tsugaike, onsen). Voyage personnalisable, devis sur demande.",
-    "itinerary": [
-      {"@type":"ListItem","position":1,"name":"Arrivée Haneda, Akihabara, Ueno, dîner Shabu‑Shabu"},
-      {"@type":"ListItem","position":2,"name":"Asakusa Sensō‑ji, Tsukiji, Ginza, Shibuya by night"},
-      {"@type":"ListItem","position":3,"name":"Palais impérial, Kanda (quartier ski), Tokyo Skytree"},
-      {"@type":"ListItem","position":4,"name":"Shinkansen Tokyo → Nagano, taxi → Hakuba, onsen"},
-      {"@type":"ListItem","position":5,"name":"Tsugaike backcountry guidé, BBQ, onsen"},
-      {"@type":"ListItem","position":6,"name":"Happo‑One piste/BC, déjeuner panoramique, onsen"},
-      {"@type":"ListItem","position":7,"name":"Derniers runs, retour Tokyo, vol de nuit"}
-    ],
-    "touristType": "Skieurs intermédiaires à experts",
-    "offers": {
-      "@type": "Offer",
-      "availability": "https://schema.org/InStock",
-      "url": "https://exemple.com/#devis"
-    }
-  }
-  </script>
 </head>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const v = document.querySelector('.hero-video-el');
-  if (!v) return;
-
-  const tryPlay = () => v.play().catch(() => {});
-  v.addEventListener('canplay', tryPlay, { once: true });
-  tryPlay();
-
-  const arm = () => {
-    tryPlay();
-    window.removeEventListener('touchstart', arm);
-    window.removeEventListener('click', arm);
-    window.removeEventListener('scroll', arm);
-  };
-  window.addEventListener('touchstart', arm, { passive: true });
-  window.addEventListener('click', arm, { passive: true });
-  window.addEventListener('scroll', arm, { passive: true });
-});
-</script>
 <body>
   <!-- NAV -->
   <nav class="nav" aria-label="Navigation principale">
@@ -100,35 +46,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   <!-- SLIDES -->
   <main class="slides">
-    <!-- HERO (image; tu remettras la vidéo plus tard si tu veux) -->
-  <header class="hero slide" id="top">
-  <div class="hero-video" aria-hidden="true">
-    <video
-      class="hero-video-el"
-      autoplay
-      muted
-      loop
-      playsinline
-      webkit-playsinline
-      preload="metadata"
-      poster="images/hero-poster.jpg"
-    >
-      <source src="video/homepage_video.mp4" type="video/mp4" />
-      <img src="images/hero-poster.jpg" alt="Montagne enneigée au Japon et Tokyo la nuit" />
-    </video>
-    <div class="hero-overlay"></div>
-  </div>
+    <!-- HERO -->
+    <header class="hero slide" id="top">
+      <div class="hero-video" aria-hidden="true">
+        <video
+          class="hero-video-el"
+          autoplay
+          muted
+          loop
+          playsinline
+          webkit-playsinline
+          preload="auto"
+        >
+          <source src="video/homepage_video.mp4" type="video/mp4" />
+        </video>
+        <div class="hero-overlay"></div>
+      </div>
 
-  <div class="container slide-inner">
-    <span class="kicker">Ski & Culture — 8 jours / 7 nuits</span>
-    <h1>Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
-    <p class="lead">Tokyo (traditions, gastronomie, quartiers iconiques) + Hakuba (poudreuse & stations JO 1998). Encadrement par <strong>Jérôme Noviant</strong> (ex‑Rossignol).</p>
-    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-      <a class="btn cta" href="#devis">Devis sur mesure</a>
-      <a class="btn" href="#sommaire">Voir le programme</a>
-    </div>
-  </div>
-</header>
+      <div class="container slide-inner">
+        <span class="kicker">Ski & Culture — 8 jours / 7 nuits</span>
+        <h1>Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
+        <p class="lead">Tokyo (traditions, gastronomie, quartiers iconiques) + Hakuba (poudreuse & stations JO 1998). Encadrement par <strong>Jérôme Noviant</strong> (ex‑Rossignol).</p>
+        <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
+          <a class="btn cta" href="#devis">Devis sur mesure</a>
+          <a class="btn" href="#sommaire">Voir le programme</a>
+        </div>
+      </div>
+    </header>
 
     <!-- Présentation -->
     <section class="slide" id="presentation" data-bg="images/hakuba-wide.jpg">
@@ -219,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     </section>
 
-    <!-- Devis & Personnalisation (pas de prix affichés) -->
+    <!-- Devis & Personnalisation -->
     <section class="slide" id="devis" data-bg="images/hakuba-wide.jpg">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
@@ -259,6 +203,28 @@ document.addEventListener('DOMContentLoaded', () => {
     <button class="btn" id="theme2" aria-pressed="true" title="Basculer clair/sombre">🌗 Thème</button>
     <a class="btn" href="#top" title="Revenir en haut">↑ Haut</a>
   </div>
+
+  <!-- Script: forcer la lecture (filet iOS) -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const v = document.querySelector('.hero-video-el');
+    if (!v) return;
+
+    const tryPlay = () => v.play().catch(() => {});
+    v.addEventListener('canplay', tryPlay, { once: true });
+    tryPlay();
+
+    const arm = () => {
+      tryPlay();
+      window.removeEventListener('touchstart', arm);
+      window.removeEventListener('click', arm);
+      window.removeEventListener('scroll', arm);
+    };
+    window.addEventListener('touchstart', arm, { passive: true });
+    window.addEventListener('click', arm, { passive: true });
+    window.addEventListener('scroll', arm, { passive: true });
+  });
+  </script>
 
   <script src="script.js"></script>
 </body>
