@@ -27,7 +27,7 @@
   --text: #e8edf5;
   --muted: #a8b3c7;
   --line: rgba(255, 255, 255, .08);
-  --accent: #4cc9f0;
+  --accent: #e8edf5;
   --pill: rgba(255, 255, 255, .06);
   --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(76, 201, 240, .15), transparent),
     radial-gradient(800px 200px at 10% 0%, rgba(255, 238, 0, .08), transparent);
@@ -287,7 +287,6 @@ footer {
   }
 }
 
-
 /* ============ Hero vidéo (plein écran) ============ */
 .hero.slide {
   align-items: end
@@ -334,7 +333,6 @@ footer {
     transform: none
   }
 }
-
 
 /* === Readability boost on HERO video === */
 .hero .slide-inner {
