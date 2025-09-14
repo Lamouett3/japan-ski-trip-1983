@@ -59,6 +59,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (!slide.hasAttribute('data-ink')) {
       slide.setAttribute('data-ink', 'light');
     }
+
+    // Injecte l'effet Shoji local si absent et non désactivé
+    if (!slide.querySelector('.shoji-local') && !slide.hasAttribute('data-shoji-off')) {
+      const shoji = document.createElement('div');
+      shoji.className = 'shoji-local';
+      shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
+      slide.appendChild(shoji);
+    }
   });
 
   // Lazy-load des backgrounds quand la slide approche la vue
@@ -261,4 +269,115 @@ document.getElementById('y').textContent = new Date().getFullYear();
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('wheel', cancelAuto, { passive: true });
   window.addEventListener('touchstart', cancelAuto, { passive: true });
+})();
+
+// === Effet Shoji: panneaux qui s'ouvrent au changement de slide ===
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+  if (window.SHOJI_GLOBAL_ENABLED === false) return;
+
+  const shoji = document.createElement('div');
+  shoji.className = 'shoji';
+  shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
+  document.body.appendChild(shoji);
+
+  const left = shoji.querySelector('.left');
+  const right = shoji.querySelector('.right');
+  let busy = false;
+
+  function playShoji(){
+    if (busy) return;
+    busy = true;
+    shoji.classList.add('visible');
+    left.classList.remove('open');
+    right.classList.remove('open');
+    void shoji.offsetWidth;
+    left.classList.add('open');
+    right.classList.add('open');
+    setTimeout(() => { shoji.classList.remove('visible'); busy = false; }, 460);
+  }
+
+  window.playShojiTransition = playShoji;
+})();
+
+// === Dots de progression + lien actif nav ===
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide[id]'));
+  if (!slides.length) return;
+
+  // Crée le conteneur de dots
+  const dotsWrap = document.createElement('div');
+  dotsWrap.className = 'progress-dots';
+  dotsWrap.setAttribute('aria-label', 'Navigation des sections');
+  document.body.appendChild(dotsWrap);
+
+  // Liens nav
+  const navLinks = Array.from(document.querySelectorAll('.nav .links a'));
+
+  const dots = new Map();
+  slides.forEach((s) => {
+    const id = s.id;
+    const btn = document.createElement('button');
+    const label = (s.querySelector('h1,h2')?.textContent || id).trim();
+    btn.setAttribute('type','button');
+    btn.setAttribute('aria-label', label);
+    btn.addEventListener('click', () => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    dotsWrap.appendChild(btn);
+    dots.set(id, btn);
+  });
+
+  let currentId = null;
+
+  function setActive(id, rect){
+    dots.forEach((btn, key) => btn.setAttribute('aria-current', key === id ? 'true' : 'false'));
+    // aria-current sur la nav
+    navLinks.forEach(a => {
+      const href = a.getAttribute('href') || '';
+      const hash = href.includes('#') ? href.split('#')[1] : '';
+      if (hash) {
+        a.setAttribute('aria-current', hash === id ? 'true' : 'false');
+      }
+    });
+    // Déclenche l'effet Shoji global (si activé) quand on change réellement de slide et que l'alignement est suffisant
+    if (window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false) {
+      const vh = window.innerHeight;
+      const nearCenter = Math.abs((rect.top + rect.height/2) - vh/2) < vh * 0.12;
+      const nearTop = Math.abs(rect.top) < vh * 0.18;
+      if (nearCenter || nearTop) {
+        window.playShojiTransition();
+        currentId = id;
+      } else {
+        currentId = id;
+      }
+    } else {
+      currentId = id;
+    }
+  }
+
+  function updateActive(){
+    const vh = window.innerHeight;
+    let bestId = null;
+    let bestDist = Infinity;
+    let bestRect = null;
+    for (const s of slides){
+      const r = s.getBoundingClientRect();
+      const center = r.top + r.height/2;
+      const dist = Math.abs(center - vh/2);
+      if (dist < bestDist){ bestDist = dist; bestId = s.id; bestRect = r; }
+    }
+    if (bestId) setActive(bestId, bestRect);
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking){
+      requestAnimationFrame(() => { updateActive(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', () => { updateActive(); }, { passive: true });
+  updateActive();
 })();

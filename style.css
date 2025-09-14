@@ -52,6 +52,21 @@ body {
   font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial
 }
 
+/* Skip link accessibilité */
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -40px;
+  background: #11161e;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  z-index: 1100;
+}
+.skip-link:focus {
+  top: 8px;
+}
+
 * {
   box-sizing: border-box
 }
@@ -359,6 +374,116 @@ footer {
   z-index: 1001;
   display: flex;
   gap: 8px
+}
+
+/* Dots de progression (clicable) */
+.progress-dots {
+  position: fixed;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  gap: 10px;
+  z-index: 1002;
+}
+.progress-dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: transform .2s ease, background-color .2s ease, border-color .2s ease;
+}
+.progress-dots button:hover { transform: scale(1.15); }
+.progress-dots button:focus { outline: none; box-shadow: var(--focus); }
+.progress-dots button[aria-current="true"] {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: scale(1.25);
+}
+
+@media (max-width: 480px) {
+  .progress-dots { right: 8px; gap: 8px; }
+}
+
+/* ============ Effet Shoji (ouverture de porte japonaise) ============ */
+.shoji {
+  position: fixed;
+  inset: 0;
+  z-index: 1003;
+  pointer-events: none;
+  display: none;
+}
+.shoji.visible { display: block; }
+.shoji .panel {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 50vw;
+  background: rgba(255,255,255,0.92);
+  /* Trame façon shoji (lattes) */
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px);
+  box-shadow: inset 0 0 0 2px rgba(139, 92, 52, 0.12);
+  will-change: transform;
+}
+.shoji .panel.left {
+  right: 50%;
+  transform: translateX(0);
+  border-right: 2px solid rgba(139, 92, 52, 0.18);
+}
+.shoji .panel.right {
+  left: 50%;
+  transform: translateX(0);
+  border-left: 2px solid rgba(139, 92, 52, 0.18);
+}
+.shoji .panel.left.open { transform: translateX(-102%); transition: transform 420ms cubic-bezier(.22,.61,.36,1); }
+.shoji .panel.right.open { transform: translateX(102%); transition: transform 420ms cubic-bezier(.22,.61,.36,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .shoji .panel { transition: none !important; }
+}
+
+/* === Shoji local par slide (fermé par défaut, s'ouvre au survol) === */
+.slide .shoji-local {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* au-dessus du contenu pour l'effet, mais pointer-events none */
+  pointer-events: none;
+}
+.slide .shoji-local .panel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  background: rgba(255,255,255,0.92);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px);
+  box-shadow: inset 0 0 0 2px rgba(139, 92, 52, 0.12);
+  will-change: transform;
+  transition: transform 420ms cubic-bezier(.22,.61,.36,1);
+}
+.slide .shoji-local .panel.left { left: 0; transform: translateX(0); border-right: 2px solid rgba(139, 92, 52, 0.18); }
+.slide .shoji-local .panel.right { right: 0; transform: translateX(0); border-left: 2px solid rgba(139, 92, 52, 0.18); }
+
+/* Ouverture au survol/focus de la slide */
+.slide:hover .shoji-local .panel.left,
+.slide:focus-within .shoji-local .panel.left { transform: translateX(-102%); }
+.slide:hover .shoji-local .panel.right,
+.slide:focus-within .shoji-local .panel.right { transform: translateX(102%); }
+
+/* Touch (pas de hover): ouvert par défaut pour l’utilisabilité */
+@media (hover: none) {
+  .slide .shoji-local .panel.left { transform: translateX(-102%); }
+  .slide .shoji-local .panel.right { transform: translateX(102%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide .shoji-local .panel { transition: none; }
 }
 
 /* ============ Responsive ============ */

@@ -16,9 +16,13 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="canonical" href="https://exemple.com/" />
+  <!-- Preload images used early (poster/OG) -->
+  <link rel="preload" as="image" href="images/AdobeStock_315259160.jpeg"/>
+  <link rel="preload" as="image" href="images/AdobeStock_518922629.jpeg"/>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <a href="#presentation" class="skip-link">Aller au contenu</a>
   <!-- NAV -->
   <nav class="nav" aria-label="Navigation principale">
     <div class="inner container">
@@ -49,7 +53,8 @@
           loop
           playsinline
           webkit-playsinline
-          preload="auto"
+          preload="metadata"
+          poster="images/AdobeStock_315259160.jpeg"
         >
           <source src="video/homepage_video.mp4" type="video/mp4" />
         </video>
