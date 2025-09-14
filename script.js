@@ -54,6 +54,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (url) {
       bg.dataset.src = url;
     }
+
+    // Lisibilité par défaut sur image: forcer encre claire si non précisé
+    if (!slide.hasAttribute('data-ink')) {
+      slide.setAttribute('data-ink', 'light');
+    }
   });
 
   // Lazy-load des backgrounds quand la slide approche la vue
