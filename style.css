@@ -146,7 +146,9 @@ img {
 
 /* ============ Slides layout (centré + parallax) ============ */
 .slides {
-  scroll-snap-type: y proximity
+  scroll-snap-type: y proximity;
+  /* Dégradé global pour éviter les ruptures entre slides */
+  background: var(--hero-grad);
 }
 
 .slide {
@@ -155,11 +157,12 @@ img {
   display: grid;
   place-items: center;
   padding: var(--slide-pad);
-  border-top: 1px solid var(--line);
+  /* pas de bordure pour éviter la ligne visible entre sections */
+  border-top: none;
   scroll-snap-align: start;
   isolation: isolate;
   overflow: hidden;
-  background: var(--hero-grad);
+  background: transparent;
 }
 
 .slide-inner {
@@ -213,8 +216,10 @@ img {
 }
 
 .slide-bg {
-  transform: translate3d(0, 0, 0) scale(1.12);
-  will-change: transform
+  transform: translate3d(0, 0, 0) scale(1.16); /* un peu plus de marge pour éviter tout bord visible */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .slide-overlay {

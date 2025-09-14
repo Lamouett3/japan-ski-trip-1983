@@ -102,11 +102,13 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const vh = window.innerHeight;
     const vw = window.innerWidth || 1024;
     const depth = vw <= 360 ? 0.10 : (vw <= 480 ? 0.14 : 0.18); // parallax adouci sur petits écrans
+    const maxShift = vh * 0.22; // clamp pour éviter de dévoiler le bord
     bgEls.forEach((el) => {
       const rect = el.parentElement.getBoundingClientRect();
       const centerDelta = (rect.top + rect.height/2) - vh/2;
-      const offset = centerDelta * depth;
-      el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.12)`;
+      const raw = centerDelta * depth;
+      const offset = Math.max(-maxShift, Math.min(maxShift, raw));
+      el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.16)`;
     });
   }
 
