@@ -343,6 +343,83 @@ img {
   -webkit-hyphens: auto;
 }
 
+/* ====== Lists & layout helpers for readable slides ====== */
+.list {
+  list-style: none;
+  margin: 4px auto 0;
+  padding: 0;
+  text-align: left;
+}
+.list li {
+  position: relative;
+  margin: 6px 0;
+  padding-left: 26px;
+  color: var(--muted);
+}
+.list li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  opacity: .9;
+}
+.list.check li::before {
+  content: "✓";
+  left: 0;
+  top: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  color: #9be7a5;
+  font-weight: 800;
+}
+
+.grid-2 {
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 900px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; align-items: start; }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: var(--pill);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* Compact cards for Sommaire */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+}
+.card h3 {
+  margin: 0 0 6px;
+  font-size: clamp(18px, 2.4vw, 22px);
+  color: #fff;
+}
+.card .list li { margin: 4px 0; }
+
 .slide h1 {
   margin: 0 0 8px;
   font-size: clamp(32px, 6vw, 64px);
