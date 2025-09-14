@@ -11,6 +11,11 @@
   --heading-color: #ffffff;
   /* Vignette de fondu aux bords haut/bas */
   --edge-fade: rgba(0, 0, 0, 0.18);
+  /* Shoji (thème clair par défaut) */
+  --shoji-paper: rgba(255, 255, 255, 0.90);
+  --shoji-grid: rgba(0, 0, 0, 0.07);
+  --shoji-frame: rgba(139, 92, 52, 0.18);
+  --shoji-edge: rgba(139, 92, 52, 0.24);
 }
 
 [data-theme="light"] {
@@ -38,6 +43,11 @@
   --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(76, 201, 240, .15), transparent),
     radial-gradient(800px 200px at 10% 0%, rgba(255, 238, 0, .08), transparent);
   --edge-fade: rgba(0, 0, 0, 0.22);
+  /* Shoji (thème sombre) */
+  --shoji-paper: rgba(16, 20, 27, 0.88);
+  --shoji-grid: rgba(255, 255, 255, 0.08);
+  --shoji-frame: rgba(255, 255, 255, 0.16);
+  --shoji-edge: rgba(255, 255, 255, 0.20);
 }
 
 /* ============ Base ============ */
@@ -545,23 +555,25 @@ footer {
   top: 0;
   height: 100vh;
   width: 50vw;
-  background: rgba(255,255,255,0.92);
+  background: var(--shoji-paper);
   /* Trame façon shoji (lattes) */
   background-image:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px),
-    repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px);
-  box-shadow: inset 0 0 0 2px rgba(139, 92, 52, 0.12);
+    repeating-linear-gradient(90deg, var(--shoji-grid) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(0deg, var(--shoji-grid) 0 1px, transparent 1px 110px);
+  box-shadow: inset 0 0 0 2px var(--shoji-frame);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
   will-change: transform;
 }
 .shoji .panel.left {
   right: 50%;
   transform: translateX(0);
-  border-right: 2px solid rgba(139, 92, 52, 0.18);
+  border-right: 2px solid var(--shoji-edge);
 }
 .shoji .panel.right {
   left: 50%;
   transform: translateX(0);
-  border-left: 2px solid rgba(139, 92, 52, 0.18);
+  border-left: 2px solid var(--shoji-edge);
 }
 .shoji .panel.left.open { transform: translateX(-102%); transition: transform 420ms cubic-bezier(.22,.61,.36,1); }
 .shoji .panel.right.open { transform: translateX(102%); transition: transform 420ms cubic-bezier(.22,.61,.36,1); }
@@ -582,16 +594,18 @@ footer {
   top: 0;
   height: 100%;
   width: 50%;
-  background: rgba(255,255,255,0.92);
+  background: var(--shoji-paper);
   background-image:
-    repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px),
-    repeating-linear-gradient(0deg, rgba(0,0,0,0.08) 0 1px, transparent 1px 110px);
-  box-shadow: inset 0 0 0 2px rgba(139, 92, 52, 0.12);
+    repeating-linear-gradient(90deg, var(--shoji-grid) 0 1px, transparent 1px 110px),
+    repeating-linear-gradient(0deg, var(--shoji-grid) 0 1px, transparent 1px 110px);
+  box-shadow: inset 0 0 0 2px var(--shoji-frame);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
   will-change: transform;
   transition: transform 420ms cubic-bezier(.22,.61,.36,1);
 }
-.slide .shoji-local .panel.left { left: 0; transform: translateX(0); border-right: 2px solid rgba(139, 92, 52, 0.18); }
-.slide .shoji-local .panel.right { right: 0; transform: translateX(0); border-left: 2px solid rgba(139, 92, 52, 0.18); }
+.slide .shoji-local .panel.left { left: 0; transform: translateX(0); border-right: 2px solid var(--shoji-edge); }
+.slide .shoji-local .panel.right { right: 0; transform: translateX(0); border-left: 2px solid var(--shoji-edge); }
 
 /* Ouverture au survol/focus de la slide */
 .slide:hover .shoji-local .panel.left,
