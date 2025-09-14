@@ -100,10 +100,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   function onScroll() {
     const vh = window.innerHeight;
+    const vw = window.innerWidth || 1024;
+    const depth = vw <= 360 ? 0.10 : (vw <= 480 ? 0.14 : 0.18); // parallax adouci sur petits écrans
     bgEls.forEach((el) => {
       const rect = el.parentElement.getBoundingClientRect();
       const centerDelta = (rect.top + rect.height/2) - vh/2;
-      const depth = 0.18; // vitesse parallax
       const offset = centerDelta * depth;
       el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.12)`;
     });
@@ -127,9 +128,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const hero = heroVideoEl.closest('.slide');
     if (!hero) return;
     const vh = window.innerHeight;
+    const vw = window.innerWidth || 1024;
+    const factor = vw <= 360 ? 0.08 : (vw <= 480 ? 0.1 : 0.12);
     const rect = hero.getBoundingClientRect();
     const centerDelta = (rect.top + rect.height/2) - vh/2;
-    const offset = centerDelta * 0.12; // plus doux
+    const offset = centerDelta * factor; // plus doux sur petits écrans
     heroVideoEl.style.transform = `translate3d(0, ${offset}px, 0) scale(1.03)`;
   }
   window.addEventListener('scroll', () => { requestAnimationFrame(onScrollHero); }, {passive:true});
