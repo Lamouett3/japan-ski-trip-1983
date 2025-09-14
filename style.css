@@ -11,8 +11,8 @@
   --heading-color: #ffffff;
   /* Vignette de fondu aux bords haut/bas */
   --edge-fade: rgba(0, 0, 0, 0.18);
-  /* Shoji (thème clair par défaut) */
-  --shoji-paper: rgba(255, 255, 255, 0.90);
+  /* Shoji (thème clair par défaut) — ton crème */
+  --shoji-paper: rgba(245, 239, 230, 0.90);
   --shoji-grid: rgba(0, 0, 0, 0.07);
   --shoji-frame: rgba(139, 92, 52, 0.18);
   --shoji-edge: rgba(139, 92, 52, 0.24);
