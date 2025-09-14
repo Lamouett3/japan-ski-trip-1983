@@ -126,7 +126,13 @@ img {
   color: var(--text);
   padding: 10px 12px;
   border-radius: 12px;
-  cursor: pointer
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem; /* unifie taille police entre <a> et <button> */
+  line-height: 1.1; /* évite variations de hauteur entre navigateurs */
+  font-weight: 600;
 }
 
 .btn:hover {
