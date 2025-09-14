@@ -21,6 +21,18 @@ window.SHOJI_GLOBAL_ENABLED = false;
 // === Année footer ===
 document.getElementById('y').textContent = new Date().getFullYear();
 
+// === Nav glass: accentue le verre au scroll ===
+(function(){
+  const nav = document.querySelector('.nav.jpn');
+  if (!nav) return;
+  function update(){
+    if (window.scrollY > 8) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('load', update, { passive: true });
+  update();
+})();
+
 // === Inject backgrounds + Parallax au scroll ===
 (function() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

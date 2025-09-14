@@ -124,6 +124,73 @@ img {
   background: rgba(255, 255, 255, .65)
 }
 
+/* ——— Nav “façade japonaise” ——— */
+.nav.jpn {
+  position: sticky;
+  top: 0;
+  background: rgba(12, 16, 23, .24);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 1px 0 rgba(255,255,255,.04) inset;
+  transition: background .25s ease, border-color .25s ease, backdrop-filter .25s ease;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  overflow: hidden;
+}
+[data-theme="light"] .nav.jpn {
+  background: rgba(255, 255, 255, .42);
+  border-bottom: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 1px 0 rgba(255,255,255,.5) inset;
+}
+
+.nav.jpn.scrolled {
+  background: rgba(12, 16, 23, .36);
+  border-bottom-color: rgba(255,255,255,.14);
+}
+[data-theme="light"] .nav.jpn.scrolled {
+  background: rgba(255, 255, 255, .62);
+  border-bottom-color: rgba(0,0,0,.09);
+}
+
+.nav.jpn .inner { padding-top: 10px; }
+
+/* Noren retiré pour un rendu plus épuré */
+.nav.jpn .noren { display: none; }
+.nav.jpn .noren::after { display: none; }
+
+/* Marque épurée: texte seul */
+.nav.jpn .brand .sign {
+  padding: 0;
+  background: transparent;
+  color: var(--accent);
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  letter-spacing: .4px;
+  font-weight: 800;
+}
+
+/* Lanternes cachées pour un look épuré */
+.nav.jpn .lantern { display: none !important; }
+
+/* Boutons dans la nav: style verre subtil */
+.nav.jpn .btn {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.18);
+}
+.nav.jpn .btn:hover { background: rgba(255,255,255,.13); }
+[data-theme="light"] .nav.jpn .btn {
+  background: rgba(255,255,255,.6);
+  border-color: rgba(0,0,0,.08);
+}
+[data-theme="light"] .nav.jpn .btn:hover { background: rgba(255,255,255,.7); }
+
+@media (max-width: 600px) {
+  .nav.jpn .inner { padding-top: 8px; }
+  .nav.jpn .noren { height: 5px; }
+}
+
 .nav .inner {
   display: flex;
   align-items: center;
@@ -185,6 +252,26 @@ img {
 .btn.cta:hover {
   filter: brightness(1.08);
 }
+
+/* Variante outline (contour) plus épurée */
+.btn.outline {
+  background: transparent;
+  border-width: 1.5px;
+  border-style: solid;
+  border-color: var(--line);
+  color: var(--accent);
+  box-shadow: none;
+}
+.btn.outline:hover { background: rgba(255,255,255,.08); }
+[data-theme="light"] .btn.outline:hover { background: rgba(0,0,0,.04); }
+
+/* Ajuste l'outline dans la nav verre */
+.nav.jpn .btn.outline {
+  background: transparent;
+  border-color: rgba(255,255,255,.35);
+  color: var(--accent);
+}
+[data-theme="light"] .nav.jpn .btn.outline { border-color: rgba(0,0,0,.22); }
 
 /* ============ Slides layout (centré + parallax) ============ */
 .slides {
@@ -386,6 +473,21 @@ footer {
   color: var(--muted);
   font-size: 0.9rem;
   line-height: 1.4;
+  /* Esprit verre + coins arrondis en haut */
+  background: rgba(12, 16, 23, .24);
+  backdrop-filter: saturate(160%) blur(14px);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  border-top: 1px solid rgba(255,255,255,.10);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 -1px 0 rgba(255,255,255,.04) inset;
+}
+
+[data-theme="light"] footer {
+  background: rgba(255, 255, 255, .42);
+  border-top-color: rgba(0,0,0,.06);
+  box-shadow: 0 -1px 0 rgba(255,255,255,.5) inset;
 }
 
 .toolbar {
