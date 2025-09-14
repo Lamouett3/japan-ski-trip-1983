@@ -1,3 +1,6 @@
+// Désactive le shoji global de démarrage (on utilise un shoji local sur le HERO uniquement)
+window.SHOJI_GLOBAL_ENABLED = false;
+
 // === Thème clair/sombre ===
 (function() {
   const themeBtn = document.getElementById('theme');
@@ -25,47 +28,45 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   // Création des éléments BG/Overlay si absents, sans charger d'image tout de suite
   slides.forEach(slide => {
-    if (slide.querySelector('.hero-video')) return; // le HERO vidéo gère son propre fond
+    const hasHeroVideo = !!slide.querySelector('.hero-video');
 
-    let bg = slide.querySelector('.slide-bg');
-    let ov = slide.querySelector('.slide-overlay');
-    if (!bg) {
-      bg = document.createElement('div');
-      bg.className = 'slide-bg';
-      slide.prepend(bg);
-    }
-    if (!ov) {
-      ov = document.createElement('div');
-      ov.className = 'slide-overlay';
-      slide.prepend(ov);
-    }
-
-    // Configure position focale si fournie (ex: data-pos="center 30%")
-    const pos = slide.getAttribute('data-pos');
-    if (pos) bg.style.backgroundPosition = pos;
-
-    // Configure intensité d'overlay si fournie (ex: data-overlay="0.45")
-    const overlayRaw = parseFloat(slide.getAttribute('data-overlay'));
-    const s = isNaN(overlayRaw) ? 0.35 : Math.max(0, Math.min(0.85, overlayRaw));
-    ov.style.background = `radial-gradient(80% 60% at 50% 30%, rgba(0,0,0, ${s * 0.2}), rgba(0,0,0, ${s}))`;
-
-    // Prépare lazy-load du background depuis data-bg
-    const url = slide.getAttribute('data-bg');
-    if (url) {
-      bg.dataset.src = url;
-    }
-
-    // Lisibilité par défaut sur image: forcer encre claire si non précisé
+    // Pour toutes les slides: lisibilité et shoji local
     if (!slide.hasAttribute('data-ink')) {
       slide.setAttribute('data-ink', 'light');
     }
-
-    // Injecte l'effet Shoji local si absent et non désactivé
     if (!slide.querySelector('.shoji-local') && !slide.hasAttribute('data-shoji-off')) {
       const shoji = document.createElement('div');
       shoji.className = 'shoji-local';
       shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
       slide.appendChild(shoji);
+    }
+
+    // Pour les slides sans vidéo HERO: gérer background/overlay/images
+    if (!hasHeroVideo) {
+      let bg = slide.querySelector('.slide-bg');
+      let ov = slide.querySelector('.slide-overlay');
+      if (!bg) {
+        bg = document.createElement('div');
+        bg.className = 'slide-bg';
+        slide.prepend(bg);
+      }
+      if (!ov) {
+        ov = document.createElement('div');
+        ov.className = 'slide-overlay';
+        slide.prepend(ov);
+      }
+
+      const pos = slide.getAttribute('data-pos');
+      if (pos) bg.style.backgroundPosition = pos;
+
+      const overlayRaw = parseFloat(slide.getAttribute('data-overlay'));
+      const s = isNaN(overlayRaw) ? 0.35 : Math.max(0, Math.min(0.85, overlayRaw));
+      ov.style.background = `radial-gradient(80% 60% at 50% 30%, rgba(0,0,0, ${s * 0.2}), rgba(0,0,0, ${s}))`;
+
+      const url = slide.getAttribute('data-bg');
+      if (url) {
+        bg.dataset.src = url;
+      }
     }
   });
 
@@ -158,6 +159,57 @@ document.getElementById('y').textContent = new Date().getFullYear();
   });
 })();
 
+  // — Auto‑ouverture shoji local sur la slide HERO au chargement —
+  (function(){
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+    const heroSlide = document.getElementById('top');
+    if (!heroSlide) return;
+    const shoji = heroSlide.querySelector('.shoji-local');
+    if (!shoji) return;
+    const left = shoji.querySelector('.panel.left');
+    const right = shoji.querySelector('.panel.right');
+    if (!left || !right) return;
+
+    // Empêche l'ouverture au survol pendant l'animation initiale
+    document.body.classList.add('hero-shoji-opening');
+
+    // Ferme visuellement (au cas où) et définit une ouverture lente
+    shoji.classList.remove('open');
+    const D = 2500; // durée d'ouverture (ms)
+    const easing = 'cubic-bezier(.22,.61,.36,1)';
+    const prevL = left.style.transition;
+    const prevR = right.style.transition;
+    left.style.transition = `transform ${D}ms ${easing}`;
+    right.style.transition = `transform ${D}ms ${easing}`;
+
+    // Lance l'ouverture au prochain frame pour garantir l'état initial appliqué
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        shoji.classList.add('open');
+      });
+    });
+
+    // Après l'ouverture, réactive le comportement normal, mais garde ouvert jusqu'à 1ère interaction
+    const cleanup = () => {
+      document.body.classList.remove('hero-shoji-opening');
+      // Restaure transitions par défaut
+      left.style.transition = prevL;
+      right.style.transition = prevR;
+      // À la première interaction, revenir au comportement normal (en retirant .open)
+      const unlock = () => {
+        shoji.classList.remove('open');
+        window.removeEventListener('wheel', unlock, { passive: true });
+        window.removeEventListener('touchstart', unlock, { passive: true });
+        window.removeEventListener('mousemove', unlock, { passive: true });
+      };
+      window.addEventListener('wheel', unlock, { passive: true, once: true });
+      window.addEventListener('touchstart', unlock, { passive: true, once: true });
+      window.addEventListener('mousemove', unlock, { passive: true, once: true });
+    };
+
+    setTimeout(cleanup, D + 80);
+  })();
 })();
 
 // === Auto-snap doux à la fin du scroll ===
@@ -286,19 +338,60 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const right = shoji.querySelector('.right');
   let busy = false;
 
-  function playShoji(){
+  function playShoji(durationMs){
     if (busy) return;
     busy = true;
+    // Transition personnalisée optionnelle
+    const dur = typeof durationMs === 'number' ? Math.max(100, durationMs) : null;
+    const prevTl = left.style.transition;
+    const prevTr = right.style.transition;
+    if (dur){
+      const easing = 'cubic-bezier(.22,.61,.36,1)';
+      left.style.transition = `transform ${dur}ms ${easing}`;
+      right.style.transition = `transform ${dur}ms ${easing}`;
+    }
+    // Si c'est une longue ouverture initiale, masque les shoji locaux
+    const isInitial = !!dur && dur > 1500;
+    if (isInitial) {
+      document.body.classList.add('shoji-opening');
+    }
     shoji.classList.add('visible');
     left.classList.remove('open');
     right.classList.remove('open');
     void shoji.offsetWidth;
     left.classList.add('open');
     right.classList.add('open');
-    setTimeout(() => { shoji.classList.remove('visible'); busy = false; }, 460);
+    const endAfter = dur ? dur + 80 : 460;
+    setTimeout(() => {
+      shoji.classList.remove('visible');
+      // Restaure les transitions par défaut si on les a surchargées
+      if (dur){ left.style.transition = prevTl; right.style.transition = prevTr; }
+      if (isInitial) {
+        // Pendant un court instant, maintient le shoji local du HERO en position ouverte sans animation
+        document.body.classList.add('shoji-initial-sync');
+        // Retire le verrou d'ouverture globale
+        document.body.classList.remove('shoji-opening');
+        // Après une petite latence, rend la main aux transitions normales des shoji locaux
+        setTimeout(() => { document.body.classList.remove('shoji-initial-sync'); }, 180);
+      }
+      busy = false;
+    }, endAfter);
   }
 
   window.playShojiTransition = playShoji;
+  // Ouverture initiale à l'arrivée sur le site (suspens 2.5s)
+  let initialPlayed = false;
+  function triggerInitialShoji(){
+    if (initialPlayed) return; initialPlayed = true;
+    // petit rafraîchissement pour s'assurer que le DOM et les styles sont appliqués
+    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(2500); } catch(e){} }, 40); });
+  }
+  if (document.readyState === 'complete') {
+    triggerInitialShoji();
+  } else {
+    window.addEventListener('load', triggerInitialShoji, { once: true });
+    document.addEventListener('DOMContentLoaded', triggerInitialShoji, { once: true });
+  }
 })();
 
 // === Dots de progression + lien actif nav ===
