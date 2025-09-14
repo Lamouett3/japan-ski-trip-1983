@@ -23,26 +23,75 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const slides = Array.from(document.querySelectorAll('.slide'));
 
-  // Injecte les backgrounds depuis data-bg si non présents
+  // Création des éléments BG/Overlay si absents, sans charger d'image tout de suite
   slides.forEach(slide => {
-    if (slide.querySelector(".hero-video")) return; if (!slide.querySelector('.slide-bg')) {
-      const bgUrl = slide.getAttribute('data-bg');
-      if (bgUrl) {
-        const bg = document.createElement('div');
-        bg.className = 'slide-bg';
-        bg.style.backgroundImage = `url('${bgUrl}')`;
-        slide.prepend(bg);
+    if (slide.querySelector('.hero-video')) return; // le HERO vidéo gère son propre fond
 
-        const ov = document.createElement('div');
-        ov.className = 'slide-overlay';
-        slide.prepend(ov);
-      }
+    let bg = slide.querySelector('.slide-bg');
+    let ov = slide.querySelector('.slide-overlay');
+    if (!bg) {
+      bg = document.createElement('div');
+      bg.className = 'slide-bg';
+      slide.prepend(bg);
+    }
+    if (!ov) {
+      ov = document.createElement('div');
+      ov.className = 'slide-overlay';
+      slide.prepend(ov);
+    }
+
+    // Configure position focale si fournie (ex: data-pos="center 30%")
+    const pos = slide.getAttribute('data-pos');
+    if (pos) bg.style.backgroundPosition = pos;
+
+    // Configure intensité d'overlay si fournie (ex: data-overlay="0.45")
+    const overlayRaw = parseFloat(slide.getAttribute('data-overlay'));
+    const s = isNaN(overlayRaw) ? 0.35 : Math.max(0, Math.min(0.85, overlayRaw));
+    ov.style.background = `radial-gradient(80% 60% at 50% 30%, rgba(0,0,0, ${s * 0.2}), rgba(0,0,0, ${s}))`;
+
+    // Prépare lazy-load du background depuis data-bg
+    const url = slide.getAttribute('data-bg');
+    if (url) {
+      bg.dataset.src = url;
     }
   });
 
-  if (prefersReduced) return; // accessibilité
-
+  // Lazy-load des backgrounds quand la slide approche la vue
   const bgEls = Array.from(document.querySelectorAll('.slide-bg'));
+  const eagerLoad = new Set();
+
+  function loadBg(el) {
+    if (!el || el.dataset.loaded) return;
+    const src = el.dataset.src;
+    if (!src) return;
+    const img = new Image();
+    img.onload = () => {
+      el.style.backgroundImage = `url('${src}')`;
+      el.dataset.loaded = '1';
+    };
+    img.src = src;
+  }
+
+  // Charge immédiatement les 2 premières slides visibles
+  bgEls.slice(0, 2).forEach(el => { loadBg(el); eagerLoad.add(el); });
+
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          loadBg(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { root: null, rootMargin: '200px 0px', threshold: 0.01 });
+
+    bgEls.forEach(el => { if (!eagerLoad.has(el)) io.observe(el); });
+  } else {
+    // Fallback: charge tout
+    bgEls.forEach(loadBg);
+  }
+
+  if (prefersReduced) return; // accessibilité (stop parallax)
 
   function onScroll() {
     const vh = window.innerHeight;

@@ -206,9 +206,9 @@ img {
 }
 
 .overlay-bg1 {
+  /* Uniquement un voile: l'image reste sur .slide-bg pour éviter le double rendu */
   background:
-    linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0)),
-    url("images/AdobeStock_315259160.jpeg") center/cover no-repeat;
+    linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0));
 }
 
 /* Timeline centrée */
@@ -355,4 +355,20 @@ footer {
 /* Make primary CTA pop more over video */
 .hero .cta {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* === Option: panneau "frost" pour texte sur image très chargée === */
+.slide[data-panel="frost"] .slide-inner {
+  background: rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  border-radius: 16px;
+  padding: clamp(16px, 3vw, 24px);
+}
+
+.slide[data-panel="frost"] .slide-inner h1,
+.slide[data-panel="frost"] .slide-inner h2,
+.slide[data-panel="frost"] .slide-inner p {
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,.45);
 }
