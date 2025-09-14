@@ -151,3 +151,114 @@ document.getElementById('y').textContent = new Date().getFullYear();
 })();
 
 })();
+
+// === Auto-snap doux à la fin du scroll ===
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReduced) return;
+
+  const container = document.querySelector('.slides');
+  if (!container) return;
+
+  let rafId = null;
+  let endTimer = null;
+  let isAuto = false;
+  let lastY = window.scrollY;
+  let lastT = performance.now();
+  let velocity = 0; // px/ms (moyenne simple)
+
+  function getTargetY() {
+    const slides = Array.from(container.querySelectorAll('.slide'));
+    if (!slides.length) return null;
+    const vh = window.innerHeight;
+    const vw = window.innerWidth || 1024;
+    const alignToCenter = vw >= 768; // desktop: alignement plus centré
+    let best = null;
+    let bestDist = Infinity;
+    for (const s of slides) {
+      const r = s.getBoundingClientRect();
+      // Mesure par rapport au centre du viewport pour un ressenti plus naturel
+      const dist = Math.abs((r.top + r.height/2) - vh/2);
+      if (dist < bestDist) { bestDist = dist; best = s; }
+    }
+    if (!best) return null;
+    const r = best.getBoundingClientRect();
+    const centerOffset = alignToCenter ? Math.max(0, (vh - Math.min(r.height, vh)) / 2) : 0;
+    // Vise à placer le haut de la slide à "centerOffset" depuis le haut du viewport
+    const target = window.scrollY + r.top - centerOffset;
+    return Math.max(0, target);
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function animateTo(targetY, duration){
+    const startY = window.scrollY;
+    const delta = targetY - startY;
+    if (Math.abs(delta) < 2) return;
+    const start = performance.now();
+    isAuto = true;
+    const prevSnap = container.style.scrollSnapType;
+    container.style.scrollSnapType = 'none';
+
+    function step(now){
+      const t = Math.min(1, (now - start) / duration);
+      const eased = easeOutCubic(t);
+      window.scrollTo(0, startY + delta * eased);
+      if (t < 1 && isAuto) {
+        rafId = requestAnimationFrame(step);
+      } else {
+        container.style.scrollSnapType = prevSnap || '';
+        isAuto = false;
+      }
+    }
+    rafId = requestAnimationFrame(step);
+  }
+
+  function smoothSnap() {
+    if (isAuto) return;
+    const targetY = getTargetY();
+    if (targetY == null) return;
+    const cur = window.scrollY;
+    const dist = Math.abs(targetY - cur);
+
+    // Si déjà très proche, évite anim inutile
+    if (dist < 6) return;
+
+    // N’anime que si on est raisonnablement près d’un point d’ancrage
+    const vh = window.innerHeight;
+    if (dist > vh * 0.75) return;
+
+    // Durée adaptative selon distance et vitesse (inertie perçue)
+    const base = 320 + (dist / vh) * 280; // 320–600ms environ
+    const speedAdj = Math.max(0.85, Math.min(1.25, 1.05 - velocity * 0.25));
+    const duration = Math.max(260, Math.min(900, base * speedAdj));
+
+    animateTo(targetY, duration);
+  }
+
+  function onScroll(){
+    if (isAuto) return;
+    const now = performance.now();
+    const dy = window.scrollY - lastY;
+    const dt = Math.max(16, now - lastT);
+    // Vitesse lissée
+    const instV = Math.abs(dy) / dt; // px/ms
+    velocity = velocity * 0.6 + instV * 0.4;
+    lastY = window.scrollY; lastT = now;
+
+    if (endTimer) clearTimeout(endTimer);
+    // Délai selon vitesse: plus on va vite, plus on attend
+    const delay = velocity < 0.05 ? 90 : velocity < 0.2 ? 140 : 220;
+    endTimer = setTimeout(smoothSnap, delay);
+  }
+
+  function cancelAuto(){
+    if (rafId) cancelAnimationFrame(rafId);
+    isAuto = false;
+    velocity = 0;
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('wheel', cancelAuto, { passive: true });
+  window.addEventListener('touchstart', cancelAuto, { passive: true });
+})();
