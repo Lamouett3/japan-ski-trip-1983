@@ -189,6 +189,16 @@ img {
   isolation: isolate;
   overflow: hidden;
   background: transparent;
+  /* Texte par défaut en blanc dans les slides, quel que soit le thème */
+  --text: #ffffff;
+  --muted: rgba(255, 255, 255, 0.92);
+  --accent: #ffffff;
+  color: var(--text);
+}
+
+/* Assure la même teinte pour les listes dans les slides */
+.slide li {
+  color: var(--muted);
 }
 
 .slide-inner {
