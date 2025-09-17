@@ -565,11 +565,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
   next.addEventListener('click', ()=> goTo(index+1));
   dots.querySelectorAll('button').forEach((b, i)=> b.addEventListener('click', ()=> goTo(i)) );
 
-  // Swipe
-  let startX=0, curX=0, dragging=false;
-  track.addEventListener('pointerdown', (e)=>{ dragging=true; startX=e.clientX; track.style.transition='none'; track.setPointerCapture(e.pointerId); });
-  track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; track.style.transform=`translateX(${-index*w + dx}px)`; });
-  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; track.releasePointerCapture(e.pointerId); track.style.transition=''; const w=carousel.clientWidth; const dx = curX - startX; if (Math.abs(dx) > w*0.2) { goTo(index + (dx<0?1:-1)); } else { update(); } });
+  // Swipe (n'interrompt pas le clic sur la carte)
+  let startX=0, curX=0, dragging=false, moved=false, pid=null;
+  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; track.style.transition=''; });
+  track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 8) { moved=true; track.style.transition='none'; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
+  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; track.style.transition=''; const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} if (Math.abs(dx) > w*0.2) { goTo(index + (dx<0?1:-1)); } else { update(); } } else { update(); } });
   window.addEventListener('resize', update, { passive:true });
   update();
 })();
