@@ -521,6 +521,59 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
 })();
 
+// === Sommaire: init carousel inside #sommaire ===
+(function(){
+  const wrap = document.querySelector('#sommaire .rec-list');
+  if (!wrap) return;
+  const cards = Array.from(wrap.children);
+  if (!cards.length) return;
+
+  const carousel = document.createElement('div');
+  carousel.className = 'carousel';
+  const track = document.createElement('div');
+  track.className = 'carousel-track';
+  const dots = document.createElement('div'); dots.className = 'carousel-dots';
+  const prev = document.createElement('button'); prev.className = 'carousel-btn prev'; prev.setAttribute('aria-label','Précédent'); prev.textContent = '‹';
+  const next = document.createElement('button'); next.className = 'carousel-btn next'; next.setAttribute('aria-label','Suivant'); next.textContent = '›';
+
+  cards.forEach((card, i) => {
+    const item = document.createElement('div'); item.className = 'carousel-item';
+    item.appendChild(card);
+    track.appendChild(item);
+    const d = document.createElement('button'); d.setAttribute('aria-label', `Slide ${i+1}`); if (i===0) d.setAttribute('aria-current','true');
+    dots.appendChild(d);
+  });
+
+  wrap.replaceWith(carousel);
+  carousel.appendChild(track);
+  carousel.appendChild(prev);
+  carousel.appendChild(next);
+  carousel.appendChild(dots);
+
+  let index = 0;
+  function update(){
+    const w = carousel.clientWidth;
+    track.style.transform = `translateX(${-index * w}px)`;
+    dots.querySelectorAll('button').forEach((b, i)=> b.setAttribute('aria-current', i===index ? 'true':'false'));
+  }
+  function goTo(i){
+    const max = track.children.length - 1;
+    index = Math.max(0, Math.min(max, i));
+    update();
+  }
+  prev.addEventListener('click', ()=> goTo(index-1));
+  next.addEventListener('click', ()=> goTo(index+1));
+  dots.querySelectorAll('button').forEach((b, i)=> b.addEventListener('click', ()=> goTo(i)) );
+
+  // Swipe
+  let startX=0, curX=0, dragging=false;
+  track.addEventListener('pointerdown', (e)=>{ dragging=true; startX=e.clientX; track.style.transition='none'; track.setPointerCapture(e.pointerId); });
+  track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; track.style.transform=`translateX(${-index*w + dx}px)`; });
+  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; track.releasePointerCapture(e.pointerId); track.style.transition=''; const w=carousel.clientWidth; const dx = curX - startX; if (Math.abs(dx) > w*0.2) { goTo(index + (dx<0?1:-1)); } else { update(); } });
+  window.addEventListener('resize', update, { passive:true });
+  update();
+})();
+
 // === Dots de progression + lien actif nav ===
 (function(){
   const slides = Array.from(document.querySelectorAll('.slide[id]'));

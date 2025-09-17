@@ -420,6 +420,89 @@ img {
 }
 .card .list li { margin: 4px 0; }
 
+/* ===== Sommaire: cards en colonne (inspiration Japan Experience) ===== */
+.rec-list { display: grid; gap: 12px; margin-top: 10px; }
+.rec-card {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 12px;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 14px;
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.rec-card:hover, .rec-card:focus-within { transform: translateY(-2px) scale(1.01); box-shadow: 0 24px 64px rgba(0,0,0,.36); }
+.rec-media { border-radius: 16px; overflow: hidden; }
+.rec-media img { display:block; width:100%; height:100%; object-fit: cover; aspect-ratio: 4/3; }
+.rec-body { display: grid; gap: 8px; text-align: center; justify-items: center; }
+.rec-title { margin: 0; font-size: clamp(18px, 2.2vw, 22px); color: #fff; text-align:center }
+.rec-desc { margin: 0; color: var(--muted); font-size: 1rem; line-height: 1.55; max-width: 85%; text-align:center }
+.rec-cta { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.rec-cta::after { content: '→'; opacity: .9; }
+.rec-pill { display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; background: var(--pill); border:1px solid var(--line); color: var(--muted); font-weight:600; font-size:.9rem }
+
+@media (max-width: 640px){
+  .rec-card { grid-template-columns: 1fr; }
+  .rec-media img { aspect-ratio: 16/9; }
+}
+
+/* Strong centering for Sommaire playing-card variant */
+#sommaire .rec-card { grid-template-columns: 1fr; max-width: min(680px, 92%); margin: 0 auto; text-align: center; }
+#sommaire .rec-media img { aspect-ratio: 2 / 3; }
+#sommaire .rec-body { padding: 10px 8px 4px; }
+
+/* Keep Sommaire card within viewport height and align with other slides */
+#sommaire .carousel { margin-top: 4px; }
+#sommaire .rec-card {
+  max-width: min(560px, 90%);
+  padding: 12px;
+  /* ensure the card never exceeds the slide height */
+  max-height: calc(100svh - (var(--slide-pad) * 2) - 64px);
+  overflow: hidden;
+}
+#sommaire .rec-media img {
+  /* scale image height to viewport to avoid overflow */
+  height: clamp(160px, 36vh, 300px);
+  width: 100%;
+  object-fit: cover;
+}
+#sommaire .rec-title { font-size: clamp(16px, 2vw, 20px); }
+#sommaire .rec-desc {
+  font-size: .95rem;
+  line-height: 1.5;
+  max-width: 88%;
+  /* clamp lines to avoid overflow */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+#sommaire .rec-pill { font-size: .85rem; padding: 3px 8px; }
+
+/* ===== Carousel for Sommaire ===== */
+.carousel { position: relative; margin-top: 10px; }
+.carousel-track { display: flex; transition: transform .5s ease; will-change: transform; }
+.carousel-item { flex: 0 0 100%; padding: 0 8px; box-sizing: border-box; display:grid; place-items:center; }
+
+.carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; 
+  background: rgba(12,16,23,.35); color: #fff; border: 1px solid rgba(255,255,255,.25);
+  backdrop-filter: blur(6px) saturate(120%); -webkit-backdrop-filter: blur(6px) saturate(120%);
+  border-radius: 12px; width: 36px; height: 36px; display: grid; place-items: center; cursor: pointer; }
+[data-theme="light"] .carousel-btn { background: rgba(255,255,255,.75); color: #0e1116; border-color: rgba(0,0,0,.12); }
+.carousel-btn.prev { left: 6px; }
+.carousel-btn.next { right: 6px; }
+.carousel-btn:hover { filter: brightness(1.05); }
+
+.carousel-dots { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 3; }
+.carousel-dots button { width: 8px; height: 8px; border-radius: 999px; border: 2px solid rgba(255,255,255,.85); background: transparent; padding: 0; cursor: pointer; }
+.carousel-dots button[aria-current="true"] { background: #fff; }
+[data-theme="light"] .carousel-dots button { border-color: rgba(0,0,0,.55); }
+[data-theme="light"] .carousel-dots button[aria-current="true"] { background: #0e1116; }
+
 .slide h1 {
   margin: 0 0 8px;
   font-size: clamp(32px, 6vw, 64px);
