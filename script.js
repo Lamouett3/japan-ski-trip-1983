@@ -156,20 +156,25 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // Création des éléments BG/Overlay si absents, sans charger d'image tout de suite
   slides.forEach(slide => {
     const hasHeroVideo = !!slide.querySelector('.hero-video');
+    const onProgrammePage = /programme/i.test(location.pathname);
+    const isDaySlide = /^jour\d+$/i.test(slide.id || '');
 
     // Pour toutes les slides: lisibilité et shoji local
     if (!slide.hasAttribute('data-ink')) {
       slide.setAttribute('data-ink', 'light');
     }
-    // Pas de shoji local sur le HERO vidéo
-    if (hasHeroVideo) {
-      const existing = slide.querySelector('.shoji-local');
-      if (existing) existing.remove();
-    } else if (!slide.querySelector('.shoji-local') && !slide.hasAttribute('data-shoji-off')) {
-      const shoji = document.createElement('div');
-      shoji.className = 'shoji-local';
-      shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
-      slide.appendChild(shoji);
+    // Shoji local uniquement sur les slides des jours (programme.html) ou si explicitement autorisé
+    const allowLocalShoji = !hasHeroVideo && (onProgrammePage || isDaySlide) && !slide.hasAttribute('data-shoji-off');
+    const existingLocal = slide.querySelector('.shoji-local');
+    if (allowLocalShoji) {
+      if (!existingLocal) {
+        const shoji = document.createElement('div');
+        shoji.className = 'shoji-local';
+        shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
+        slide.appendChild(shoji);
+      }
+    } else if (existingLocal) {
+      existingLocal.remove();
     }
 
     // Pour les slides sans vidéo HERO: gérer background/overlay/images
@@ -427,8 +432,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const prevTl = left.style.transition;
     const prevTr = right.style.transition;
     if (dur){
-      // Aligne l'easing/tempo sur les shoji locaux
-      const easing = 'cubic-bezier(.22,.61,.36,1)';
+      // Pour une longue ouverture « bienvenue », on garde un easing fluide
+      const easing = (dur >= 1500) ? 'cubic-bezier(0.16, 1, 0.3, 1)' : 'cubic-bezier(.22,.61,.36,1)';
       left.style.transition = `transform ${dur}ms ${easing}`;
       right.style.transition = `transform ${dur}ms ${easing}`;
     }
@@ -442,13 +447,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
     right.classList.remove('open');
     // Force reflow
     void shoji.offsetWidth;
-    // Déclenchement: même tempo que les autres (pas de délai si dur < 1500ms)
+    // Déclenchement: rythme fluide pour longue ouverture
     const useDelay = !!dur && dur >= 1500;
-    const START_DELAY = useDelay ? 180 : 0;
-    const STAGGER = useDelay ? 140 : 0;
+    // Pour garantir exactement 4s perçues quand dur=4000, on évite tout délai/décalage
+    const START_DELAY = useDelay ? 0 : 0;
+    const STAGGER = useDelay ? 0 : 0;
     setTimeout(() => { left.classList.add('open'); }, START_DELAY);
     setTimeout(() => { right.classList.add('open'); }, START_DELAY + STAGGER);
-    const endAfter = dur ? dur + START_DELAY + STAGGER + 80 : 520;
+    const endAfter = dur ? dur + 80 : 520;
     setTimeout(() => {
       shoji.classList.remove('visible');
       // Restaure les transitions par défaut si on les a surchargées
@@ -466,12 +472,12 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
 
   window.playShojiTransition = playShoji;
-  // Ouverture initiale à l'arrivée sur le site (même tempo que les autres)
+  // Ouverture initiale à l'arrivée sur le site (fluide, 4s)
   let initialPlayed = false;
   function triggerInitialShoji(){
     if (initialPlayed) return; initialPlayed = true;
     // petit rafraîchissement pour s'assurer que le DOM et les styles sont appliqués
-    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(520); } catch(e){} }, 40); });
+    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(4000); } catch(e){} }, 60); });
   }
   if (document.readyState === 'complete') {
     triggerInitialShoji();
@@ -575,7 +581,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
       }
     });
     // Déclenche l'effet Shoji global (si activé) quand on change réellement de slide et que l'alignement est suffisant
-    if (window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false) {
+    const openingNow = document.body.classList.contains('shoji-opening');
+    if (window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false && !openingNow) {
       const vh = window.innerHeight;
       const nearCenter = Math.abs((rect.top + rect.height/2) - vh/2) < vh * 0.12;
       const nearTop = Math.abs(rect.top) < vh * 0.18;
