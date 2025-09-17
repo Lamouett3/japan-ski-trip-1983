@@ -477,7 +477,19 @@ document.getElementById('y').textContent = new Date().getFullYear();
   function triggerInitialShoji(){
     if (initialPlayed) return; initialPlayed = true;
     // petit rafraîchissement pour s'assurer que le DOM et les styles sont appliqués
-    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(4000); } catch(e){} }, 60); });
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        try {
+          const D = 4000;
+          playShoji(D);
+          // Sur la page d'accueil, on ne garde QUE l'ouverture initiale
+          const isHome = /(?:^\/$|index\.html$)/.test(location.pathname);
+          if (isHome) {
+            setTimeout(() => { window.SHOJI_GLOBAL_ENABLED = false; }, D + 200);
+          }
+        } catch(e){}
+      }, 60);
+    });
   }
   if (document.readyState === 'complete') {
     triggerInitialShoji();
@@ -571,6 +583,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   let currentId = null;
 
   function setActive(id, rect){
+    const onProgrammePage = /programme/i.test(location.pathname);
     dots.forEach((btn, key) => btn.setAttribute('aria-current', key === id ? 'true' : 'false'));
     // aria-current sur la nav
     navLinks.forEach(a => {
@@ -582,7 +595,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     });
     // Déclenche l'effet Shoji global (si activé) quand on change réellement de slide et que l'alignement est suffisant
     const openingNow = document.body.classList.contains('shoji-opening');
-    if (window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false && !openingNow) {
+    if (onProgrammePage && window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false && !openingNow) {
       const vh = window.innerHeight;
       const nearCenter = Math.abs((rect.top + rect.height/2) - vh/2) < vh * 0.12;
       const nearTop = Math.abs(rect.top) < vh * 0.18;
