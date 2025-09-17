@@ -11,7 +11,7 @@
   },
   "hero": {
     "kicker": "Ski & Culture — 8 jours / 7 nuits",
-    "title": "Tokyo ✕ Hakuba — poudreuse légendaire & onsen",
+    "title": "Tokyo ✕ Hakuba<br>poudreuse légendaire & onsen",
     "viewProgram": "Voir le programme"
   },
   "presentation": {"title": "Présentation — Ski au Japon & culture à Tokyo"},
@@ -31,4 +31,3 @@
   "quote": {"title": "Devis & Personnalisation — Voyage sur mesure"},
   "contact": {"title": "Contact — Réserver / Demander un devis"}
 }
-

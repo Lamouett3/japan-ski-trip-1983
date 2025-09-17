@@ -6,16 +6,31 @@ window.SHOJI_GLOBAL_ENABLED = true;
   const themeBtn = document.getElementById('theme');
   const langBtn = document.getElementById('lang');
   const themeBtn2 = document.getElementById('theme2');
+  const nav = document.querySelector('.nav.jpn');
+  const menuBtn = document.getElementById('menu');
+  const navLinks = document.getElementById('nav-links');
   function toggleTheme(){
     const root = document.documentElement;
     const now = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', now);
     try { localStorage.setItem('theme', now); } catch(e){}
+    // Accessibilité: mettre à jour aria-pressed pour les boutons thème
+    [themeBtn, themeBtn2].forEach(b => {
+      if (b) b.setAttribute('aria-pressed', String(now === 'dark'));
+    });
   }
   [themeBtn, themeBtn2].forEach(b=> b && b.addEventListener('click', toggleTheme));
   try {
     const saved = localStorage.getItem('theme');
-    if(saved){ document.documentElement.setAttribute('data-theme', saved); }
+    if(saved){
+      document.documentElement.setAttribute('data-theme', saved);
+      // Sync aria-pressed with restored theme
+      [themeBtn, themeBtn2].forEach(b => { if (b) b.setAttribute('aria-pressed', String(saved === 'dark')); });
+    } else {
+      // Sync aria-pressed with current attribute
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      [themeBtn, themeBtn2].forEach(b => { if (b) b.setAttribute('aria-pressed', String(cur === 'dark')); });
+    }
   } catch(e){}
 })();
 
@@ -42,6 +57,14 @@ window.SHOJI_GLOBAL_ENABLED = true;
       const val = key.split('.').reduce((o,k)=> (o||{})[k], dict);
       if (typeof val === 'string') {
         el.textContent = val;
+      }
+    });
+    // Supporte les contenus HTML contrôlés (ex: titres avec <br>)
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+      const key = el.getAttribute('data-i18n-html');
+      const val = key.split('.').reduce((o,k)=> (o||{})[k], dict);
+      if (typeof val === 'string') {
+        el.innerHTML = val;
       }
     });
   }
@@ -146,6 +169,44 @@ document.getElementById('y').textContent = new Date().getFullYear();
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('load', update, { passive: true });
   update();
+})();
+
+// === Menu mobile (hamburger) ===
+(function(){
+  const nav = document.querySelector('.nav.jpn');
+  const btn = document.getElementById('menu');
+  const links = document.getElementById('nav-links');
+  if (!nav || !btn || !links) return;
+  function close(){
+    nav.classList.remove('menu-open');
+    btn.setAttribute('aria-expanded', 'false');
+    links.setAttribute('aria-hidden', 'true');
+  }
+  function toggle(){
+    const open = nav.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', String(open));
+    links.setAttribute('aria-hidden', String(!open));
+  }
+  btn.addEventListener('click', toggle);
+  // Ferme au clic sur un lien
+  links.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (a) close();
+  });
+  // Ferme au clic extérieur
+  document.addEventListener('click', (e) => {
+    if (!nav.classList.contains('menu-open')) return;
+    if (e.target === btn || btn.contains(e.target)) return;
+    if (links.contains(e.target)) return;
+    close();
+  });
+  // Ferme à ESC
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close();
+  });
+  // Init ARIA
+  btn.setAttribute('aria-expanded', 'false');
+  links.setAttribute('aria-hidden', 'true');
 })();
 
 // === Inject backgrounds + Parallax au scroll ===

@@ -8,20 +8,30 @@
   <link rel="alternate" href="/programme.html" hreflang="fr" />
   <link rel="alternate" href="/en/programme.html" hreflang="en" />
   <link rel="alternate" href="/programme.html" hreflang="x-default" />
+  <!-- Fonts preloads removed (no local fonts in use) -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <nav class="nav jpn" aria-label="Navigation principale">
     <div class="inner container">
-      <div class="brand"><a href="index.html" class="brand-link"><span class="sign" aria-label="Japan Ski Trip">J A P A N&nbsp;S K I&nbsp;T R I P</span><span class="hinomaru" aria-hidden="true"></span></a></div>
-      <div class="links" role="menubar">
-        <a href="index.html#presentation" role="menuitem" data-i18n="nav.presentation">Présentation</a>
-        <a href="index.html#sommaire" role="menuitem" data-i18n="nav.summary">Sommaire</a>
-        <a href="index.html#devis" role="menuitem" data-i18n="nav.quote">Devis</a>
-        <a href="#jour1" role="menuitem" data-i18n="nav.guide">Programme</a>
-        <a href="index.html#contact" role="menuitem" data-i18n="nav.contact">Contact</a>
+      <div class="brand">
+        <a href="index.html" class="brand-link">
+          <span class="brand-row">
+            <span class="sign" aria-label="Japan Ski Trip">J A P A N&nbsp;S K I&nbsp;T R I P</span>
+            <span class="hinomaru" aria-hidden="true"></span>
+          </span>
+          <span class="brand-sub" aria-hidden="false">by Jérome NOVIANT</span>
+        </a>
+      </div>
+      <div class="links" id="nav-links">
+        <a href="index.html#presentation" data-i18n="nav.presentation">Présentation</a>
+        <a href="index.html#sommaire" data-i18n="nav.summary">Sommaire</a>
+        <a href="index.html#devis" data-i18n="nav.quote">Devis</a>
+        <a href="#jour1" data-i18n="nav.guide">Programme</a>
+        <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
       </div>
       <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn outline menu-btn" id="menu" aria-controls="nav-links" aria-expanded="false" title="Ouvrir le menu">☰</button>
         <button class="btn outline" id="theme" title="Basculer clair/sombre" aria-pressed="true">🌗</button>
         <button class="btn outline" id="lang" title="Changer de langue">FR</button>
         <a class="btn outline" href="index.html#devis" data-i18n="cta.requestQuote">Demander un devis</a>

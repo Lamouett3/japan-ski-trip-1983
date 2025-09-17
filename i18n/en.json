@@ -11,7 +11,7 @@
   },
   "hero": {
     "kicker": "Ski & Culture — 8 days / 7 nights",
-    "title": "Tokyo ✕ Hakuba — legendary powder & onsen",
+    "title": "Tokyo ✕ Hakuba<br>legendary powder & onsen",
     "viewProgram": "View itinerary"
   },
   "presentation": {"title": "Overview — Ski in Japan & culture in Tokyo"},
@@ -31,4 +31,3 @@
   "quote": {"title": "Quote & Personalization — Tailor‑made trip"},
   "contact": {"title": "Contact — Book / Request a quote"}
 }
-
