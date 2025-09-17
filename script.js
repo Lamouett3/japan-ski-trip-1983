@@ -1,5 +1,5 @@
-// Désactive le shoji global de démarrage (on utilise un shoji local sur le HERO uniquement)
-window.SHOJI_GLOBAL_ENABLED = false;
+// Active le shoji global de démarrage (porte au chargement)
+window.SHOJI_GLOBAL_ENABLED = true;
 
 // === Thème clair/sombre ===
 (function() {
@@ -161,7 +161,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (!slide.hasAttribute('data-ink')) {
       slide.setAttribute('data-ink', 'light');
     }
-    if (!slide.querySelector('.shoji-local') && !slide.hasAttribute('data-shoji-off')) {
+    // Pas de shoji local sur le HERO vidéo
+    if (hasHeroVideo) {
+      const existing = slide.querySelector('.shoji-local');
+      if (existing) existing.remove();
+    } else if (!slide.querySelector('.shoji-local') && !slide.hasAttribute('data-shoji-off')) {
       const shoji = document.createElement('div');
       shoji.className = 'shoji-local';
       shoji.innerHTML = '<div class="panel left"></div><div class="panel right"></div>';
@@ -286,57 +290,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   });
 })();
 
-  // — Auto‑ouverture shoji local sur la slide HERO au chargement —
-  (function(){
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-    const heroSlide = document.getElementById('top');
-    if (!heroSlide) return;
-    const shoji = heroSlide.querySelector('.shoji-local');
-    if (!shoji) return;
-    const left = shoji.querySelector('.panel.left');
-    const right = shoji.querySelector('.panel.right');
-    if (!left || !right) return;
-
-    // Empêche l'ouverture au survol pendant l'animation initiale
-    document.body.classList.add('hero-shoji-opening');
-
-    // Ferme visuellement (au cas où) et définit une ouverture lente
-    shoji.classList.remove('open');
-    const D = 2500; // durée d'ouverture (ms)
-    const easing = 'cubic-bezier(.22,.61,.36,1)';
-    const prevL = left.style.transition;
-    const prevR = right.style.transition;
-    left.style.transition = `transform ${D}ms ${easing}`;
-    right.style.transition = `transform ${D}ms ${easing}`;
-
-    // Lance l'ouverture au prochain frame pour garantir l'état initial appliqué
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        shoji.classList.add('open');
-      });
-    });
-
-    // Après l'ouverture, réactive le comportement normal, mais garde ouvert jusqu'à 1ère interaction
-    const cleanup = () => {
-      document.body.classList.remove('hero-shoji-opening');
-      // Restaure transitions par défaut
-      left.style.transition = prevL;
-      right.style.transition = prevR;
-      // À la première interaction, revenir au comportement normal (en retirant .open)
-      const unlock = () => {
-        shoji.classList.remove('open');
-        window.removeEventListener('wheel', unlock, { passive: true });
-        window.removeEventListener('touchstart', unlock, { passive: true });
-        window.removeEventListener('mousemove', unlock, { passive: true });
-      };
-      window.addEventListener('wheel', unlock, { passive: true, once: true });
-      window.addEventListener('touchstart', unlock, { passive: true, once: true });
-      window.addEventListener('mousemove', unlock, { passive: true, once: true });
-    };
-
-    setTimeout(cleanup, D + 80);
-  })();
+  // plus d'auto‑ouverture shoji sur la slide HERO
 })();
 
 // === Auto-snap doux à la fin du scroll ===
@@ -473,6 +427,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const prevTl = left.style.transition;
     const prevTr = right.style.transition;
     if (dur){
+      // Aligne l'easing/tempo sur les shoji locaux
       const easing = 'cubic-bezier(.22,.61,.36,1)';
       left.style.transition = `transform ${dur}ms ${easing}`;
       right.style.transition = `transform ${dur}ms ${easing}`;
@@ -485,10 +440,15 @@ document.getElementById('y').textContent = new Date().getFullYear();
     shoji.classList.add('visible');
     left.classList.remove('open');
     right.classList.remove('open');
+    // Force reflow
     void shoji.offsetWidth;
-    left.classList.add('open');
-    right.classList.add('open');
-    const endAfter = dur ? dur + 80 : 460;
+    // Déclenchement: même tempo que les autres (pas de délai si dur < 1500ms)
+    const useDelay = !!dur && dur >= 1500;
+    const START_DELAY = useDelay ? 180 : 0;
+    const STAGGER = useDelay ? 140 : 0;
+    setTimeout(() => { left.classList.add('open'); }, START_DELAY);
+    setTimeout(() => { right.classList.add('open'); }, START_DELAY + STAGGER);
+    const endAfter = dur ? dur + START_DELAY + STAGGER + 80 : 520;
     setTimeout(() => {
       shoji.classList.remove('visible');
       // Restaure les transitions par défaut si on les a surchargées
@@ -506,12 +466,12 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
 
   window.playShojiTransition = playShoji;
-  // Ouverture initiale à l'arrivée sur le site (suspens 2.5s)
+  // Ouverture initiale à l'arrivée sur le site (même tempo que les autres)
   let initialPlayed = false;
   function triggerInitialShoji(){
     if (initialPlayed) return; initialPlayed = true;
     // petit rafraîchissement pour s'assurer que le DOM et les styles sont appliqués
-    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(2500); } catch(e){} }, 40); });
+    requestAnimationFrame(() => { setTimeout(() => { try { playShoji(520); } catch(e){} }, 40); });
   }
   if (document.readyState === 'complete') {
     triggerInitialShoji();
