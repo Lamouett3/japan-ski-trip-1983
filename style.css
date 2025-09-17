@@ -229,10 +229,11 @@ img {
 }
 
 @media (max-width: 600px) {
-.nav.jpn .inner {
-  padding-top: 8px;
-  position: relative; /* ancre le menu déroulant mobile */
-}
+  .nav.jpn .inner {
+    padding-top: 8px;
+    position: relative;
+    /* ancre le menu déroulant mobile */
+  }
 
   .nav.jpn .noren {
     height: 5px;
@@ -253,6 +254,7 @@ img {
   .nav .inner {
     padding-left: 6px;
   }
+
   .nav .brand {
     margin-left: -4px;
   }
@@ -262,6 +264,7 @@ img {
   .nav .inner {
     padding-left: 4px;
   }
+
   .nav .brand {
     margin-left: -6px;
   }
@@ -305,13 +308,13 @@ img {
 }
 
 .brand .brand-sub {
-  font-size: clamp(9px, 1.4vw, 12px);
+  font-size: 0.5em;
   font-style: normal;
-  letter-spacing: .02em;
+  /* letter-spacing: .02em; */
   color: var(--accent);
   align-self: flex-end;
-  margin-right: 12px;
-  margin-top: -3px;
+  margin-right: 35px;
+  margin-top: -7px;
   line-height: 1.05;
   font-family: inherit;
   white-space: nowrap;
@@ -329,10 +332,12 @@ img {
   white-space: nowrap;
   gap: 6px;
 }
+
 .nav .links a {
   font-size: clamp(12px, 1.4vw, 14px);
   padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
 }
+
 .nav .btn {
   font-size: clamp(12px, 1.4vw, 14px);
   padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
@@ -347,9 +352,12 @@ img {
   .nav .inner {
     gap: 10px;
   }
+
   .links {
-    display: none; /* caché par défaut sur mobile */
+    display: none;
+    /* caché par défaut sur mobile */
   }
+
   .menu-btn {
     display: inline-flex;
     align-items: center;
@@ -357,6 +365,7 @@ img {
     width: 40px;
     height: 40px;
   }
+
   /* Dropdown container */
   .nav.jpn .links {
     position: absolute;
@@ -372,20 +381,25 @@ img {
     gap: 6px;
     z-index: 1001;
   }
+
   [data-theme="light"] .nav.jpn .links {
     background: rgba(255, 255, 255, .92);
     border-color: rgba(0, 0, 0, .08);
   }
+
   .nav.jpn.menu-open .links {
-    display: flex; /* affiché quand menu ouvert */
+    display: flex;
+    /* affiché quand menu ouvert */
     flex-wrap: wrap;
   }
+
   .nav.jpn .links a {
     flex: 1 1 auto;
     padding: 10px 12px;
     border-radius: 10px;
     background: transparent;
   }
+
   /* Réduit le sous-titre pour éviter les retours */
   .brand .brand-sub {
     font-size: 10px;
@@ -394,7 +408,9 @@ img {
 }
 
 @media (max-width: 520px) {
-  .brand .brand-sub { display: none; }
+  .brand .brand-sub {
+    display: none;
+  }
 }
 
 .links a {
@@ -642,6 +658,12 @@ img {
 .rec-card:hover, .rec-card:focus-within {
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 24px 64px rgba(0, 0, 0, .36);
+}
+
+/* Améliore la visibilité clavier sur les cartes */
+.rec-card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus), 0 24px 64px rgba(0, 0, 0, .36);
 }
 
 .rec-media {

@@ -502,6 +502,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const isInitial = !!dur && dur > 1500;
     if (isInitial) {
       document.body.classList.add('shoji-opening');
+      // Filet de sécurité: au pire, retire le verrou après la durée prévue + marge
+      setTimeout(() => { document.body.classList.remove('shoji-opening'); }, (dur || 0) + 1200);
     }
     shoji.classList.add('visible');
     left.classList.remove('open');
@@ -516,20 +518,24 @@ document.getElementById('y').textContent = new Date().getFullYear();
     setTimeout(() => { left.classList.add('open'); }, START_DELAY);
     setTimeout(() => { right.classList.add('open'); }, START_DELAY + STAGGER);
     const endAfter = dur ? dur + 80 : 520;
-    setTimeout(() => {
+    let ended = false;
+    function endOnce(){
+      if (ended) return; ended = true;
       shoji.classList.remove('visible');
-      // Restaure les transitions par défaut si on les a surchargées
       if (dur){ left.style.transition = prevTl; right.style.transition = prevTr; }
       if (isInitial) {
-        // Pendant un court instant, maintient le shoji local du HERO en position ouverte sans animation
         document.body.classList.add('shoji-initial-sync');
-        // Retire le verrou d'ouverture globale
         document.body.classList.remove('shoji-opening');
-        // Après une petite latence, rend la main aux transitions normales des shoji locaux
         setTimeout(() => { document.body.classList.remove('shoji-initial-sync'); }, 180);
       }
       busy = false;
-    }, endAfter);
+      left.removeEventListener('transitionend', endOnce);
+      right.removeEventListener('transitionend', endOnce);
+    }
+    // Fin pilotée par timer + transitionend (robustesse)
+    setTimeout(endOnce, endAfter);
+    left.addEventListener('transitionend', endOnce);
+    right.addEventListener('transitionend', endOnce);
   }
 
   window.playShojiTransition = playShoji;
@@ -558,6 +564,13 @@ document.getElementById('y').textContent = new Date().getFullYear();
     window.addEventListener('load', triggerInitialShoji, { once: true });
     document.addEventListener('DOMContentLoaded', triggerInitialShoji, { once: true });
   }
+
+  // Déverrouillage de secours si l'utilisateur interagit mais que le verrou persiste
+  ['wheel','touchstart','pointerdown','keydown','scroll'].forEach(evt => {
+    window.addEventListener(evt, () => {
+      document.body.classList.remove('shoji-opening');
+    }, { passive: true });
+  });
 })();
 
 // === Sommaire: init carousel inside #sommaire ===
