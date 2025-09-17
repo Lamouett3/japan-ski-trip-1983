@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "presentation": "Présentation",
+    "summary": "Sommaire",
+    "quote": "Devis",
+    "guide": "Guide",
+    "contact": "Contact"
+  },
+  "cta": {
+    "requestQuote": "Demander un devis"
+  },
+  "hero": {
+    "kicker": "Ski & Culture — 8 jours / 7 nuits",
+    "title": "Tokyo ✕ Hakuba — poudreuse légendaire & onsen",
+    "viewProgram": "Voir le programme"
+  },
+  "presentation": {"title": "Présentation — Ski au Japon & culture à Tokyo"},
+  "summary": {
+    "title": "Sommaire du séjour (J1 → J7)",
+    "cardTokyo": "Tokyo — J1 à J3",
+    "cardHakuba": "Hakuba — J4 à J7",
+    "j1": "J1 · Arrivée Haneda, Akihabara, Ueno, Shabu‑Shabu",
+    "j2": "J2 · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya",
+    "j3": "J3 · Palais impérial, Kanda (shops ski), Skytree",
+    "j4": "J4 · Shinkansen Tokyo→Nagano, taxi → Hakuba, onsen",
+    "j5": "J5 · Happo‑One (poudreuse), déjeuner Pilar, onsen",
+    "j6": "J6 · Tsugaike (backcountry guidé), BBQ, onsen",
+    "j7": "J7 · Derniers runs, retour Tokyo, vol de nuit"
+  },
+  "guide": {"title": "Votre guide — Jérôme Noviant"},
+  "quote": {"title": "Devis & Personnalisation — Voyage sur mesure"},
+  "contact": {"title": "Contact — Réserver / Demander un devis"}
+}
+

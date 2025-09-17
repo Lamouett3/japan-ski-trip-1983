@@ -31,15 +31,16 @@
     <div class="inner container">
       <div class="brand"><span class="sign" aria-label="Tokyo Hakuba">Tokyo × Hakuba</span></div>
 <div class="links" role="menubar">
-  <a href="#presentation" role="menuitem">Présentation</a>
-  <a href="#sommaire" role="menuitem">Sommaire</a>
-  <a href="#devis" role="menuitem">Devis</a>
-  <a href="#guide" role="menuitem">Guide</a>
-  <a href="#contact" role="menuitem">Contact</a>
+  <a href="#presentation" role="menuitem" data-i18n="nav.presentation">Présentation</a>
+  <a href="#sommaire" role="menuitem" data-i18n="nav.summary">Sommaire</a>
+  <a href="#devis" role="menuitem" data-i18n="nav.quote">Devis</a>
+  <a href="#guide" role="menuitem" data-i18n="nav.guide">Guide</a>
+  <a href="#contact" role="menuitem" data-i18n="nav.contact">Contact</a>
 </div>
       <div style="display:flex;gap:8px;align-items:center">
         <button class="btn outline" id="theme" title="Basculer clair/sombre" aria-pressed="true">🌗</button>
-        <a class="btn outline" href="#devis">Demander un devis</a>
+        <button class="btn outline" id="lang" title="Changer de langue">FR</button>
+        <a class="btn outline" href="#devis" data-i18n="cta.requestQuote">Demander un devis</a>
       </div>
     </div>
   </nav>
@@ -65,15 +66,15 @@
       </div>
 
       <div class="container slide-inner">
-        <span class="kicker">Ski & Culture — 8 jours / 7 nuits</span>
-        <h1>Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
+        <span class="kicker" data-i18n="hero.kicker">Ski & Culture — 8 jours / 7 nuits</span>
+        <h1 data-i18n="hero.title">Tokyo ✕ Hakuba — poudreuse légendaire & onsen</h1>
         <p class="lead">
           Tokyo (traditions, gastronomie, quartiers iconiques) + Hakuba (poudreuse & stations JO 1998).
           Encadrement par <strong>Jérôme Noviant</strong> (ex‑Rossignol).
         </p>
         <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:10px">
-          <a class="btn cta" href="#devis">Devis sur mesure</a>
-          <a class="btn" href="#sommaire">Voir le programme</a>
+          <a class="btn cta" href="#devis" data-i18n="cta.requestQuote">Devis sur mesure</a>
+          <a class="btn" href="#sommaire" data-i18n="hero.viewProgram">Voir le programme</a>
         </div>
       </div>
     </header>
@@ -82,7 +83,7 @@
     <section class="slide" id="guide" data-bg="images/jerome-noviant-se-lance-un-nouveau-defi-personnel-archives-photo-agence-zoom (1).jpg" data-pos="center 40%" data-overlay="0.55">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
-        <h2>Votre guide — Jérôme Noviant</h2>
+        <h2 data-i18n="guide.title">Votre guide — Jérôme Noviant</h2>
         <div class="tags">
           <span class="tag">Ex‑Équipe de France</span>
           <span class="tag">4× Champion de France</span>
@@ -102,7 +103,7 @@
     <section class="slide" id="presentation" data-bg="images/pexels-ben-cheung-140183-439741.jpg" data-pos="center 35%" data-overlay="0.45">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
-        <h2>Présentation — Ski au Japon & culture à Tokyo</h2>
+        <h2 data-i18n="presentation.title">Présentation — Ski au Japon & culture à Tokyo</h2>
         <p><strong>Tokyo</strong>, capitale aux contrastes (temples, gratte‑ciel, scène culinaire la plus étoilée au monde) et <strong>Hakuba</strong> (Nagano), au cœur des Alpes japonaises : <strong>10 stations</strong>, <strong>200+ pistes</strong>, <strong>139 remontées</strong> et une poudreuse <strong>&lt; 4% d’humidité</strong>. Onsen traditionnels, gastronomie locale et transferts rapides en <strong>Shinkansen</strong>.</p>
 
         <div class="card" style="margin-top:10px;text-align:left">
@@ -120,7 +121,7 @@
     <section class="slide" id="sommaire" data-bg="images/pexels-dsd-143941-1822605.jpg" data-pos="center 40%" data-overlay="0.5">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
-        <h2>Sommaire du séjour (J1 → J7)</h2>
+        <h2 data-i18n="summary.title">Sommaire du séjour (J1 → J7)</h2>
         <div class="tags" aria-hidden="true" style="margin-top:4px">
           <span class="tag">Tokyo</span>
           <span class="tag">Hakuba</span>
@@ -130,20 +131,20 @@
         </div>
         <div class="grid-2" style="margin-top:10px">
           <div class="card">
-            <h3>Tokyo — J1 à J3</h3>
+            <h3 data-i18n="summary.cardTokyo">Tokyo — J1 à J3</h3>
             <ul class="list">
-              <li><strong>J1</strong> · Arrivée Haneda, Akihabara, Ueno, Shabu‑Shabu</li>
-              <li><strong>J2</strong> · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya</li>
-              <li><strong>J3</strong> · Palais impérial, Kanda (shops ski), Skytree</li>
+              <li data-i18n="summary.j1"><strong>J1</strong> · Arrivée Haneda, Akihabara, Ueno, Shabu‑Shabu</li>
+              <li data-i18n="summary.j2"><strong>J2</strong> · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya</li>
+              <li data-i18n="summary.j3"><strong>J3</strong> · Palais impérial, Kanda (shops ski), Skytree</li>
             </ul>
           </div>
           <div class="card">
-            <h3>Hakuba — J4 à J7</h3>
+            <h3 data-i18n="summary.cardHakuba">Hakuba — J4 à J7</h3>
             <ul class="list">
-              <li><strong>J4</strong> · Shinkansen Tokyo→Nagano, taxi → Hakuba, onsen</li>
-              <li><strong>J5</strong> · Happo‑One (poudreuse), déjeuner Pilar, onsen</li>
-              <li><strong>J6</strong> · Tsugaike (backcountry guidé), BBQ, onsen</li>
-              <li><strong>J7</strong> · Derniers runs, retour Tokyo, vol de nuit</li>
+              <li data-i18n="summary.j4"><strong>J4</strong> · Shinkansen Tokyo→Nagano, taxi → Hakuba, onsen</li>
+              <li data-i18n="summary.j5"><strong>J5</strong> · Happo‑One (poudreuse), déjeuner Pilar, onsen</li>
+              <li data-i18n="summary.j6"><strong>J6</strong> · Tsugaike (backcountry guidé), BBQ, onsen</li>
+              <li data-i18n="summary.j7"><strong>J7</strong> · Derniers runs, retour Tokyo, vol de nuit</li>
             </ul>
           </div>
         </div>
@@ -252,7 +253,7 @@
     <section class="slide" id="devis" data-bg="images/AdobeStock_488038876.jpeg" data-pos="center 45%" data-overlay="0.6">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
-        <h2>Devis & Personnalisation — Voyage sur mesure</h2>
+        <h2 data-i18n="quote.title">Devis & Personnalisation — Voyage sur mesure</h2>
         <p><strong>Tarif indicatif</strong> · 5 490 € / personne · 10 490 € couple · <em>hors billet d’avion & alcool</em></p>
         <div class="grid-2">
           <div>
@@ -276,7 +277,7 @@
           </div>
         </div>
         <div style="margin-top:10px">
-          <a class="btn cta" href="#contact">Demander un devis</a>
+          <a class="btn cta" href="#contact" data-i18n="cta.requestQuote">Demander un devis</a>
         </div>
       </div>
     </section>
@@ -287,7 +288,7 @@
     <section class="slide" id="contact" data-bg="images/AdobeStock_419823310.jpeg" data-pos="center 35%" data-overlay="0.55">
       <div class="slide-bg"></div><div class="slide-overlay"></div>
       <div class="slide-inner">
-        <h2>Contact — Réserver / Demander un devis</h2>
+        <h2 data-i18n="contact.title">Contact — Réserver / Demander un devis</h2>
         <p><a class="btn cta" href="mailto:noviant.jerome@gmail.com?subject=Devis%20Tokyo%20%C3%97%20Hakuba%20(poudreuse%20%26%20culture)">noviant.jerome@gmail.com</a></p>
         <p class="muted">Merci d’indiquer : dates souhaitées, niveau, nombre de personnes, attentes (culture, onsen, backcountry…), aéroport d’arrivée (Haneda conseillé).</p>
       </div>

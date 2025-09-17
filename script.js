@@ -4,6 +4,7 @@ window.SHOJI_GLOBAL_ENABLED = false;
 // === Thème clair/sombre ===
 (function() {
   const themeBtn = document.getElementById('theme');
+  const langBtn = document.getElementById('lang');
   const themeBtn2 = document.getElementById('theme2');
   function toggleTheme(){
     const root = document.documentElement;
@@ -18,8 +19,122 @@ window.SHOJI_GLOBAL_ENABLED = false;
   } catch(e){}
 })();
 
+// === i18n (simple) ===
+(function(){
+  const root = document.documentElement;
+  const storeKey = 'lang';
+  const defaultLang = 'fr';
+  function setBtnLabel(lang){
+    const btn = document.getElementById('lang');
+    if (!btn) return;
+    btn.textContent = (lang === 'fr') ? 'FR' : 'EN';
+    btn.setAttribute('aria-label', (lang === 'fr') ? 'Langue: Français' : 'Language: English');
+  }
+  async function loadDict(lang){
+    const url = `i18n/${lang}.json`;
+    const res = await fetch(url, { cache: 'no-cache' });
+    if (!res.ok) throw new Error('i18n load failed');
+    return res.json();
+  }
+  function applyDict(dict){
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      const val = key.split('.').reduce((o,k)=> (o||{})[k], dict);
+      if (typeof val === 'string') {
+        el.textContent = val;
+      }
+    });
+  }
+  async function setLang(lang){
+    try { localStorage.setItem(storeKey, lang); } catch(e){}
+    root.lang = lang;
+    setBtnLabel(lang);
+    try {
+      const dict = await loadDict(lang);
+      applyDict(dict);
+    } catch(e) { /* ignore */ }
+  }
+  window.I18N_setLang = setLang;
+  const saved = (()=>{ try { return localStorage.getItem(storeKey); } catch(e){ return null; } })();
+  const initial = saved || defaultLang;
+  setBtnLabel(initial);
+  setLang(initial);
+  const langBtnEl = document.getElementById('lang');
+  if (langBtnEl){
+    langBtnEl.addEventListener('click', async ()=>{
+      const cur = (root.lang || initial) === 'fr' ? 'en' : 'fr';
+      setLang(cur);
+    });
+  }
+})();
+
 // === Année footer ===
 document.getElementById('y').textContent = new Date().getFullYear();
+
+// === Lang suggestion (FR/EN) with geo/IP fallback and Accept-Language ===
+// Update: integrate with i18n switch if available
+(function(){
+  const root = document.documentElement;
+  const saved = (()=>{ try { return localStorage.getItem('lang'); } catch(e){ return null; } })();
+  if (saved) { root.lang = saved; return; }
+
+  function guessFromNavigator(){
+    const langs = navigator.languages || [navigator.language || navigator.userLanguage || ''];
+    const joined = langs.join(',').toLowerCase();
+    return joined.includes('fr') ? 'fr' : 'en';
+  }
+
+  function buildBanner(target){
+    // Avoid duplicate
+    if (document.querySelector('.lang-banner')) return;
+    const b = document.createElement('div');
+    b.className = 'lang-banner';
+    // bilingual copy to avoid dependency on current lang
+    b.innerHTML = `
+      <span>${target === 'en' ? 'Switch to English?' : 'Basculer en français ?'}</span>
+      <button class="btn outline" data-lang="en">English</button>
+      <button class="btn outline" data-lang="fr">Français</button>
+      <button class="btn" data-dismiss title="Fermer">✕</button>
+    `;
+    document.body.appendChild(b);
+    b.querySelectorAll('button[data-lang]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const lang = e.currentTarget.getAttribute('data-lang');
+        try { localStorage.setItem('lang', lang); } catch(_){}
+        if (window.I18N_setLang) { window.I18N_setLang(lang); }
+        else { root.lang = lang; }
+        b.remove();
+      });
+    });
+    b.querySelector('[data-dismiss]').addEventListener('click', ()=> b.remove());
+  }
+
+  function geoSuggest(){
+    // Try IP-based country to refine decision
+    const controller = new AbortController();
+    const to = setTimeout(()=> controller.abort(), 1500);
+    fetch('https://ipapi.co/json/', { signal: controller.signal })
+      .then(r => r.ok ? r.json() : Promise.reject())
+      .then(data => {
+        clearTimeout(to);
+        const cc = (data && data.country) || '';
+        const frCountries = new Set(['FR','BE','CH','CA','LU','MC','GP','MQ','RE','PF','NC','YT','BL','MF','PM','WF','TF']);
+        const target = frCountries.has(cc) ? 'fr' : 'en';
+        if (target !== (root.lang || 'fr')) buildBanner(target);
+      })
+      .catch(() => {
+        // fallback to navigator
+        const target = guessFromNavigator();
+        if (target !== (root.lang || 'fr')) buildBanner(target);
+      });
+  }
+
+  // Start with navigator; if different from current, show quickly; also try geo for refinement
+  const navGuess = guessFromNavigator();
+  if (navGuess !== (root.lang || 'fr')) buildBanner(navGuess);
+  // Kick geo (non-blocking)
+  try { geoSuggest(); } catch(e){}
+})();
 
 // === Nav glass: accentue le verre au scroll ===
 (function(){

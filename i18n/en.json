@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "presentation": "Overview",
+    "summary": "Itinerary",
+    "quote": "Quote",
+    "guide": "Guide",
+    "contact": "Contact"
+  },
+  "cta": {
+    "requestQuote": "Request a quote"
+  },
+  "hero": {
+    "kicker": "Ski & Culture — 8 days / 7 nights",
+    "title": "Tokyo ✕ Hakuba — legendary powder & onsen",
+    "viewProgram": "View itinerary"
+  },
+  "presentation": {"title": "Overview — Ski in Japan & culture in Tokyo"},
+  "summary": {
+    "title": "Trip summary (D1 → D7)",
+    "cardTokyo": "Tokyo — D1 to D3",
+    "cardHakuba": "Hakuba — D4 to D7",
+    "j1": "D1 · Arrival Haneda, Akihabara, Ueno, Shabu‑Shabu",
+    "j2": "D2 · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya",
+    "j3": "D3 · Imperial Palace, Kanda (ski shops), Skytree",
+    "j4": "D4 · Shinkansen Tokyo→Nagano, taxi → Hakuba, onsen",
+    "j5": "D5 · Happo‑One (powder), lunch at Pilar, onsen",
+    "j6": "D6 · Tsugaike (guided backcountry), BBQ, onsen",
+    "j7": "D7 · Last runs, return to Tokyo, night flight"
+  },
+  "guide": {"title": "Your guide — Jérôme Noviant"},
+  "quote": {"title": "Quote & Personalization — Tailor‑made trip"},
+  "contact": {"title": "Contact — Book / Request a quote"}
+}
+
