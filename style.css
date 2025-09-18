@@ -1073,6 +1073,18 @@ img {
   display: flex;
   transition: transform .5s ease;
   will-change: transform;
+  /* Meilleure prise en charge du swipe tactile et souris */
+  touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
+}
+
+.carousel-track.dragging {
+  cursor: grabbing;
+}
+
+#sommaire .carousel {
+  overscroll-behavior-x: contain;
 }
 
 .carousel-item {

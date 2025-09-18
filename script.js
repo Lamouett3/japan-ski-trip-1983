@@ -635,9 +635,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   // Swipe (infinite)
   let startX=0, curX=0, dragging=false, moved=false, pid=null;
-  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; setTransition(0); });
+  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; setTransition(0); track.classList.add('dragging'); });
   track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 6) { moved=true; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
-  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} const adx = Math.abs(dx); if (adx > w*0.15) { // momentum: plus on glisse loin, plus l'anim est rapide
+  function endDrag(){ if(!dragging) return; dragging=false; track.classList.remove('dragging'); const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} const adx = Math.abs(dx); if (adx > w*0.15) { // momentum: plus on glisse loin, plus l'anim est rapide
         const t = Math.max(0, Math.min(1, (adx - w*0.15) / (w*0.85))); // 0..1
         const dur = Math.round(DEFAULT_MS - (DEFAULT_MS - 180) * t); // 380ms -> 180ms
         setTransition(dur);
@@ -646,8 +646,10 @@ document.getElementById('y').textContent = new Date().getFullYear();
         // snap back vite mais doux
         setTransition(220);
         update();
-      } } else { setTransition(220); update(); } });
-  track.addEventListener('pointercancel', ()=>{ dragging=false; setTransition(DEFAULT_MS); update(); });
+      } } else { setTransition(220); update(); } }
+  track.addEventListener('pointerup', endDrag);
+  track.addEventListener('pointerleave', endDrag);
+  track.addEventListener('pointercancel', ()=>{ dragging=false; track.classList.remove('dragging'); setTransition(DEFAULT_MS); update(); });
 
   // Reboucle sans à-coup après animation
   track.addEventListener('transitionend', ()=>{
@@ -655,6 +657,24 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (index === 0) { goTo(n, true); }
     else if (index === n+1) { goTo(1, true); }
   });
+
+  // Trackpad (macOS) — empêche le geste "page précédente" en capturant le wheel horizontal
+  // et déclenche un slide next/prev avec un petit cooldown
+  let wheelBusy = false;
+  const WHEEL_COOLDOWN = 320;
+  carousel.addEventListener('wheel', (e) => {
+    const ax = Math.abs(e.deltaX), ay = Math.abs(e.deltaY);
+    if (ax > ay && ax > 2) {
+      // Geste horizontal → on gère nous-mêmes
+      e.preventDefault();
+      if (wheelBusy) return;
+      wheelBusy = true;
+      const dir = e.deltaX > 0 ? 1 : -1;
+      setTransition(260);
+      goTo(index + dir);
+      setTimeout(()=>{ wheelBusy = false; }, WHEEL_COOLDOWN);
+    }
+  }, { passive: false });
 
   window.addEventListener('resize', update, { passive:true });
   goTo(1, true);
