@@ -42,8 +42,20 @@ window.SHOJI_GLOBAL_ENABLED = true;
   function setBtnLabel(lang){
     const btn = document.getElementById('lang');
     if (!btn) return;
-    btn.textContent = (lang === 'fr') ? 'FR' : 'EN';
+    const svgFR = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>';
+    const svgGB = (function(){
+      // Simplified Union Jack
+      const bg = '<rect width="60" height="40" fill="#012169"/>';
+      const whiteDiag = '<path d="M0,0 L8,0 L60,32 L60,40 L52,40 L0,8 Z M60,0 L52,0 L0,32 L0,40 L8,40 L60,8 Z" fill="#FFF"/>';
+      const redDiag = '<path d="M0,0 L4.8,0 L60,28.8 L60,40 L55.2,40 L0,11.2 Z M60,0 L55.2,0 L0,28.8 L0,40 L4.8,40 L60,11.2 Z" fill="#C8102E"/>';
+      const whiteCross = '<rect x="0" y="16" width="60" height="8" fill="#FFF"/><rect x="26" y="0" width="8" height="40" fill="#FFF"/>';
+      const redCross = '<rect x="0" y="18" width="60" height="4" fill="#C8102E"/><rect x="28" y="0" width="4" height="40" fill="#C8102E"/>';
+      return `<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 60 40\" aria-hidden=\"true\">${bg}${whiteDiag}${redDiag}${whiteCross}${redCross}</svg>`;
+    })();
+    btn.innerHTML = (lang === 'fr') ? svgFR : svgGB;
+    btn.classList.add('lang-flag');
     btn.setAttribute('aria-label', (lang === 'fr') ? 'Langue: Français' : 'Language: English');
+    btn.setAttribute('title', (lang === 'fr') ? 'Français' : 'English');
   }
   async function loadDict(lang){
     const url = `i18n/${lang}.json`;

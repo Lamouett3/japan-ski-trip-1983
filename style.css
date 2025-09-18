@@ -557,6 +557,19 @@ img {
   font-weight: 600;
 }
 
+/* Flag button visuals (conserve proportions des autres boutons) */
+#lang.lang-flag {
+  padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
+}
+#lang.lang-flag svg {
+  display: block;
+  width: auto;
+  height: 1.2em; /* aligne visuellement avec l’icône thème */
+  vertical-align: middle;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset;
+}
+
 .btn:hover {
   filter: brightness(1.06)
 }
