@@ -334,6 +334,19 @@ document.getElementById('y').textContent = new Date().getFullYear();
       const offset = Math.max(-maxShift, Math.min(maxShift, raw));
       el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.16)`;
     });
+
+    // Parallax pour les images du carrousel Sommaire (effet similaire aux autres sections)
+    const sommaire = document.getElementById('sommaire');
+    if (sommaire) {
+      const r = sommaire.getBoundingClientRect();
+      const cDelta = (r.top + r.height/2) - vh/2;
+      const f = vw <= 360 ? 0.06 : (vw <= 480 ? 0.08 : 0.10);
+      const max = vh * 0.16;
+      const off = Math.max(-max, Math.min(max, cDelta * f));
+      sommaire.querySelectorAll('.rec-media').forEach((m) => {
+        m.style.transform = `translate3d(0, ${off}px, 0) scale(1.08)`;
+      });
+    }
   }
 
   let ticking = false;

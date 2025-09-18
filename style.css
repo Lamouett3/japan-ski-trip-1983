@@ -1297,6 +1297,7 @@ img {
   overflow: hidden;
   border: none;
   margin: 0;
+  will-change: transform;
 }
 
 #sommaire .rec-media img {
