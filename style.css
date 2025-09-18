@@ -294,7 +294,7 @@ img {
   display: inline-block;
   width: 11px;
   height: 11px;
-  margin-left: 12px;
+  margin-left: 5px;
   margin-top: -1px;
   border-radius: 999px;
   background: #e60026;
@@ -561,13 +561,15 @@ img {
 #lang.lang-flag {
   padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
 }
+
 #lang.lang-flag svg {
   display: block;
   width: auto;
-  height: 1.2em; /* aligne visuellement avec l’icône thème */
+  height: 1.2em;
+  /* aligne visuellement avec l’icône thème */
   vertical-align: middle;
   border-radius: 2px;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.15) inset;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .15) inset;
 }
 
 .btn:hover {
@@ -780,7 +782,7 @@ img {
 
 /* Présentation — fond lisible et cohérent (mobile/tablette) */
 .presentation-text {
-  background: var(--shoji-paper);
+  background: transparent;
   border: 1px solid var(--shoji-edge);
   border-radius: 16px;
   padding: 16px;
@@ -821,6 +823,53 @@ img {
   color: var(--muted);
   font-weight: 600;
 }
+
+/* KPIs pour la présentation */
+.kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 8px;
+}
+
+.kpi {
+  display: grid;
+  place-items: center;
+  min-width: 86px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.kpi .val {
+  font-weight: 800;
+  font-size: clamp(14px, 2.2vw, 18px);
+  color: var(--accent);
+  line-height: 1.05;
+}
+
+.kpi .lab {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.divider {
+  height: 1px;
+  background: var(--line);
+  margin: 12px 0 8px;
+  opacity: .8;
+}
+
+/* Présentation: titres lisibles sur fond Shoji */
+.presentation-text h2, .presentation-text h3 {
+  color: var(--heading-color);
+}
+
+.presentation-text p {
+  color: var(--text);
+}
+
 
 /* Compact cards for Sommaire */
 .card {
@@ -1203,7 +1252,6 @@ img {
   height: clamp(420px, 60vh, 560px);
   border-radius: 16px;
   border: 1px solid var(--shoji-edge);
-  background: var(--shoji-paper);
   box-shadow: 0 16px 38px var(--shoji-shadow, rgba(0, 0, 0, .30));
   backdrop-filter: blur(10px) saturate(140%);
   -webkit-backdrop-filter: blur(10px) saturate(140%);
@@ -1261,7 +1309,6 @@ img {
 
 [data-theme="light"] #sommaire .rec-card {
   border-color: var(--shoji-edge);
-  background: var(--shoji-paper);
   box-shadow: 0 16px 38px rgba(0, 0, 0, .14);
 }
 
