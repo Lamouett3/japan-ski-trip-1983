@@ -388,8 +388,7 @@ img {
     transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
   }
 
-  /* Cache la langue + devis du header pour gagner de la place */
-  .nav .inner > :last-child #lang,
+  /* Cache seulement le bouton "Demander un devis" dans le header (mobile) pour gagner de la place */
   .nav .inner > :last-child a[href*="#devis"] {
     display: none !important;
   }
@@ -401,6 +400,14 @@ img {
     width: 100%;
     padding-top: 4px;
   }
+
+  /* Ordonne les contrôles à droite: thème, langue, menu */
+  .nav .inner > :last-child {
+    display: flex;
+  }
+  .nav .inner > :last-child #theme { order: 1; }
+  .nav .inner > :last-child #lang { order: 2; }
+  .nav .inner > :last-child #menu { order: 3; }
 
   [data-theme="light"] .nav.jpn .links {
     background: rgba(255, 255, 255, .92);
@@ -450,7 +457,8 @@ img {
   .nav.jpn .links a,
   .nav.jpn .links .btn {
     flex: 1 1 auto;
-    padding: 10px 12px;
+    font-size: clamp(12px, 1.4vw, 14px);
+    padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
     border-radius: 12px;
     background: rgba(255, 255, 255, .06);
     border: 1px solid rgba(255, 255, 255, .16);
@@ -512,13 +520,14 @@ img {
   background: var(--panel);
   border: 1px solid var(--line);
   color: var(--text);
-  padding: 10px 12px;
+  /* tailles responsives et cohérentes */
+  font-size: clamp(12px, 1.4vw, 14px);
+  padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
   border-radius: 12px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 1rem;
   /* unifie taille police entre <a> et <button> */
   line-height: 1.1;
   /* évite variations de hauteur entre navigateurs */
