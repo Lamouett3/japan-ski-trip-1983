@@ -218,18 +218,18 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
     // Trajectoire "skieur" depuis bas-gauche vers la marque (courbe Catmull-Rom), 5s
-    const total = 5000; // ms
+    const total = 3200; // ms (accéléré)
     const startBL = { x: -size * 2, y: vh + size };
+    // Trois virages principaux: droite → gauche → droite
     const anchors = [
-      { x: startBL.x,  y: startBL.y },
-      { x: vw * 0.12,  y: vh * 0.92 },
-      { x: vw * 0.55,  y: vh * 0.72 },
-      { x: vw * 0.82,  y: vh * 0.44 },
-      { x: vw * 0.48,  y: vh * 0.58 },
-      { x: vw * 0.28,  y: vh * 0.40 },
-      { x: vw * 0.58,  y: vh * 0.28 },
-      { x: vw * 0.32,  y: vh * 0.20 },
-      { x: end.x,      y: end.y }
+      { x: startBL.x,  y: startBL.y },          // départ bas-gauche
+      { x: vw * 0.14,  y: vh * 0.92 },          // entrée piste
+      { x: vw * 0.64,  y: vh * 0.70 },          // 1) grande boucle à droite (remonte)
+      { x: vw * 0.48,  y: vh * 0.58 },          // petite redescente
+      { x: vw * 0.26,  y: vh * 0.38 },          // 2) virage à gauche (remonte)
+      { x: vw * 0.42,  y: vh * 0.34 },          // stabilisation légère
+      { x: vw * 0.70,  y: vh * 0.22 },          // 3) virage à droite (remonte)
+      { x: end.x,      y: end.y }               // arrivée précise
     ];
 
     function catmull(p0, p1, p2, p3, t){
@@ -254,16 +254,37 @@ document.getElementById('y').textContent = new Date().getFullYear();
       return arr;
     }
 
-    const frames = sample(anchors, 10);
+    // échantillonnage plus fin pour une courbe plus souple
+    const frames = sample(anchors, 14);
+    const loops = 3; // exactement 3 virages majeurs
     const kfs = frames.map((pt, i) => {
       const t = i / (frames.length - 1);
-      const carve = 1 + 0.02 * Math.cos(t * Math.PI * 4);
-      const sc = (i === frames.length - 1) ? 0.90 : carve;
-      return { transform: `translate(${Math.round(pt.x)}px, ${Math.round(pt.y)}px) scale(${sc.toFixed(3)})` };
+      const carve = 1 + 0.015 * Math.cos(t * Math.PI * 4); // carving plus discret
+      const sc = (i === frames.length - 1) ? 1.00 : carve; // pleine taille avant freinage
+      // Ralentit en début de boucle, accélère en fin (par keyframe easing)
+      const loopT = (t * loops) % 1; // 0..1 au sein du virage courant
+      const easing = loopT < 0.6 ? 'cubic-bezier(.42,0,1,1)' /* ease-in */ : 'linear';
+      return {
+        transform: `translate(${Math.round(pt.x)}px, ${Math.round(pt.y)}px) scale(${sc.toFixed(3)})`,
+        easing
+      };
     });
-    const travel = dot.animate(kfs, { duration: total, easing: 'linear', fill: 'forwards' });
-    ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 550, delay: Math.round(total * 0.90), fill: 'forwards', easing: 'linear' });
-    travel.onfinish = () => { ov.remove(); };
+    // Phase 1: trajet principal, Phase 2: freinage/réduction, Phase 3: fondu overlay
+    const travelMs = Math.max(800, Math.round(total * 0.8));
+    const brakeMs = Math.max(280, total - travelMs);
+    const travel = dot.animate(kfs, { duration: travelMs, easing: 'linear', fill: 'forwards' });
+    travel.onfinish = () => {
+      const endTx = `translate(${Math.round(end.x)}px, ${Math.round(end.y)}px)`;
+      const brake = dot.animate([
+        { transform: `${endTx} scale(1)` },
+        { transform: `${endTx} scale(1.08)`, offset: 0.4, easing: 'cubic-bezier(.16,1,.3,1)' },
+        { transform: `${endTx} scale(0.90)` }
+      ], { duration: brakeMs, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
+      brake.onfinish = () => {
+        const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: 'linear', fill: 'forwards' });
+        fade.onfinish = () => { ov.remove(); };
+      };
+    };
 
     // Skip on user interaction
     const skip = () => { ov.remove(); cleanup(); };
