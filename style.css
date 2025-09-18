@@ -1613,6 +1613,24 @@ footer {
   box-shadow: 0 -1px 0 rgba(255, 255, 255, .04) inset;
 }
 
+/* Aligne le footer avec la marque en plein écran */
+@media (min-width: 1200px) {
+  footer .container {
+    max-width: none;
+    width: 100%;
+    margin: 0;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
+
+@media (min-width: 1600px) {
+  footer .container {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
 [data-theme="light"] footer {
   background: rgba(255, 255, 255, .42);
   border-top-color: rgba(0, 0, 0, .06);
