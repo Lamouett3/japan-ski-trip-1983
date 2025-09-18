@@ -345,12 +345,13 @@ img {
 
 /* ——— Menu burger (mobile) ——— */
 .menu-btn {
-  display: none;
+  display: none !important;
 }
 
 @media (max-width: 720px) {
   .nav .inner {
     gap: 10px;
+    position: relative; /* ancre le menu déroulant */
   }
 
   .links {
@@ -359,7 +360,7 @@ img {
   }
 
   .menu-btn {
-    display: inline-flex;
+    display: inline-flex !important;
     align-items: center;
     justify-content: center;
     width: 40px;
@@ -367,24 +368,44 @@ img {
   }
 
   /* Dropdown container */
+  .nav.jpn { overflow: visible; }
   .nav.jpn .links {
     position: absolute;
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(12, 16, 23, .9);
+    background: rgba(12, 16, 23, .90);
     backdrop-filter: saturate(160%) blur(14px);
     -webkit-backdrop-filter: saturate(160%) blur(14px);
-    border: 1px solid rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .10);
     border-top: none;
     padding: 8px;
     gap: 6px;
     z-index: 1001;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .06);
+    transition: background .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+
+  /* Cache la langue + devis du header pour gagner de la place */
+  .nav .inner > :last-child #lang,
+  .nav .inner > :last-child a[href*="#devis"] {
+    display: none !important;
+  }
+
+  /* Actions mobiles dans le menu déroulant */
+  .nav.jpn .links .mobile-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    padding-top: 4px;
   }
 
   [data-theme="light"] .nav.jpn .links {
     background: rgba(255, 255, 255, .92);
     border-color: rgba(0, 0, 0, .08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .14), inset 0 1px 0 rgba(255, 255, 255, .50);
   }
 
   .nav.jpn.menu-open .links {
@@ -393,11 +414,68 @@ img {
     flex-wrap: wrap;
   }
 
-  .nav.jpn .links a {
+  /* Quand le menu est ouvert: fondre le dropdown dans le header */
+  .nav.jpn.menu-open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none !important; /* supprime la ligne de séparation */
+    box-shadow: none !important; /* supprime le liseré inset */
+  }
+  .nav.jpn.scrolled.menu-open {
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+  .nav.jpn.menu-open .links {
+    background: rgba(12, 16, 23, .24); /* même transparence que le header par défaut */
+    box-shadow: none; /* se fond sans ombre de séparation */
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-left-color: rgba(255, 255, 255, .10);
+    border-right-color: rgba(255, 255, 255, .10);
+    border-bottom-color: rgba(255, 255, 255, .10);
+  }
+  .nav.jpn.scrolled.menu-open .links {
+    background: rgba(12, 16, 23, .36); /* même fond que header scrolled */
+  }
+  [data-theme="light"] .nav.jpn.menu-open .links {
+    background: rgba(255, 255, 255, .42);
+    border-left-color: rgba(0, 0, 0, .08);
+    border-right-color: rgba(0, 0, 0, .08);
+    border-bottom-color: rgba(0, 0, 0, .08);
+  }
+  [data-theme="light"] .nav.jpn.scrolled.menu-open .links {
+    background: rgba(255, 255, 255, .62);
+  }
+
+  .nav.jpn .links a,
+  .nav.jpn .links .btn {
     flex: 1 1 auto;
     padding: 10px 12px;
-    border-radius: 10px;
-    background: transparent;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid rgba(255, 255, 255, .16);
+    color: var(--accent);
+    box-shadow: none;
+    transition: background .2s ease, border-color .2s ease, filter .2s ease;
+  }
+
+  .nav.jpn .links a:hover,
+  .nav.jpn .links .btn:hover {
+    background: rgba(255, 255, 255, .12);
+    border-color: rgba(255, 255, 255, .24);
+    filter: none;
+  }
+
+  [data-theme="light"] .nav.jpn .links a,
+  [data-theme="light"] .nav.jpn .links .btn {
+    background: rgba(0, 0, 0, .04);
+    border-color: rgba(0, 0, 0, .10);
+  }
+
+  [data-theme="light"] .nav.jpn .links a:hover,
+  [data-theme="light"] .nav.jpn .links .btn:hover {
+    background: rgba(0, 0, 0, .06);
+    border-color: rgba(0, 0, 0, .16);
   }
 
   /* Réduit le sous-titre pour éviter les retours */
@@ -1388,7 +1466,7 @@ body.shoji-opening .slide .shoji-local {
 }
 
 /* ============ Responsive ============ */
-@media (max-width:960px) {
+@media (max-width:720px) {
   .nav .links {
     display: none
   }
