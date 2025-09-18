@@ -1,5 +1,5 @@
-// Active le shoji global de démarrage (porte au chargement)
-window.SHOJI_GLOBAL_ENABLED = true;
+// Désactive l'effet Shoji global au démarrage (remplacé par l'intro Hinomaru)
+window.SHOJI_GLOBAL_ENABLED = false;
 
 // === Thème clair/sombre ===
 (function() {
@@ -187,6 +187,92 @@ document.getElementById('y').textContent = new Date().getFullYear();
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('load', update, { passive: true });
   update();
+})();
+
+// === Intro Hinomaru (point rouge) — remplace l'ouverture Shoji initiale ===
+(function(){
+  const isHomePage = /(?:^\/$|index\.html$)/.test(location.pathname);
+  if (!isHomePage) return;
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function play(){
+    const navDot = document.querySelector('.brand .hinomaru');
+    if (!navDot) return;
+    const ov = document.createElement('div');
+    ov.className = 'intro-hinomaru';
+    const dot = document.createElement('div');
+    dot.className = 'intro-dot';
+    ov.appendChild(dot);
+    document.body.appendChild(ov);
+
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const size = Math.max(28, Math.min(64, Math.round(Math.min(vw, vh)*0.06)));
+    dot.style.width = dot.style.height = size + 'px';
+
+    const start = { x: -size*2, y: Math.round(vh*0.5 - size/2) };
+    const mid   = { x: Math.round(vw*0.5 - size/2), y: start.y };
+    const navR  = navDot.getBoundingClientRect();
+    const end   = { x: Math.round(navR.left + navR.width/2 - size/2), y: Math.round(navR.top + navR.height/2 - size/2) };
+
+    // Skip heavy motion if user prefers reduced motion
+    if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
+
+    // Trajectoire "skieur" depuis bas-gauche vers la marque (courbe Catmull-Rom), 5s
+    const total = 5000; // ms
+    const startBL = { x: -size * 2, y: vh + size };
+    const anchors = [
+      { x: startBL.x,  y: startBL.y },
+      { x: vw * 0.12,  y: vh * 0.92 },
+      { x: vw * 0.55,  y: vh * 0.72 },
+      { x: vw * 0.82,  y: vh * 0.44 },
+      { x: vw * 0.48,  y: vh * 0.58 },
+      { x: vw * 0.28,  y: vh * 0.40 },
+      { x: vw * 0.58,  y: vh * 0.28 },
+      { x: vw * 0.32,  y: vh * 0.20 },
+      { x: end.x,      y: end.y }
+    ];
+
+    function catmull(p0, p1, p2, p3, t){
+      const t2 = t*t, t3 = t2*t;
+      return {
+        x: 0.5 * (2*p1.x + (-p0.x + p2.x)*t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x)*t2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x)*t3),
+        y: 0.5 * (2*p1.y + (-p0.y + p2.y)*t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y)*t2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y)*t3)
+      };
+    }
+    function sample(points, segSamples){
+      const arr = [];
+      for (let i = 0; i < points.length - 1; i++){
+        const p0 = points[Math.max(0, i - 1)];
+        const p1 = points[i];
+        const p2 = points[i + 1];
+        const p3 = points[Math.min(points.length - 1, i + 2)];
+        for (let s = 0; s < segSamples; s++){
+          arr.push(catmull(p0, p1, p2, p3, s / segSamples));
+        }
+      }
+      arr.push(points[points.length - 1]);
+      return arr;
+    }
+
+    const frames = sample(anchors, 10);
+    const kfs = frames.map((pt, i) => {
+      const t = i / (frames.length - 1);
+      const carve = 1 + 0.02 * Math.cos(t * Math.PI * 4);
+      const sc = (i === frames.length - 1) ? 0.90 : carve;
+      return { transform: `translate(${Math.round(pt.x)}px, ${Math.round(pt.y)}px) scale(${sc.toFixed(3)})` };
+    });
+    const travel = dot.animate(kfs, { duration: total, easing: 'linear', fill: 'forwards' });
+    ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 550, delay: Math.round(total * 0.90), fill: 'forwards', easing: 'linear' });
+    travel.onfinish = () => { ov.remove(); };
+
+    // Skip on user interaction
+    const skip = () => { ov.remove(); cleanup(); };
+    function cleanup(){ ['click','keydown','wheel','touchstart'].forEach(ev=> window.removeEventListener(ev, skip, { passive:true })); }
+    ['click','keydown','wheel','touchstart'].forEach(ev=> window.addEventListener(ev, skip, { passive:true }));
+  }
+
+  if (document.readyState === 'complete') play();
+  else window.addEventListener('load', play, { once: true });
 })();
 
 // === Menu mobile (hamburger) ===
