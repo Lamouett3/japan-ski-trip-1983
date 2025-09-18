@@ -1202,36 +1202,60 @@ img {
   filter: brightness(1.05);
 }
 
+/* ===== Carousel dots: plus visibles sur tous formats ===== */
 .carousel-dots {
   position: absolute;
-  bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
+  bottom: clamp(10px, 3vh, 28px);
   display: flex;
-  gap: 6px;
+  gap: 8px;
   z-index: 3;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .22);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
 }
 
 .carousel-dots button {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 999px;
-  border: 2px solid rgba(255, 255, 255, .85);
-  background: transparent;
+  border: 2px solid rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .14);
   padding: 0;
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,.35);
 }
 
 .carousel-dots button[aria-current="true"] {
   background: #fff;
+  border-color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,.45), 0 0 0 3px rgba(255,255,255,.22) inset;
+}
+
+[data-theme="light"] .carousel-dots {
+  background: rgba(255, 255, 255, .65);
+  border-color: rgba(0, 0, 0, .12);
 }
 
 [data-theme="light"] .carousel-dots button {
-  border-color: rgba(0, 0, 0, .55);
+  border-color: rgba(0, 0, 0, .6);
+  background: rgba(0, 0, 0, .08);
 }
 
 [data-theme="light"] .carousel-dots button[aria-current="true"] {
   background: #0e1116;
+  border-color: #0e1116;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25), 0 0 0 3px rgba(0,0,0,.08) inset;
+}
+
+/* Petits écrans: remonte légèrement les dots au-dessus de la zone gestuelle/bars */
+@media (max-width: 640px) {
+  .carousel-dots { bottom: calc(16px + env(safe-area-inset-bottom)); gap: 10px; padding: 6px 12px; }
+  .carousel-dots button { width: 11px; height: 11px; }
 }
 
 /* ===== Sommaire — arrière-plan style Shoji ===== */
@@ -1273,20 +1297,25 @@ img {
 
 /* (legacy Shoji card styling removed) */
 
+/* ===== Planning — overrides consolidés pour garantir l'image plein cadre ===== */
+/* (fusionné avec le bloc "mode slide" ci-dessous pour éviter les conflits) */
+
 /* ===== Planning — mode slide (texte superposé sur l'image) ===== */
 /* Garde le carrousel, remplace l'apparence des cartes par une slide visuelle */
 #sommaire .rec-card {
+  box-sizing: border-box;
   position: relative;
   padding: 0 !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  border-radius: 16px; /* angles arrondis sur toute la carte */
+  border-radius: 0; /* bord gauche à fleur d'écran, aucun arrondi visible */
   overflow: hidden;
   width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
-  height: clamp(360px, 58vh, 640px) !important;
+  /* Full-bleed en hauteur dans la slide */
+  height: 100% !important;
 }
 
 #sommaire .rec-card::after {
@@ -1299,15 +1328,19 @@ img {
 }
 
 #sommaire .rec-media {
+  box-sizing: border-box;
   position: absolute;
   inset: 0;
   width: 100% !important;
   height: 100% !important;
   border-radius: inherit;
   overflow: hidden;
+  border: none;
+  margin: 0;
 }
 
 #sommaire .rec-media img {
+  box-sizing: border-box;
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
@@ -1318,7 +1351,7 @@ img {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: clamp(20px, 6vh, 80px); /* remonte légèrement pour plus de lisibilité */
   padding: clamp(12px, 3vw, 22px);
   display: grid;
   gap: 8px;
@@ -1326,6 +1359,22 @@ img {
   justify-items: start;
   color: #ffffff;
   text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 6px 20px rgba(0,0,0,.35);
+}
+
+/* Tablet/Desktop: panneau lisible en bas-gauche (verre + bordure) */
+@media (min-width: 640px) {
+  #sommaire .rec-body {
+    left: clamp(12px, 4vw, 48px);
+    right: auto;
+    max-width: min(760px, 92vw);
+    /* Fond retiré sur demande: conserve seulement le positionnement */
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
 }
 
 #sommaire .rec-title { color: #ffffff !important; text-align: left !important; }
@@ -1338,9 +1387,117 @@ img {
 }
 
 @media (max-width: 640px) {
-  #sommaire .rec-card { height: clamp(320px, 56vh, 520px) !important; }
   #sommaire .rec-body { text-align: center; justify-items: center; }
   #sommaire .rec-title, #sommaire .rec-desc { text-align: center !important; }
+}
+
+/* Étendre la card à la taille de la section et superposer titre/tags */
+#sommaire {
+  padding: 0;
+  /* Étire le contenu au lieu de le centrer pour éviter toute marge latérale */
+  place-items: stretch;
+}
+
+#sommaire .slide-inner {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  min-height: var(--slide-h);
+  /* Variables d'espacement pour titre et tags (ajustables) */
+  --sommaire-title-offset: clamp(36px, 4.5vw, 64px);
+  --sommaire-tags-gap: clamp(8px, 2.8vh, 24px);
+}
+
+#sommaire .carousel {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  z-index: 1; /* sous le titre/tags, au-dessus des overlays */
+  /* 100% pour éviter le décalage lié à 100vw/scrollbar */
+  width: 100%;
+  left: 0;
+  transform: none;
+}
+
+#sommaire .carousel-track,
+#sommaire .carousel-item {
+  height: 100%;
+}
+
+/* Évite tout décalage dû à des marges/paddings implicites */
+#sommaire .carousel-track { margin: 0; padding: 0; }
+
+/* Chaque item occupe toute la largeur du conteneur */
+#sommaire .carousel-item {
+  flex: 0 0 100% !important;
+  width: 100% !important;
+}
+
+#sommaire .slide-inner > h2 {
+  position: absolute;
+  top: var(--slide-pad); /* aligne l’entête avec le padding standard des slides */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  color: #fff;
+  text-align: center;
+  text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 6px 20px rgba(0,0,0,.35);
+}
+
+#sommaire .slide-inner > .tags {
+  position: absolute;
+  /* place les tags sous le titre avec un gap responsive */
+  top: calc(var(--slide-pad) + var(--sommaire-title-offset) + var(--sommaire-tags-gap));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+/* Mobile & tablette: titres et tags mieux agencés, non centrés pour éviter la superposition */
+@media (max-width: 900px) {
+  /* Titre compact en haut-gauche, fond semi-transparent pour lisibilité */
+  #sommaire .slide-inner > h2 {
+    left: 12px;
+    right: auto;
+    transform: none;
+    top: calc(env(safe-area-inset-top) + 10px);
+    text-align: left;
+    font-size: clamp(18px, 5vw, 24px);
+    line-height: 1.2;
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, .35);
+    backdrop-filter: blur(6px) saturate(120%);
+    -webkit-backdrop-filter: blur(6px) saturate(120%);
+    max-width: calc(100vw - 24px);
+  }
+
+  /* Tags en bandeau défilant horizontal sous le titre */
+  #sommaire .slide-inner > .tags {
+    left: 12px;
+    right: 12px;
+    transform: none;
+    top: calc(env(safe-area-inset-top) + 10px + 42px);
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 6px;
+    justify-content: flex-start;
+  }
+  #sommaire .slide-inner > .tags::-webkit-scrollbar { display: none; }
+  #sommaire .slide-inner > .tags .tag { white-space: nowrap; }
+}
+
+/* (ratio forcé retiré: plein écran en hauteur/largeur) */
+
+/* Ajuste les variables sur petits écrans très compacts */
+@media (max-width: 480px) {
+  #sommaire .slide-inner {
+    --sommaire-title-offset: clamp(28px, 6vw, 44px);
+    --sommaire-tags-gap: clamp(6px, 2vh, 16px);
+  }
 }
 
 [data-theme="light"] #sommaire .rec-card {
