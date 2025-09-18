@@ -1,7 +1,7 @@
 {
   "nav": {
     "presentation": "Présentation",
-    "summary": "Sommaire",
+    "summary": "Planning",
     "quote": "Devis",
     "guide": "Guide",
     "contact": "Contact"
@@ -16,7 +16,7 @@
   },
   "presentation": {"title": "Présentation — Ski au Japon & culture à Tokyo"},
   "summary": {
-    "title": "Sommaire du séjour (J1 → J7)",
+    "title": "Planning du séjour (J1 → J7)",
     "cardTokyo": "Tokyo — J1 à J3",
     "cardHakuba": "Hakuba — J4 à J7",
     "j1": "J1 · Arrivée Haneda, Akihabara, Ueno, Shabu‑Shabu",

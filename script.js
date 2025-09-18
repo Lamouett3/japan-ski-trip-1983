@@ -42,14 +42,20 @@ window.SHOJI_GLOBAL_ENABLED = true;
   function setBtnLabel(lang){
     const btn = document.getElementById('lang');
     if (!btn) return;
-    const svgFR = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" aria-hidden="true"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#ffffff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>';
+    // Drapeaux plus doux (coins arrondis + teintes adoucies), sans contour
+    const svgFR = (
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" aria-hidden="true">'
+      + '<rect x="0" y="0" width="300" height="200" rx="12" ry="12" fill="#fff"/>'
+      + '<rect x="0" y="0" width="100" height="200" rx="12" ry="12" fill="#3563A9"/>'
+      + '<rect x="200" y="0" width="100" height="200" rx="12" ry="12" fill="#D84C4C"/>'
+      + '</svg>'
+    );
     const svgGB = (function(){
-      // Simplified Union Jack
-      const bg = '<rect width="60" height="40" fill="#012169"/>';
-      const whiteDiag = '<path d="M0,0 L8,0 L60,32 L60,40 L52,40 L0,8 Z M60,0 L52,0 L0,32 L0,40 L8,40 L60,8 Z" fill="#FFF"/>';
-      const redDiag = '<path d="M0,0 L4.8,0 L60,28.8 L60,40 L55.2,40 L0,11.2 Z M60,0 L55.2,0 L0,28.8 L0,40 L4.8,40 L60,11.2 Z" fill="#C8102E"/>';
-      const whiteCross = '<rect x="0" y="16" width="60" height="8" fill="#FFF"/><rect x="26" y="0" width="8" height="40" fill="#FFF"/>';
-      const redCross = '<rect x="0" y="18" width="60" height="4" fill="#C8102E"/><rect x="28" y="0" width="4" height="40" fill="#C8102E"/>';
+      const bg = '<rect width="60" height="40" rx="4" ry="4" fill="#243B76"/>';
+      const whiteDiag = '<path d="M0,0 L7,0 L60,33 L60,40 L53,40 L0,7 Z M60,0 L53,0 L0,33 L0,40 L7,40 L60,7 Z" fill="#FFFFFF" opacity="0.95"/>';
+      const redDiag = '<path d="M0,0 L4.8,0 L60,28.8 L60,40 L55.2,40 L0,11.2 Z M60,0 L55.2,0 L0,28.8 L0,40 L4.8,40 L60,11.2 Z" fill="#D84C4C"/>';
+      const whiteCross = '<rect x="0" y="16" width="60" height="8" fill="#FFFFFF" opacity="0.95"/><rect x="26" y="0" width="8" height="40" fill="#FFFFFF" opacity="0.95"/>';
+      const redCross = '<rect x="0" y="18" width="60" height="4" fill="#D84C4C"/><rect x="28" y="0" width="4" height="40" fill="#D84C4C"/>';
       return `<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 60 40\" aria-hidden=\"true\">${bg}${whiteDiag}${redDiag}${whiteCross}${redCross}</svg>`;
     })();
     btn.innerHTML = (lang === 'fr') ? svgFR : svgGB;
