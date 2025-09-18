@@ -1126,118 +1126,16 @@ img {
   }
 }
 
-/* Strong centering for Sommaire playing-card variant */
-#sommaire .rec-card {
-  grid-template-columns: 1fr;
-  max-width: min(680px, 92%);
-  margin: 0 auto;
-  text-align: center;
-}
+/* (legacy Sommaire card styles removed: replaced by slide-mode styles) */
 
-#sommaire .rec-media img {
-  aspect-ratio: 2 / 3;
-}
-
-#sommaire .rec-body {
-  padding: 10px 8px 4px;
-}
-
-/* Keep Sommaire card within viewport height and align with other slides */
-#sommaire .carousel {
-  margin-top: 4px;
-}
-
-#sommaire .rec-card {
-  max-width: min(560px, 90%);
-  padding: 12px;
-  /* ensure the card never exceeds the slide height */
-  max-height: calc(100svh - (var(--slide-pad) * 2) - 64px);
-  overflow: hidden;
-}
-
-#sommaire .rec-media img {
-  /* scale image height to viewport to avoid overflow */
-  height: clamp(200px, 42vh, 360px);
-  width: 100%;
-  object-fit: cover;
-}
-
-#sommaire .rec-title {
-  font-size: clamp(16px, 2vw, 20px);
-}
-
-#sommaire .rec-desc {
-  font-size: .95rem;
-  line-height: 1.5;
-  max-width: 88%;
-  /* clamp lines to avoid overflow */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-#sommaire .rec-pill {
-  font-size: .85rem;
-  padding: 3px 8px;
-}
-
-/* ===== Sommaire — variante large (desktop, horizontal) ===== */
-@media (min-width: 900px) {
-  #sommaire .rec-card {
-    width: clamp(68%, 76vw, 90%);
-    max-width: none;
-    margin: 0 auto;
-    grid-template-columns: 70% 30%;
-    align-items: stretch;
-    text-align: center;
-    justify-items: center;
-    padding: 0;
-    /* full-bleed image + body padding */
-    min-height: clamp(360px, 48vh, 560px);
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  #sommaire .rec-media {
-    align-self: stretch;
-    height: 100%;
-    border-radius: 0;
-    width: 90%;
-  }
-
-  #sommaire .rec-media img {
-    width: 100%;
-    height: 100%;
-    aspect-ratio: auto;
-    object-fit: cover;
-    object-position: center;
-  }
-
-  #sommaire .rec-body {
-    text-align: center;
-    justify-items: center;
-    align-content: center;
-    gap: 12px;
-    padding: 18px 22px;
-  }
-
-  #sommaire .rec-title {
-    font-size: clamp(18px, 2.2vw, 24px);
-    line-height: 1.2;
-  }
-
-  #sommaire .rec-desc {
-    max-width: 100%;
-    -webkit-line-clamp: 3;
-    font-size: clamp(14px, 1.1vw, 16px);
-  }
-}
+/* (legacy desktop horizontal variant removed) */
 
 /* ===== Carousel for Sommaire ===== */
 .carousel {
   position: relative;
   margin-top: 10px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .carousel-track {
@@ -1260,10 +1158,12 @@ img {
 
 .carousel-item {
   flex: 0 0 100%;
-  padding: 0 8px;
+  padding: 0; /* supprime toute marge pour que la carte et l'image remplissent 100% */
   box-sizing: border-box;
   display: grid;
   place-items: center;
+  width: 100% !important;
+  overflow: hidden;
 }
 
 .carousel-btn {
@@ -1371,68 +1271,76 @@ img {
     linear-gradient(to top, rgba(0, 0, 0, .16), rgba(0, 0, 0, .06) 40%, rgba(0, 0, 0, 0)) !important;
 }
 
-/* ===== Sommaire — cartes style Shoji (papier/crème) ===== */
+/* (legacy Shoji card styling removed) */
+
+/* ===== Planning — mode slide (texte superposé sur l'image) ===== */
+/* Garde le carrousel, remplace l'apparence des cartes par une slide visuelle */
 #sommaire .rec-card {
-  grid-template-columns: 1fr;
-  max-width: min(720px, 94%);
-  margin: 0 auto;
-  padding: 14px;
-  height: clamp(420px, 60vh, 560px);
-  border-radius: 16px;
-  border: 1px solid var(--shoji-edge);
-  box-shadow: 0 16px 38px var(--shoji-shadow, rgba(0, 0, 0, .30));
-  backdrop-filter: blur(10px) saturate(140%);
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
-  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  position: relative;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 16px; /* angles arrondis sur toute la carte */
+  overflow: hidden;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  height: clamp(360px, 58vh, 640px) !important;
 }
 
-#sommaire .rec-card:hover, #sommaire .rec-card:focus-within {
-  transform: translateY(-1px);
-  box-shadow: 0 22px 56px var(--shoji-shadow, rgba(0, 0, 0, .34));
-  border-color: var(--shoji-edge);
+#sommaire .rec-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,.25) 42%, rgba(0,0,0,0));
+  border-radius: inherit; /* suit l'arrondi de la carte */
+  pointer-events: none;
 }
 
 #sommaire .rec-media {
-  border-radius: 16px;
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: inherit;
   overflow: hidden;
 }
 
 #sommaire .rec-media img {
-  display: block;
-  width: 100%;
-  height: clamp(160px, 34vh, 260px);
-  object-fit: cover;
-  aspect-ratio: 2/3;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  aspect-ratio: auto !important;
 }
 
 #sommaire .rec-body {
-  padding: 10px 8px 6px;
-  text-align: center;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: clamp(12px, 3vw, 22px);
   display: grid;
-  gap: 10px;
-  justify-items: center
+  gap: 8px;
+  text-align: left;
+  justify-items: start;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 6px 20px rgba(0,0,0,.35);
 }
 
-#sommaire .rec-title {
-  font-size: clamp(17px, 2.1vw, 21px);
-  letter-spacing: .2px;
-}
-
-#sommaire .rec-desc {
-  font-size: .95rem;
-  line-height: 1.5;
-  max-width: 86%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+#sommaire .rec-title { color: #ffffff !important; text-align: left !important; }
+#sommaire .rec-desc { color: #ffffff !important; text-align: left !important; max-width: 92%; -webkit-line-clamp: 4; }
 
 #sommaire .rec-pill {
-  font-size: .85rem;
-  padding: 3px 8px;
-  background: rgba(0, 0, 0, .04);
-  border-color: var(--shoji-edge);
+  background: rgba(0,0,0,.35) !important;
+  border-color: rgba(255,255,255,.28) !important;
+  color: #fff !important;
+}
+
+@media (max-width: 640px) {
+  #sommaire .rec-card { height: clamp(320px, 56vh, 520px) !important; }
+  #sommaire .rec-body { text-align: center; justify-items: center; }
+  #sommaire .rec-title, #sommaire .rec-desc { text-align: center !important; }
 }
 
 [data-theme="light"] #sommaire .rec-card {
