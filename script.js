@@ -557,9 +557,17 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (initialPlayed) return; initialPlayed = true;
     // petit rafraîchissement pour s'assurer que le DOM et les styles sont appliqués
     requestAnimationFrame(() => {
+      // Affiche immédiatement les panneaux fermés, puis ouvre après 1,5s
+      try {
+        // rend les panneaux visibles en position fermée et bloque les interactions
+        document.body.classList.add('shoji-opening');
+        shoji.classList.add('visible');
+        left.classList.remove('open');
+        right.classList.remove('open');
+      } catch(e){}
       setTimeout(() => {
         try {
-          const D = 4000;
+          const D = 3200; // légèrement plus rapide et fluide
           playShoji(D);
           // Sur la page d'accueil, on ne garde QUE l'ouverture initiale
           const isHome = /(?:^\/$|index\.html$)/.test(location.pathname);
@@ -567,14 +575,18 @@ document.getElementById('y').textContent = new Date().getFullYear();
             setTimeout(() => { window.SHOJI_GLOBAL_ENABLED = false; }, D + 200);
           }
         } catch(e){}
-      }, 60);
+      }, 1000); // attente de 1s avant ouverture
     });
   }
-  if (document.readyState === 'complete') {
-    triggerInitialShoji();
-  } else {
-    window.addEventListener('load', triggerInitialShoji, { once: true });
-    document.addEventListener('DOMContentLoaded', triggerInitialShoji, { once: true });
+  // Ne joue l'ouverture initiale que sur la page d'accueil
+  const isHomePage = /(?:^\/$|index\.html$)/.test(location.pathname);
+  if (isHomePage) {
+    if (document.readyState === 'complete') {
+      triggerInitialShoji();
+    } else {
+      window.addEventListener('load', triggerInitialShoji, { once: true });
+      document.addEventListener('DOMContentLoaded', triggerInitialShoji, { once: true });
+    }
   }
 
   // Déverrouillage de secours si l'utilisateur interagit mais que le verrou persiste
