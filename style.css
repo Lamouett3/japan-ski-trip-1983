@@ -1335,21 +1335,40 @@ img {
 }
 
 /* ===== Sommaire — arrière-plan style Shoji ===== */
+#sommaire .slide-bg {
+  /* Fond plein rappellant le Shoji; s'adapte au thème (clair/sombre) */
+  background: var(--shoji-paper) !important;
+}
+
 #sommaire .slide-overlay {
+  /* Voile très léger pour la lisibilité du texte, sans masquer la teinte crème */
   background:
-    /* quadrillage Shoji très léger */
-    repeating-linear-gradient(0deg, var(--shoji-grid) 0 1px, rgba(0, 0, 0, 0) 1px 22px),
-    repeating-linear-gradient(90deg, var(--shoji-grid) 0 1px, rgba(0, 0, 0, 0) 1px 22px),
-    radial-gradient(55% 45% at 50% 25%, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0) 60%),
-    linear-gradient(to top, rgba(0, 0, 0, .52), rgba(0, 0, 0, .22) 38%, rgba(0, 0, 0, 0)) !important;
+    radial-gradient(55% 45% at 50% 25%, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(to top, rgba(0, 0, 0, .18), rgba(0, 0, 0, .06) 40%, rgba(0, 0, 0, 0)) !important;
 }
 
 [data-theme="light"] #sommaire .slide-overlay {
   background:
-    repeating-linear-gradient(0deg, var(--shoji-grid) 0 1px, rgba(0, 0, 0, 0) 1px 22px),
-    repeating-linear-gradient(90deg, var(--shoji-grid) 0 1px, rgba(0, 0, 0, 0) 1px 22px),
-    radial-gradient(55% 45% at 50% 25%, rgba(0, 0, 0, .08), rgba(0, 0, 0, 0) 60%),
-    linear-gradient(to top, rgba(0, 0, 0, .46), rgba(0, 0, 0, .18) 38%, rgba(0, 0, 0, 0)) !important;
+    radial-gradient(55% 45% at 50% 25%, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(to top, rgba(0, 0, 0, .16), rgba(0, 0, 0, .06) 40%, rgba(0, 0, 0, 0)) !important;
+}
+
+/* ===== Présentation & Devis — arrière-plan style Shoji (même rendu que Planning) ===== */
+#presentation .slide-bg, #devis .slide-bg {
+  background: var(--shoji-paper) !important;
+}
+
+#presentation .slide-overlay, #devis .slide-overlay {
+  background:
+    radial-gradient(55% 45% at 50% 25%, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(to top, rgba(0, 0, 0, .18), rgba(0, 0, 0, .06) 40%, rgba(0, 0, 0, 0)) !important;
+}
+
+[data-theme="light"] #presentation .slide-overlay,
+[data-theme="light"] #devis .slide-overlay {
+  background:
+    radial-gradient(55% 45% at 50% 25%, rgba(255, 255, 255, .10), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(to top, rgba(0, 0, 0, .16), rgba(0, 0, 0, .06) 40%, rgba(0, 0, 0, 0)) !important;
 }
 
 /* ===== Sommaire — cartes style Shoji (papier/crème) ===== */
