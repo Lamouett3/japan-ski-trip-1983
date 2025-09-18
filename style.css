@@ -1731,15 +1731,10 @@ footer {
   transform: translateX(102%);
 }
 
-/* Touch (pas de hover): ouvert par défaut pour l’utilisabilité */
+/* Touch (pas de hover): fermé par défaut, ouverture pilotée par JS (.open) */
 @media (hover: none) {
-  .slide .shoji-local .panel.left {
-    transform: translateX(-102%);
-  }
-
-  .slide .shoji-local .panel.right {
-    transform: translateX(102%);
-  }
+  .slide .shoji-local .panel.left { transform: translateX(0); }
+  .slide .shoji-local .panel.right { transform: translateX(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

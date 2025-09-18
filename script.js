@@ -745,6 +745,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
         a.setAttribute('aria-current', hash === id ? 'true' : 'false');
       }
     });
+    // Ouvre/ferme les shoji locaux en fonction de la slide active (surtout utile mobile/tablette)
+    try {
+      document.querySelectorAll('.slide .shoji-local').forEach(el => el.classList.remove('open'));
+      const activeSlide = document.getElementById(id);
+      const local = activeSlide && activeSlide.querySelector('.shoji-local');
+      if (local) local.classList.add('open');
+    } catch(e){}
+
     // Déclenche l'effet Shoji global (si activé) quand on change réellement de slide et que l'alignement est suffisant
     const openingNow = document.body.classList.contains('shoji-opening');
     if (onProgrammePage && window.playShojiTransition && id !== currentId && rect && window.SHOJI_GLOBAL_ENABLED !== false && !openingNow) {
