@@ -790,6 +790,37 @@ img {
   -webkit-backdrop-filter: blur(10px) saturate(140%);
 }
 
+/* Devis — même layout 50/50 que Présentation, image à gauche, texte à droite */
+@media (min-width: 900px) {
+  #devis { padding: 0; }
+  #devis .quote-inner { width: 100%; max-width: none; padding: 0; height: var(--slide-h); }
+  #devis .quote-grid { gap: 0; align-items: stretch; min-height: var(--slide-h); }
+  #devis .quote-grid > * { height: 100%; }
+  #devis .quote-media { display: block; height: 100%; border-radius: 0; margin: 0; }
+  #devis .quote-media img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+  #devis .quote-text {
+    text-align: left;
+    background: var(--shoji-paper);
+    background-image:
+      repeating-linear-gradient(90deg, var(--shoji-grid) 0 1px, transparent 1px 110px),
+      repeating-linear-gradient(0deg, var(--shoji-grid) 0 1px, transparent 1px 110px);
+    padding: 24px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* Devis — fond lisible (mobile/tablette) */
+#devis .quote-text {
+  background: transparent;
+  border: 1px solid var(--shoji-edge);
+  border-radius: 16px;
+  padding: 16px;
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+}
+
 @media (min-width: 900px) {
   #presentation .illus-card {
     height: 100%;
