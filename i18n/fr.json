@@ -10,9 +10,10 @@
     "requestQuote": "Demander un devis"
   },
   "hero": {
-    "kicker": "Ski & Culture — 8 jours / 7 nuits",
+    "kicker": "Séjour Ski & Culture — 8 jours / 7 nuits",
     "title": "Tokyo ✕ Hakuba<br>poudreuse légendaire & onsen",
-    "viewProgram": "Voir le programme"
+    "viewProgram": "Voir le programme",
+    "lead": "<strong>Visitez Tokyo</strong> ces temples, quartiers iconiques et ces saveurs uniques — puis <strong>skiez à Hakuba</strong> et découvrez sa <strong>poudreuse légendaire</strong> dans les stations des <strong>JO 1998</strong>.<br>Encadrement personnalisé par <strong>Jérôme Noviant</strong> (<strong>30 ans d’expérience</strong> au Japon chez Rossignol)."
   },
   "presentation": {"title": "Présentation — Ski au Japon & culture à Tokyo"},
   "summary": {
