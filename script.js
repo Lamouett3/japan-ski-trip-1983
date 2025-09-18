@@ -598,32 +598,66 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   wrap.replaceWith(carousel);
   carousel.appendChild(track);
-  carousel.appendChild(prev);
-  carousel.appendChild(next);
+  // Retire les flèches; navigation au swipe + dots
   carousel.appendChild(dots);
 
-  let index = 0;
+  // Crée un carrousel infini par clones en bordure
+  const originalCount = track.children.length;
+  if (!originalCount) return;
+  const firstClone = track.firstElementChild.cloneNode(true);
+  const lastClone = track.lastElementChild.cloneNode(true);
+  track.insertBefore(lastClone, track.firstChild);
+  track.appendChild(firstClone);
+
+  let index = 1; // commence sur la 1ère carte réelle
+  const DEFAULT_MS = 380;
+  function setTransition(ms){
+    if (!ms || ms <= 0) {
+      track.style.transition = 'none';
+    } else {
+      track.style.transition = `transform ${ms}ms cubic-bezier(.22,.61,.36,1)`;
+    }
+  }
+  function effectiveIndex(){ return ((index - 1 + originalCount) % originalCount); }
   function update(){
     const w = carousel.clientWidth;
     track.style.transform = `translateX(${-index * w}px)`;
-    dots.querySelectorAll('button').forEach((b, i)=> b.setAttribute('aria-current', i===index ? 'true':'false'));
+    dots.querySelectorAll('button').forEach((b, i)=> b.setAttribute('aria-current', i===effectiveIndex() ? 'true':'false'));
   }
-  function goTo(i){
-    const max = track.children.length - 1;
-    index = Math.max(0, Math.min(max, i));
+  function goTo(i, immediate=false){
+    index = i;
+    if (immediate) setTransition(0);
     update();
+    if (immediate) { void track.offsetWidth; setTransition(DEFAULT_MS); }
   }
-  prev.addEventListener('click', ()=> goTo(index-1));
-  next.addEventListener('click', ()=> goTo(index+1));
-  dots.querySelectorAll('button').forEach((b, i)=> b.addEventListener('click', ()=> goTo(i)) );
+  // Navigation via dots (mappe vers index réel + offset clone)
+  dots.querySelectorAll('button').forEach((b, i)=> b.addEventListener('click', ()=> goTo(i+1)) );
 
-  // Swipe (n'interrompt pas le clic sur la carte)
+  // Swipe (infinite)
   let startX=0, curX=0, dragging=false, moved=false, pid=null;
-  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; track.style.transition=''; });
-  track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 8) { moved=true; track.style.transition='none'; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
-  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; track.style.transition=''; const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} if (Math.abs(dx) > w*0.2) { goTo(index + (dx<0?1:-1)); } else { update(); } } else { update(); } });
+  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; setTransition(0); });
+  track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 6) { moved=true; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
+  track.addEventListener('pointerup', (e)=>{ if(!dragging) return; dragging=false; const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} const adx = Math.abs(dx); if (adx > w*0.15) { // momentum: plus on glisse loin, plus l'anim est rapide
+        const t = Math.max(0, Math.min(1, (adx - w*0.15) / (w*0.85))); // 0..1
+        const dur = Math.round(DEFAULT_MS - (DEFAULT_MS - 180) * t); // 380ms -> 180ms
+        setTransition(dur);
+        goTo(index + (dx<0?1:-1));
+      } else {
+        // snap back vite mais doux
+        setTransition(220);
+        update();
+      } } else { setTransition(220); update(); } });
+  track.addEventListener('pointercancel', ()=>{ dragging=false; setTransition(DEFAULT_MS); update(); });
+
+  // Reboucle sans à-coup après animation
+  track.addEventListener('transitionend', ()=>{
+    const n = originalCount;
+    if (index === 0) { goTo(n, true); }
+    else if (index === n+1) { goTo(1, true); }
+  });
+
   window.addEventListener('resize', update, { passive:true });
-  update();
+  goTo(1, true);
 })();
 
 // === Dots de progression + lien actif nav ===

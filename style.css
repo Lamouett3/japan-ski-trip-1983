@@ -351,7 +351,8 @@ img {
 @media (max-width: 720px) {
   .nav .inner {
     gap: 10px;
-    position: relative; /* ancre le menu déroulant */
+    position: relative;
+    /* ancre le menu déroulant */
   }
 
   .links {
@@ -368,7 +369,10 @@ img {
   }
 
   /* Dropdown container */
-  .nav.jpn { overflow: visible; }
+  .nav.jpn {
+    overflow: visible;
+  }
+
   .nav.jpn .links {
     position: absolute;
     top: 100%;
@@ -389,7 +393,7 @@ img {
   }
 
   /* Cache seulement le bouton "Demander un devis" dans le header (mobile) pour gagner de la place */
-  .nav .inner > :last-child a[href*="#devis"] {
+  .nav .inner> :last-child a[href*="#devis"] {
     display: none !important;
   }
 
@@ -402,12 +406,21 @@ img {
   }
 
   /* Ordonne les contrôles à droite: thème, langue, menu */
-  .nav .inner > :last-child {
+  .nav .inner> :last-child {
     display: flex;
   }
-  .nav .inner > :last-child #theme { order: 1; }
-  .nav .inner > :last-child #lang { order: 2; }
-  .nav .inner > :last-child #menu { order: 3; }
+
+  .nav .inner> :last-child #theme {
+    order: 1;
+  }
+
+  .nav .inner> :last-child #lang {
+    order: 2;
+  }
+
+  .nav .inner> :last-child #menu {
+    order: 3;
+  }
 
   [data-theme="light"] .nav.jpn .links {
     background: rgba(255, 255, 255, .92);
@@ -425,31 +438,41 @@ img {
   .nav.jpn.menu-open {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    border-bottom: none !important; /* supprime la ligne de séparation */
-    box-shadow: none !important; /* supprime le liseré inset */
+    border-bottom: none !important;
+    /* supprime la ligne de séparation */
+    box-shadow: none !important;
+    /* supprime le liseré inset */
   }
+
   .nav.jpn.scrolled.menu-open {
     border-bottom: none !important;
     box-shadow: none !important;
   }
+
   .nav.jpn.menu-open .links {
-    background: rgba(12, 16, 23, .24); /* même transparence que le header par défaut */
-    box-shadow: none; /* se fond sans ombre de séparation */
+    background: rgba(12, 16, 23, .24);
+    /* même transparence que le header par défaut */
+    box-shadow: none;
+    /* se fond sans ombre de séparation */
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     border-left-color: rgba(255, 255, 255, .10);
     border-right-color: rgba(255, 255, 255, .10);
     border-bottom-color: rgba(255, 255, 255, .10);
   }
+
   .nav.jpn.scrolled.menu-open .links {
-    background: rgba(12, 16, 23, .36); /* même fond que header scrolled */
+    background: rgba(12, 16, 23, .36);
+    /* même fond que header scrolled */
   }
+
   [data-theme="light"] .nav.jpn.menu-open .links {
     background: rgba(255, 255, 255, .42);
     border-left-color: rgba(0, 0, 0, .08);
     border-right-color: rgba(0, 0, 0, .08);
     border-bottom-color: rgba(0, 0, 0, .08);
   }
+
   [data-theme="light"] .nav.jpn.scrolled.menu-open .links {
     background: rgba(255, 255, 255, .62);
   }
@@ -684,13 +707,31 @@ img {
 
 /* Présentation — disposition desktop en 2 blocs */
 @media (min-width: 900px) {
+
   /* Plein 50/50: conteneur à 100% et colonnes sans espace */
-  #presentation { padding: 0; }
-  #presentation .slide-inner { width: 100%; max-width: none; padding: 0; height: var(--slide-h); }
-  #presentation .grid-2 { gap: 0; align-items: stretch; min-height: var(--slide-h); }
-  #presentation .grid-2 > * { height: 100%; }
+  #presentation {
+    padding: 0;
+  }
+
+  #presentation .slide-inner {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    height: var(--slide-h);
+  }
+
+  #presentation .grid-2 {
+    gap: 0;
+    align-items: stretch;
+    min-height: var(--slide-h);
+  }
+
+  #presentation .grid-2>* {
+    height: 100%;
+  }
+
   /* Panneau texte gauche, sans effet card */
-  #presentation .grid-2 > :first-child {
+  #presentation .grid-2> :first-child {
     text-align: left;
     background: var(--shoji-paper);
     padding: 24px;
@@ -701,12 +742,39 @@ img {
 }
 
 /* Carte image à droite (desktop) */
-.illus-card { display: none; overflow: hidden; border-radius: 16px; }
-.illus-card img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 3; }
-@media (min-width: 900px) { .illus-card { display: block; } }
+.illus-card {
+  display: none;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.illus-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 4 / 3;
+}
+
 @media (min-width: 900px) {
-  #presentation .illus-card { height: 100%; border-radius: 0; margin: 0; }
-  #presentation .illus-card img { height: 100%; object-fit: cover; aspect-ratio: auto; border-radius: 0; }
+  .illus-card {
+    display: block;
+  }
+}
+
+@media (min-width: 900px) {
+  #presentation .illus-card {
+    height: 100%;
+    border-radius: 0;
+    margin: 0;
+  }
+
+  #presentation .illus-card img {
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
 }
 
 .tags {
@@ -851,6 +919,16 @@ img {
   }
 }
 
+/* Mobile — centrer mieux la carte Sommaire et utiliser toute la largeur utile */
+@media (max-width: 640px) {
+  #sommaire .carousel-item { padding: 0; }
+  #sommaire .rec-card {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
 /* Strong centering for Sommaire playing-card variant */
 #sommaire .rec-card {
   grid-template-columns: 1fr;
@@ -882,7 +960,7 @@ img {
 
 #sommaire .rec-media img {
   /* scale image height to viewport to avoid overflow */
-  height: clamp(160px, 36vh, 300px);
+  height: clamp(200px, 42vh, 360px);
   width: 100%;
   object-fit: cover;
 }
@@ -905,6 +983,58 @@ img {
 #sommaire .rec-pill {
   font-size: .85rem;
   padding: 3px 8px;
+}
+
+/* ===== Sommaire — variante large (desktop, horizontal) ===== */
+@media (min-width: 900px) {
+  #sommaire .rec-card {
+    width: clamp(68%, 76vw, 90%);
+    max-width: none;
+    margin: 0 auto;
+    grid-template-columns: 70% 30%;
+    align-items: stretch;
+    text-align: center;
+    justify-items: center;
+    padding: 0;
+    /* full-bleed image + body padding */
+    min-height: clamp(360px, 48vh, 560px);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  #sommaire .rec-media {
+    align-self: stretch;
+    height: 100%;
+    border-radius: 0;
+    width: 90%;
+  }
+
+  #sommaire .rec-media img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  #sommaire .rec-body {
+    text-align: center;
+    justify-items: center;
+    align-content: center;
+    gap: 12px;
+    padding: 18px 22px;
+  }
+
+  #sommaire .rec-title {
+    font-size: clamp(18px, 2.2vw, 24px);
+    line-height: 1.2;
+  }
+
+  #sommaire .rec-desc {
+    max-width: 100%;
+    -webkit-line-clamp: 3;
+    font-size: clamp(14px, 1.1vw, 16px);
+  }
 }
 
 /* ===== Carousel for Sommaire ===== */
