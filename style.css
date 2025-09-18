@@ -929,6 +929,16 @@ img {
   }
 }
 
+/* Mobile — remettre une image de fond sur la section #presentation */
+@media (max-width: 720px) {
+  #presentation .slide-bg {
+    background-image: url('images/pexels-ben-cheung-140183-439741.jpg');
+    background-size: cover;
+    background-position: center 35%;
+    background-repeat: no-repeat;
+  }
+}
+
 /* Strong centering for Sommaire playing-card variant */
 #sommaire .rec-card {
   grid-template-columns: 1fr;
