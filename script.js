@@ -218,7 +218,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
     // Trajectoire "skieur" depuis bas-gauche vers la marque (courbe Catmull-Rom), 5s
-    const total = 3200; // ms (accéléré)
+    const total = 3000; // ms (3s)
     const startBL = { x: -size * 2, y: vh + size };
     // Trois virages principaux: droite → gauche → droite
     const anchors = [
