@@ -194,10 +194,13 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const isHomePage = /(?:^\/$|index\.html$)/.test(location.pathname);
   if (!isHomePage) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Ne rejoue pas l'intro si déjà lancée pendant cette session (retour depuis programme.html, etc.)
+  try { if (sessionStorage.getItem('intro_hinomaru') === '1') return; } catch(_){}
 
   function play(){
     const navDot = document.querySelector('.brand .hinomaru');
     if (!navDot) return;
+    try { sessionStorage.setItem('intro_hinomaru', '1'); } catch(_){}
     const ov = document.createElement('div');
     ov.className = 'intro-hinomaru';
     const dot = document.createElement('div');
@@ -218,7 +221,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
     // Trajectoire "skieur" depuis bas-gauche vers la marque (courbe Catmull-Rom), 5s
-    const total = 3000; // ms (3s)
+    const total = 2000; // ms (2s)
     const startBL = { x: -size * 2, y: vh + size };
     // Trois virages principaux: droite → gauche → droite
     const anchors = [
@@ -269,9 +272,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
         easing
       };
     });
-    // Phase 1: trajet principal, Phase 2: freinage/réduction, Phase 3: fondu overlay
-    const travelMs = Math.max(800, Math.round(total * 0.8));
-    const brakeMs = Math.max(280, total - travelMs);
+    // Phase 1: trajet principal (≈70%), Phase 2: freinage (≈30%), puis fondu
+    const travelMs = 1400; // 1.4s pour la courbe
+    const brakeMs = 600;   // 0.6s de freinage avant le fondu
     const travel = dot.animate(kfs, { duration: travelMs, easing: 'linear', fill: 'forwards' });
     travel.onfinish = () => {
       const endTx = `translate(${Math.round(end.x)}px, ${Math.round(end.y)}px)`;
@@ -281,13 +284,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
         { transform: `${endTx} scale(0.90)` }
       ], { duration: brakeMs, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
       brake.onfinish = () => {
+        // Démarre le fondu juste après cette seconde de freinage
         const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: 'linear', fill: 'forwards' });
         fade.onfinish = () => { ov.remove(); };
       };
     };
 
     // Skip on user interaction
-    const skip = () => { ov.remove(); cleanup(); };
+    const skip = () => { try { sessionStorage.setItem('intro_hinomaru','1'); } catch(_){} ov.remove(); cleanup(); };
     function cleanup(){ ['click','keydown','wheel','touchstart'].forEach(ev=> window.removeEventListener(ev, skip, { passive:true })); }
     ['click','keydown','wheel','touchstart'].forEach(ev=> window.addEventListener(ev, skip, { passive:true }));
   }
