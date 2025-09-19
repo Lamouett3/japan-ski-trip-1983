@@ -434,6 +434,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   if (prefersReduced) return; // accessibilité (stop parallax)
 
   function onScroll() {
+    if (window.__SNAP_ACTIVE) return; // fige le parallax pendant l'auto-snap pour éviter les accrocs
     const vh = window.innerHeight;
     const vw = window.innerWidth || 1024;
     const depth = vw <= 360 ? 0.10 : (vw <= 480 ? 0.14 : 0.18); // parallax adouci sur petits écrans
@@ -486,7 +487,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     heroVideoEl.style.transform = `translate3d(0, ${offset}px, 0) scale(1.03)`;
   }
   window.addEventListener('scroll', () => { requestAnimationFrame(onScrollHero); }, {passive:true});
-  onScrollHero();
+  // Évite les accrocs pendant le snap
+  if (!window.__SNAP_ACTIVE) onScrollHero();
 
   // Fallback si autoplay bloqué
   heroVideoEl.play && heroVideoEl.play().catch(() => {
@@ -546,8 +548,15 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (Math.abs(delta) < 2) return;
     const start = performance.now();
     isAuto = true;
+    window.__SNAP_ACTIVE = true;
+    // Annule tout snap programmé précédemment
+    if (endTimer) { clearTimeout(endTimer); endTimer = null; }
     const prevSnap = container.style.scrollSnapType;
     container.style.scrollSnapType = 'none';
+    // Désactive le scroll-behavior: smooth global le temps de l'anim pour éviter le double-lissage
+    const root = document.documentElement;
+    const prevBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
 
     function step(now){
       const t = Math.min(1, (now - start) / duration);
@@ -556,8 +565,12 @@ document.getElementById('y').textContent = new Date().getFullYear();
       if (t < 1 && isAuto) {
         rafId = requestAnimationFrame(step);
       } else {
-        container.style.scrollSnapType = prevSnap || '';
+        // Petit délai pour éviter que le snap natif recorrige juste après notre anim
+        setTimeout(() => { container.style.scrollSnapType = prevSnap || ''; }, 40);
+        // Restaure le scroll-behavior initial
+        root.style.scrollBehavior = prevBehavior || '';
         isAuto = false;
+        window.__SNAP_ACTIVE = false;
       }
     }
     rafId = requestAnimationFrame(step);
@@ -598,7 +611,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (endTimer) clearTimeout(endTimer);
     // Délai selon vitesse: plus on va vite, plus on attend
     // Attente quasi immédiate avant snap
-    const delay = velocity < 0.05 ? 0 : velocity < 0.2 ? 40 : 80;
+    const delay = velocity < 0.05 ? 40 : velocity < 0.2 ? 80 : 120; // quasi immédiat mais évite l'accro
     endTimer = setTimeout(smoothSnap, delay);
   }
 
@@ -606,6 +619,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (rafId) cancelAnimationFrame(rafId);
     isAuto = false;
     velocity = 0;
+    window.__SNAP_ACTIVE = false;
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
