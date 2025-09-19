@@ -538,7 +538,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     return Math.max(0, target);
   }
 
-  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function easeOutQuint(t){ return 1 - Math.pow(1 - t, 5); }
 
   function animateTo(targetY, duration){
     const startY = window.scrollY;
@@ -551,7 +551,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
     function step(now){
       const t = Math.min(1, (now - start) / duration);
-      const eased = easeOutCubic(t);
+      const eased = easeOutQuint(t); // freinage plus doux en fin de course
       window.scrollTo(0, startY + delta * eased);
       if (t < 1 && isAuto) {
         rafId = requestAnimationFrame(step);
@@ -571,16 +571,16 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const dist = Math.abs(targetY - cur);
 
     // Si déjà très proche, évite anim inutile
-    if (dist < 6) return;
+    if (dist < 14) return;
 
     // N’anime que si on est raisonnablement près d’un point d’ancrage
     const vh = window.innerHeight;
-    if (dist > vh * 0.75) return;
+    if (dist > vh * 0.55) return; // snap seulement si on est relativement proche
 
     // Durée adaptative selon distance et vitesse (inertie perçue)
-    const base = 320 + (dist / vh) * 280; // 320–600ms environ
-    const speedAdj = Math.max(0.85, Math.min(1.25, 1.05 - velocity * 0.25));
-    const duration = Math.max(260, Math.min(900, base * speedAdj));
+    const base = 360 + (dist / vh) * 320; // 360–680ms environ
+    const speedAdj = Math.max(0.8, Math.min(1.15, 1.02 - velocity * 0.22));
+    const duration = Math.max(280, Math.min(1000, base * speedAdj));
 
     animateTo(targetY, duration);
   }
@@ -597,7 +597,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
     if (endTimer) clearTimeout(endTimer);
     // Délai selon vitesse: plus on va vite, plus on attend
-    const delay = velocity < 0.05 ? 90 : velocity < 0.2 ? 140 : 220;
+    // Attente quasi immédiate avant snap
+    const delay = velocity < 0.05 ? 0 : velocity < 0.2 ? 40 : 80;
     endTimer = setTimeout(smoothSnap, delay);
   }
 
