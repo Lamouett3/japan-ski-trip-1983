@@ -189,6 +189,29 @@ document.getElementById('y').textContent = new Date().getFullYear();
   update();
 })();
 
+// === Présentation: Lire plus / Lire moins ===
+(function(){
+  const wrap = document.getElementById('presentation-more');
+  const btn = document.getElementById('presentation-more-btn');
+  if (!wrap || !btn) return;
+  let open = false;
+  function set(openNow){
+    open = openNow;
+    btn.setAttribute('aria-expanded', String(open));
+    wrap.setAttribute('aria-hidden', String(!open));
+    if (open) {
+      wrap.style.maxHeight = wrap.scrollHeight + 'px';
+      btn.textContent = 'Lire moins';
+    } else {
+      wrap.style.maxHeight = '0px';
+      btn.textContent = 'Lire plus';
+    }
+  }
+  btn.addEventListener('click', () => set(!open));
+  window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+  set(false);
+})();
+
 // === Intro Hinomaru (point rouge) — remplace l'ouverture Shoji initiale ===
 (function(){
   const isHomePage = /(?:^\/$|index\.html$)/.test(location.pathname);

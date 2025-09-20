@@ -882,7 +882,18 @@ img {
   #presentation .presentation-text { max-width: min(980px, 94vw); }
   #presentation .presentation-text p,
   #presentation .presentation-text li { font-size: 1.04rem; line-height: 1.65; }
+  #presentation .grid-2 { align-items: center; align-content: center; justify-items: center; }
+  #presentation .presentation-grid { margin-top: 0 !important; }
 }
+
+/* Collapsible (Présentation) */
+#presentation .more-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 360ms cubic-bezier(.22,.61,.36,1);
+}
+
+#presentation .more-toggle { white-space: nowrap; }
 
 /* Carte image à droite (desktop) */
 .illus-card {
