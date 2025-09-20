@@ -721,6 +721,32 @@ img {
 /* Ensure list markers created via ::before stay crisp */
 .list.check li::before { text-shadow: none; }
 
+/* ===== Guide section — refined layout ===== */
+#guide .slide-inner {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: clamp(12px, 2.4vw, 22px);
+  width: var(--content-w);
+  text-align: left;
+}
+
+#guide h2 { margin-bottom: 10px; }
+#guide h3 { margin: 10px 0 6px; font-weight: 800; }
+#guide p { margin: 6px 0; font-size: 1.06rem; line-height: 1.7; }
+#guide .list { margin-top: 8px; }
+#guide .list li { padding-left: 26px; font-size: 1.06rem; line-height: 1.7; }
+#guide .list li::before { content: ""; position: absolute; left: 6px; top: 10px; width: 8px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.85); }
+
+@media (min-width: 900px) {
+  #guide .slide-inner { width: min(1040px, 94vw); }
+  /* split points into two columns on desktop for a balanced block */
+  #guide .list { column-count: 2; column-gap: 20px; }
+  #guide .list li { break-inside: avoid; }
+}
+
 /* Assure la même teinte pour les listes dans les slides */
 .slide li {
   color: var(--muted);
