@@ -803,7 +803,9 @@ img {
 
   #presentation .grid-2 {
     gap: 0;
-    align-items: stretch;
+    align-items: center;
+    align-content: center;
+    justify-items: center;
     min-height: var(--slide-h);
   }
 
@@ -842,6 +844,18 @@ img {
     margin-right: 6px;
     top: auto; left: auto;
   }
+
+  /* Remplir davantage l'espace texte en desktop */
+  #presentation .presentation-text { max-width: min(1100px, 94vw); }
+  #presentation .presentation-text p,
+  #presentation .presentation-text li { font-size: 1.06rem; line-height: 1.7; }
+}
+
+/* Tablette: augmente légèrement la largeur et la lisibilité */
+@media (min-width: 700px) and (max-width: 899px) {
+  #presentation .presentation-text { max-width: min(980px, 94vw); }
+  #presentation .presentation-text p,
+  #presentation .presentation-text li { font-size: 1.04rem; line-height: 1.65; }
 }
 
 /* Carte image à droite (desktop) */
