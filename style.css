@@ -8,6 +8,9 @@
   --slide-h: 100svh;
   --slide-pad: clamp(24px, 4vw, 56px);
   --content-w: min(860px, 92vw);
+  /* Text shadows for readability on image backgrounds */
+  --txtshadow-soft: 0 1px 3px rgba(0, 0, 0, .45);
+  --txtshadow-strong: 0 2px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
   /* Couleur des titres (fixe, identique en light/dark sauf override spécifique) */
   --heading-color: #ffffff;
   /* Vignette de fondu aux bords haut/bas */
@@ -700,6 +703,24 @@ img {
   background: transparent;
 }
 
+/* Improve legibility of text on slide backgrounds */
+.slide h1,
+.slide h2 { text-shadow: var(--txtshadow-strong); }
+
+.slide h3,
+.slide h4,
+.slide p,
+.slide .lead,
+.slide li,
+.slide a,
+.slide .kicker,
+.slide .tag,
+.slide .kpi .val,
+.slide .kpi .lab { text-shadow: var(--txtshadow-soft); }
+
+/* Ensure list markers created via ::before stay crisp */
+.list.check li::before { text-shadow: none; }
+
 /* Assure la même teinte pour les listes dans les slides */
 .slide li {
   color: var(--muted);
@@ -800,6 +821,27 @@ img {
     box-shadow: none;
   }
   #presentation .grid-2 { grid-template-columns: 1fr; justify-items: center; }
+
+  /* Centrer tout le contenu textuel de la slide Présentation en desktop */
+  #presentation .presentation-text h1,
+  #presentation .presentation-text h2,
+  #presentation .presentation-text h3,
+  #presentation .presentation-text p,
+  #presentation .presentation-text .lead,
+  #presentation .presentation-text .kpis,
+  #presentation .presentation-text .tags,
+  #presentation .presentation-text .btn,
+  #presentation .presentation-text a { text-align: center; margin-left: auto; margin-right: auto; }
+
+  /* Listes centrées visuellement (réarrange le check) */
+  #presentation .list { text-align: center; }
+  #presentation .list li { padding-left: 0; }
+  #presentation .list.check li::before {
+    position: static;
+    display: inline-block;
+    margin-right: 6px;
+    top: auto; left: auto;
+  }
 }
 
 /* Carte image à droite (desktop) */

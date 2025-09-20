@@ -194,13 +194,21 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const isHomePage = /(?:^\/$|index\.html$)/.test(location.pathname);
   if (!isHomePage) return;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // Ne rejoue pas l'intro si déjà lancée pendant cette session (retour depuis programme.html, etc.)
-  try { if (sessionStorage.getItem('intro_hinomaru') === '1') return; } catch(_){}
+  // Si on revient via back/forward (ex: depuis programme), ne pas rejouer
+  try {
+    const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+    const isBackForward = nav ? nav.type === 'back_forward' : (performance.navigation && performance.navigation.type === 2);
+    if (isBackForward) return;
+  } catch(_){}
 
   function play(){
     const navDot = document.querySelector('.brand .hinomaru');
     if (!navDot) return;
-    try { sessionStorage.setItem('intro_hinomaru', '1'); } catch(_){}
+    // Marque l'intro active et fige le scroll pour éviter tout jank
+    window.__INTRO_ACTIVE = true;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    // Pas de mémorisation de session: l'intro rejoue à chaque arrivée sur la home (hors retour back/forward)
     const ov = document.createElement('div');
     ov.className = 'intro-hinomaru';
     const dot = document.createElement('div');
@@ -257,41 +265,31 @@ document.getElementById('y').textContent = new Date().getFullYear();
       return arr;
     }
 
-    // échantillonnage plus fin pour une courbe plus souple
-    const frames = sample(anchors, 14);
-    const loops = 3; // exactement 3 virages majeurs
-    const kfs = frames.map((pt, i) => {
-      const t = i / (frames.length - 1);
-      const carve = 1 + 0.015 * Math.cos(t * Math.PI * 4); // carving plus discret
-      const sc = (i === frames.length - 1) ? 1.00 : carve; // pleine taille avant freinage
-      // Ralentit en début de boucle, accélère en fin (par keyframe easing)
-      const loopT = (t * loops) % 1; // 0..1 au sein du virage courant
-      const easing = loopT < 0.6 ? 'cubic-bezier(.42,0,1,1)' /* ease-in */ : 'linear';
-      return {
-        transform: `translate(${Math.round(pt.x)}px, ${Math.round(pt.y)}px) scale(${sc.toFixed(3)})`,
-        easing
-      };
-    });
+    // échantillonnage plus fin et déplacement linéaire (pas d'easing ni de scale per-frame)
+    const frames = sample(anchors, 24);
+    const kfs = frames.map((pt) => ({
+      transform: `translate3d(${Math.round(pt.x)}px, ${Math.round(pt.y)}px, 0) scale(1)`
+    }));
     // Phase 1: trajet principal (≈70%), Phase 2: freinage (≈30%), puis fondu
     const travelMs = 1400; // 1.4s pour la courbe
     const brakeMs = 600;   // 0.6s de freinage avant le fondu
     const travel = dot.animate(kfs, { duration: travelMs, easing: 'linear', fill: 'forwards' });
     travel.onfinish = () => {
-      const endTx = `translate(${Math.round(end.x)}px, ${Math.round(end.y)}px)`;
+      const endTx = `translate3d(${Math.round(end.x)}px, ${Math.round(end.y)}px, 0)`;
       const brake = dot.animate([
         { transform: `${endTx} scale(1)` },
-        { transform: `${endTx} scale(1.08)`, offset: 0.4, easing: 'cubic-bezier(.16,1,.3,1)' },
-        { transform: `${endTx} scale(0.90)` }
+        { transform: `${endTx} scale(1.05)`, offset: 0.4, easing: 'cubic-bezier(.16,1,.3,1)' },
+        { transform: `${endTx} scale(0.94)` }
       ], { duration: brakeMs, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
       brake.onfinish = () => {
         // Démarre le fondu juste après cette seconde de freinage
         const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: 'linear', fill: 'forwards' });
-        fade.onfinish = () => { ov.remove(); };
+        fade.onfinish = () => { ov.remove(); window.__INTRO_ACTIVE = false; document.body.style.overflow = prevOverflow || ''; };
       };
     };
 
     // Skip on user interaction
-    const skip = () => { try { sessionStorage.setItem('intro_hinomaru','1'); } catch(_){} ov.remove(); cleanup(); };
+    const skip = () => { ov.remove(); window.__INTRO_ACTIVE = false; document.body.style.overflow = prevOverflow || ''; cleanup(); };
     function cleanup(){ ['click','keydown','wheel','touchstart'].forEach(ev=> window.removeEventListener(ev, skip, { passive:true })); }
     ['click','keydown','wheel','touchstart'].forEach(ev=> window.addEventListener(ev, skip, { passive:true }));
   }
@@ -434,7 +432,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   if (prefersReduced) return; // accessibilité (stop parallax)
 
   function onScroll() {
-    if (window.__SNAP_ACTIVE) return; // fige le parallax pendant l'auto-snap pour éviter les accrocs
+    if (window.__SNAP_ACTIVE || window.__INTRO_ACTIVE) return; // fige le parallax pendant snap/intro
     const vh = window.innerHeight;
     const vw = window.innerWidth || 1024;
     const depth = vw <= 360 ? 0.10 : (vw <= 480 ? 0.14 : 0.18); // parallax adouci sur petits écrans
@@ -476,6 +474,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   if (!heroVideoEl) return;
 
   function onScrollHero(){
+    if (window.__SNAP_ACTIVE || window.__INTRO_ACTIVE) return;
     const hero = heroVideoEl.closest('.slide');
     if (!hero) return;
     const vh = window.innerHeight;
