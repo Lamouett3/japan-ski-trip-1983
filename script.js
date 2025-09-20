@@ -286,7 +286,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     document.body.appendChild(ov);
 
     const vw = window.innerWidth, vh = window.innerHeight;
-    const size = Math.max(28, Math.min(64, Math.round(Math.min(vw, vh)*0.06)));
+    // Taille de base réduite pour un rendu plus discret
+    const size = Math.max(18, Math.min(48, Math.round(Math.min(vw, vh) * 0.045)));
     dot.style.width = dot.style.height = size + 'px';
 
     const start = { x: -size*2, y: Math.round(vh*0.5 - size/2) };
@@ -297,30 +298,34 @@ document.getElementById('y').textContent = new Date().getFullYear();
     // Skip heavy motion if user prefers reduced motion
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
-    // Pulsations cardiaques x3 directement sur la position finale, puis réduction et fondu
-    // Pulsations cardiaques pattern: un–deux, silence, un–deux
-    const pulseMs = 1200;   // 1.2s total: 2 battements, pause, 2 battements
-    const brakeMs = 200;   // réduction finale
+    // Pulsations cardiaques x3 directement sur la position finale, avec effet de lueur (glow), puis réduction et fondu
+    // Rythme calmé: un–deux, longue pause, un–deux (fluide)
+    const pulseMs = 1800;   // 1.8s total: un cran plus rapide
+    const brakeMs = 220;    // freinage un peu plus net
     const endTx = `translate3d(${Math.round(end.x)}px, ${Math.round(end.y)}px, 0)`;
     dot.style.transform = `${endTx} scale(1)`;
+    // États d'ombre pour simuler l'illumination
+    const glowBase = '0 0 0 2px rgba(0,0,0,.06) inset, 0 8px 28px rgba(0,0,0,.28), 0 0 18px rgba(230,0,38,.35)';
+    const glowPeak = '0 0 0 2px rgba(0,0,0,.06) inset, 0 12px 36px rgba(0,0,0,.28), 0 0 44px rgba(230,0,38,.85)';
+    const colorBase = '#e60026';
+    const colorPeak = '#ff3045';
 
     const pulseKfs = [
       // départ
-      { transform: `${endTx} scale(1)`, offset: 0 },
-      // un — premier battement
-      { transform: `${endTx} scale(1.18)`, offset: 0.10, easing: 'cubic-bezier(.22,.61,.36,1)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.20 },
+      { transform: `${endTx} scale(1)`, offset: 0, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // un — premier battement (plus tardif)
+      { transform: `${endTx} scale(1.18)`, offset: 0.12, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.24, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
       // deux — deuxième battement
-      { transform: `${endTx} scale(1.18)`, offset: 0.30, easing: 'cubic-bezier(.22,.61,.36,1)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.40 },
-      // silence — reste au calme
-      { transform: `${endTx} scale(1)`,     offset: 0.65 },
-      // un — troisième battement
-      { transform: `${endTx} scale(1.18)`, offset: 0.75, easing: 'cubic-bezier(.22,.61,.36,1)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.85 },
-      // deux — quatrième battement
-      { transform: `${endTx} scale(1.18)`, offset: 0.92, easing: 'cubic-bezier(.22,.61,.36,1)' },
-      { transform: `${endTx} scale(1)`,     offset: 1 }
+      { transform: `${endTx} scale(1.18)`, offset: 0.36, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.48, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // silence — longue pause
+      { transform: `${endTx} scale(1)`,     offset: 0.80, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // un — troisième battement (final)
+      { transform: `${endTx} scale(1.18)`, offset: 0.90, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.98, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // dernier état (repos)
+      { transform: `${endTx} scale(1)`,     offset: 1, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' }
     ];
 
     const pulse = dot.animate(pulseKfs, { duration: pulseMs, easing: 'linear', fill: 'forwards' });

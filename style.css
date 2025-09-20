@@ -1994,8 +1994,20 @@ footer {
   position: fixed;
   inset: 0;
   z-index: 2000;
-  background: #f5efe6; /* crème doux */
+  /* Pas de fond: l'animation se joue sans voile */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
   display: block;
+}
+
+/* Variante thème clair: couleur du header (light) */
+[data-theme="light"] .intro-hinomaru {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
 }
 
 .intro-dot {
