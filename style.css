@@ -740,6 +740,50 @@ img {
 #guide .list li { padding-left: 26px; font-size: 1.06rem; line-height: 1.7; }
 #guide .list li::before { content: ""; position: absolute; left: 6px; top: 10px; width: 8px; height: 8px; border-radius: 999px; background: rgba(255,255,255,.85); }
 
+/* Guide header (profil) */
+#guide .guide-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+#guide .guide-header .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  color: #0e1116;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: .4px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.28);
+}
+
+#guide .guide-header .meta .role {
+  font-size: .9rem;
+  opacity: .9;
+}
+
+#guide .guide-header .meta h2 { margin: 0; }
+
+/* Guide: tags essentiels mis en avant */
+#guide .tags.key .tag {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255,255,255,.22);
+}
+
+/* Guide: collapsible */
+#guide .more-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 360ms cubic-bezier(.22,.61,.36,1);
+}
+
+#guide .more-toggle { white-space: nowrap; }
+
 @media (min-width: 900px) {
   #guide .slide-inner { width: min(1040px, 94vw); }
   /* split points into two columns on desktop for a balanced block */
