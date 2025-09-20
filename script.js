@@ -297,62 +297,40 @@ document.getElementById('y').textContent = new Date().getFullYear();
     // Skip heavy motion if user prefers reduced motion
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
-    // Trajectoire "skieur" depuis bas-gauche vers la marque (courbe Catmull-Rom), 5s
-    const total = 2000; // ms (2s)
-    const startBL = { x: -size * 2, y: vh + size };
-    // Trois virages principaux: droite → gauche → droite
-    const anchors = [
-      { x: startBL.x,  y: startBL.y },          // départ bas-gauche
-      { x: vw * 0.14,  y: vh * 0.92 },          // entrée piste
-      { x: vw * 0.64,  y: vh * 0.70 },          // 1) grande boucle à droite (remonte)
-      { x: vw * 0.48,  y: vh * 0.58 },          // petite redescente
-      { x: vw * 0.26,  y: vh * 0.38 },          // 2) virage à gauche (remonte)
-      { x: vw * 0.42,  y: vh * 0.34 },          // stabilisation légère
-      { x: vw * 0.70,  y: vh * 0.22 },          // 3) virage à droite (remonte)
-      { x: end.x,      y: end.y }               // arrivée précise
+    // Pulsations cardiaques x3 directement sur la position finale, puis réduction et fondu
+    // Pulsations cardiaques pattern: un–deux, silence, un–deux
+    const pulseMs = 1200;   // 1.2s total: 2 battements, pause, 2 battements
+    const brakeMs = 200;   // réduction finale
+    const endTx = `translate3d(${Math.round(end.x)}px, ${Math.round(end.y)}px, 0)`;
+    dot.style.transform = `${endTx} scale(1)`;
+
+    const pulseKfs = [
+      // départ
+      { transform: `${endTx} scale(1)`, offset: 0 },
+      // un — premier battement
+      { transform: `${endTx} scale(1.18)`, offset: 0.10, easing: 'cubic-bezier(.22,.61,.36,1)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.20 },
+      // deux — deuxième battement
+      { transform: `${endTx} scale(1.18)`, offset: 0.30, easing: 'cubic-bezier(.22,.61,.36,1)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.40 },
+      // silence — reste au calme
+      { transform: `${endTx} scale(1)`,     offset: 0.65 },
+      // un — troisième battement
+      { transform: `${endTx} scale(1.18)`, offset: 0.75, easing: 'cubic-bezier(.22,.61,.36,1)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.85 },
+      // deux — quatrième battement
+      { transform: `${endTx} scale(1.18)`, offset: 0.92, easing: 'cubic-bezier(.22,.61,.36,1)' },
+      { transform: `${endTx} scale(1)`,     offset: 1 }
     ];
 
-    function catmull(p0, p1, p2, p3, t){
-      const t2 = t*t, t3 = t2*t;
-      return {
-        x: 0.5 * (2*p1.x + (-p0.x + p2.x)*t + (2*p0.x - 5*p1.x + 4*p2.x - p3.x)*t2 + (-p0.x + 3*p1.x - 3*p2.x + p3.x)*t3),
-        y: 0.5 * (2*p1.y + (-p0.y + p2.y)*t + (2*p0.y - 5*p1.y + 4*p2.y - p3.y)*t2 + (-p0.y + 3*p1.y - 3*p2.y + p3.y)*t3)
-      };
-    }
-    function sample(points, segSamples){
-      const arr = [];
-      for (let i = 0; i < points.length - 1; i++){
-        const p0 = points[Math.max(0, i - 1)];
-        const p1 = points[i];
-        const p2 = points[i + 1];
-        const p3 = points[Math.min(points.length - 1, i + 2)];
-        for (let s = 0; s < segSamples; s++){
-          arr.push(catmull(p0, p1, p2, p3, s / segSamples));
-        }
-      }
-      arr.push(points[points.length - 1]);
-      return arr;
-    }
-
-    // échantillonnage plus fin et déplacement linéaire (pas d'easing ni de scale per-frame)
-    const frames = sample(anchors, 24);
-    const kfs = frames.map((pt) => ({
-      transform: `translate3d(${Math.round(pt.x)}px, ${Math.round(pt.y)}px, 0) scale(1)`
-    }));
-    // Phase 1: trajet principal (≈70%), Phase 2: freinage (≈30%), puis fondu
-    const travelMs = 1400; // 1.4s pour la courbe
-    const brakeMs = 600;   // 0.6s de freinage avant le fondu
-    const travel = dot.animate(kfs, { duration: travelMs, easing: 'linear', fill: 'forwards' });
-    travel.onfinish = () => {
-      const endTx = `translate3d(${Math.round(end.x)}px, ${Math.round(end.y)}px, 0)`;
+    const pulse = dot.animate(pulseKfs, { duration: pulseMs, easing: 'linear', fill: 'forwards' });
+    pulse.onfinish = () => {
       const brake = dot.animate([
         { transform: `${endTx} scale(1)` },
-        { transform: `${endTx} scale(1.05)`, offset: 0.4, easing: 'cubic-bezier(.16,1,.3,1)' },
-        { transform: `${endTx} scale(0.94)` }
+        { transform: `${endTx} scale(0.92)` }
       ], { duration: brakeMs, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
       brake.onfinish = () => {
-        // Démarre le fondu juste après cette seconde de freinage
-        const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 420, easing: 'linear', fill: 'forwards' });
+        const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'linear', fill: 'forwards' });
         fade.onfinish = () => { ov.remove(); window.__INTRO_ACTIVE = false; document.body.style.overflow = prevOverflow || ''; };
       };
     };
