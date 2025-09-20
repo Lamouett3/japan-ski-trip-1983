@@ -791,6 +791,16 @@ img {
   #guide .list li { break-inside: avoid; }
 }
 
+/* ===== Devis section — refined essentials + collapsible ===== */
+#devis .slide-inner { width: var(--content-w); text-align: left; }
+#devis p { margin: 6px 0; }
+#devis .tags.key .tag { background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.22); }
+#devis .more-collapsible { overflow: hidden; max-height: 0; transition: max-height 360ms cubic-bezier(.22,.61,.36,1); }
+#devis .more-toggle { white-space: nowrap; }
+@media (min-width: 900px) {
+  #devis .grid-2 { align-items: start; }
+}
+
 /* Assure la même teinte pour les listes dans les slides */
 .slide li {
   color: var(--muted);
