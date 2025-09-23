@@ -846,6 +846,14 @@ img {
   -webkit-hyphens: auto;
 }
 
+/* Lisibilité accrue du texte sur la page programme */
+body[data-page="programme"] .slide-inner h1,
+body[data-page="programme"] .slide-inner h2,
+body[data-page="programme"] .slide-inner p,
+body[data-page="programme"] .slide-inner li {
+  text-shadow: var(--txtshadow-strong);
+}
+
 /* ====== Lists & layout helpers for readable slides ====== */
 .list {
   list-style: none;
