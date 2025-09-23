@@ -195,6 +195,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const btn = document.getElementById('presentation-more-btn');
   if (!wrap || !btn) return;
   let open = false;
+  // Observe sortie de section pour refermer et réactiver auto-snap
+  let io = null;
   function set(openNow){
     open = openNow;
     btn.setAttribute('aria-expanded', String(open));
@@ -202,9 +204,25 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = 'Lire moins';
+      // Désactive temporairement l'auto-snap si présent
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Date.now() + 4000; } catch(_){}
+      // Met en place un observer qui referme si la section sort notablement de la vue
+      if (!io) {
+        io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting && entry.intersectionRatio < 0.2) {
+              set(false);
+              try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
+            }
+          });
+        }, { root: null, threshold: [0, 0.2, 0.4] });
+        const section = document.getElementById('presentation');
+        if (section) io.observe(section);
+      }
     } else {
       wrap.style.maxHeight = '0px';
       btn.textContent = 'Lire plus';
+      if (io) { try { io.disconnect(); } catch(_){} io = null; }
     }
   }
   btn.addEventListener('click', () => set(!open));
@@ -218,6 +236,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const btn = document.getElementById('guide-more-btn');
   if (!wrap || !btn) return;
   let open = false;
+  let io = null;
   function set(openNow){
     open = openNow;
     btn.setAttribute('aria-expanded', String(open));
@@ -225,9 +244,24 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = 'Lire moins';
+      // Désactive temporairement l'auto-snap si présent
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Date.now() + 4000; } catch(_){}
+      if (!io) {
+        io = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting && entry.intersectionRatio < 0.2) {
+              set(false);
+              try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
+            }
+          });
+        }, { root: null, threshold: [0, 0.2, 0.4] });
+        const section = document.getElementById('guide');
+        if (section) io.observe(section);
+      }
     } else {
       wrap.style.maxHeight = '0px';
       btn.textContent = 'Lire plus';
+      if (io) { try { io.disconnect(); } catch(_){} io = null; }
     }
   }
   btn.addEventListener('click', () => set(!open));
