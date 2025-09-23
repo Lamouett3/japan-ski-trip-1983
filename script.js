@@ -405,6 +405,50 @@ document.getElementById('y').textContent = new Date().getFullYear();
   links.setAttribute('aria-hidden', 'true');
 })();
 
+// === Formulaire de contact (Formspree) ===
+(function(){
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+  const statusEl = document.getElementById('contact-status');
+  // i18n helpers
+  function t(key, fallback){
+    const dictEl = document.querySelector(`[data-i18n="${key}"]`);
+    if (dictEl && dictEl.textContent.trim()) return dictEl.textContent.trim();
+    return fallback;
+  }
+  function setPlaceholder(el){
+    const k = el.getAttribute('data-i18n-placeholder');
+    if (!k) return;
+    // On récupère la clé dans le dictionnaire déjà chargé et on applique
+    try {
+      // Hack léger: on duplique la résolution faite par applyDict côté i18n si présent
+      // Sinon, on laisse le placeholder existant
+      const lang = document.documentElement.lang || 'fr';
+      // no direct access to dict here; if i18n loader ran, attributes data-i18n may have been translated in-place
+      // we try to find an element carrying same data-i18n key to read text
+      const probe = document.querySelector(`[data-i18n="${k}"]`);
+      if (probe && probe.textContent.trim()) el.placeholder = probe.textContent.trim();
+    } catch(_){ /* noop */ }
+  }
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(setPlaceholder);
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (statusEl){ statusEl.hidden = false; statusEl.textContent = t('contact.status.sending','Envoi en cours…'); }
+    try {
+      const data = new FormData(form);
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' }});
+      if (res.ok) {
+        if (statusEl) statusEl.textContent = t('contact.status.ok','Merci, votre message a été envoyé.');
+        form.reset();
+      } else {
+        if (statusEl) statusEl.textContent = t('contact.status.err','Une erreur est survenue. Vous pouvez aussi écrire à noviant.jerome@gmail.com');
+      }
+    } catch(_){
+      if (statusEl) statusEl.textContent = t('contact.status.offline','Réseau indisponible. Réessayez ou écrivez à noviant.jerome@gmail.com');
+    }
+  });
+})();
+
 // === Inject backgrounds + Parallax au scroll ===
 (function() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
