@@ -30,5 +30,19 @@
   },
   "guide": {"title": "Your guide — Jérôme Noviant"},
   "quote": {"title": "Get your personalized quote and travel with peace of mind."},
-  "contact": {"title": "Contact me"}
+  "contact": {"title": "Contact me"},
+  "day2": {
+    "title": "Day 2 \u2013 Traditions, gastronomy and Tokyo's effervescence",
+    "p1": "The second day begins in the Asakusa district, Tokyo's historic heart. You will discover the majestic Sens\u014d-ji temple, the city's oldest, famous for its Kaminarimon gate and five-storey pagoda. The spiritual atmosphere here contrasts with the lively Nakamise street, lined with small craft shops and local food stalls.",
+    "p2": "The morning continues with a visit to the Tsukiji market, long considered one of the world's largest fish markets. Japanese gastronomy comes to life here: colourful stalls, freshly caught fish and an authentic atmosphere. Instead of a conventional breakfast, you will enjoy a street-food style lunch on site — the perfect opportunity to taste sushi, sashimi, skewers and other local specialties.",
+    "p3": "In the afternoon head to Ginza, nicknamed Tokyo's Champs-\u00c9lys\u00e9es. This chic and sophisticated district mixes modern architecture, department stores, luxury boutiques and galleries, offering a refined side of the capital.",
+    "p4": "The day ends in one of contemporary Japan's most emblematic places: Shibuya. Experience the famous Shibuya Crossing in person — the world's busiest pedestrian intersection. Between glittering neon signs, giant screens and the flow of people, this place perfectly captures Tokyo's energy."
+  },
+  "day1": {
+    "title": "Day 1 – Arrival in Tokyo, immersion between Akihabara and Ueno",
+    "p1": "Upon arrival at Haneda Airport, you are warmly welcomed before your transfer to Akihabara, nicknamed Electric City, a hotspot for electronics, manga and Japanese pop culture. It’s the perfect starting point to dive into Tokyo’s unique energy.",
+    "p2": "After collecting your Suica travel card and setting up an eSIM to stay connected throughout the trip, head to the hotel to drop your bags and check in.",
+    "p3": "In the afternoon, enjoy a first guided stroll through the bustling Ameya‑Yokochō shopping street in Ueno. Its lively alleys are full of small shops, traditional markets and Japanese street snacks where you can try grilled yakitori and other local specialties. This immersion into everyday Tokyo life offers a first glimpse of the capital’s culinary and cultural richness.",
+    "p4": "The day ends with a friendly Shabu‑Shabu dinner, a traditional Japanese hotpot where everyone cooks vegetables and thin slices of meat in a flavorful broth. An authentic, unifying culinary experience to start the adventure well."
+  }
 }

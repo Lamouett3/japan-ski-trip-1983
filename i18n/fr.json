@@ -30,5 +30,12 @@
   },
   "guide": {"title": "Votre guide — Jérôme Noviant"},
   "quote": {"title": "Obtenez votre devis personnalisé et partez l’esprit libre."},
-  "contact": {"title": "Contactez‑moi"}
+  "contact": {"title": "Contactez‑moi"},
+  "day1": {
+    "title": "Jour 1 – Arrivée à Tokyo, immersion entre Akihabara et Ueno",
+    "p1": "À votre arrivée à l’aéroport d’Haneda, vous êtes chaleureusement accueillis avant votre transfert vers Akihabara, surnommée Electric City, haut lieu de l’électronique, des mangas et de la pop culture japonaise. C’est le point de départ idéal pour plonger dans l’énergie unique de Tokyo.",
+    "p2": "Après la récupération de votre titre de transport Suica et l’installation d’une eSIM pour rester connecté tout au long du séjour, direction l’hôtel pour le dépôt des bagages et le check-in.",
+    "p3": "L’après-midi, place à une première balade guidée dans l’effervescente galerie marchande d’Ameya-Yokocho à Ueno. Ses ruelles animées regorgent de petites échoppes, de marchés typiques et de snacks de rue japonais où l’on goûte volontiers aux yakitori grillés et autres spécialités locales. Cette immersion dans la vie quotidienne tokyoïte donne un premier aperçu de la richesse culinaire et culturelle de la capitale.",
+    "p4": "La journée se conclut autour d’un dîner convivial de Shabu-Shabu, une fondue japonaise traditionnelle où chacun fait cuire légumes et fines tranches de viande dans un bouillon parfumé. Une expérience culinaire authentique et fédératrice pour bien démarrer l’aventure."
+  }
 }
