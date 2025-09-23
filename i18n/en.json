@@ -39,6 +39,29 @@
     "p4": "Late afternoon is dedicated to getting familiar with and adjusting ski equipment (skis and poles, excluding boots), so everyone can start the ski days with confidence.",
     "p5": "In the evening, enjoy a convivial dinner in an Izakaya — Japanese taverns where you share a variety of dishes and drinks in a warm atmosphere. To wrap up this first day in the mountains, relax in an onsen, Japan’s hot spring bath, perfect for recovery and to prepare for the snowy adventures ahead."
   },
+  "day5": {
+    "title": "Day 5 – First tracks in Japanese powder",
+    "p1": "This day marks the true start of the snow adventure. Head to Japan’s Alps with the legendary Happo‑One resort — a top international ski destination and a 1998 Olympic venue — or to Hokkaido’s pristine slopes, Japan’s northernmost island famed for its feather‑light powder carried by Siberian winds.",
+    "p2": "On site, you’ll purchase your skipasses (paid with your personal bank card, which activates included insurances). Then comes the long‑awaited moment: a full day dedicated to powder skiing. Depending on conditions, explore ski resorts, try some backcountry, or simply enjoy perfectly groomed runs. Japan’s snow, renowned for its incredible lightness and abundance, promises unique sensations whether you’re an experienced skier or exploring new thrills.",
+    "p3": "Lunch is at a local mountain hut with views of the peaks, serving simple, revitalizing cuisine — the perfect way to refuel in a warm atmosphere before heading back out for the afternoon.",
+    "p4": "In the evening, enjoy convivial Japanese dining. Depending on destination and availability, savor Teppan‑yaki (meats and vegetables grilled in front of you), Izakaya (a variety of shared small plates), a local barbecue or a hearty bowl of steaming ramen.",
+    "p5": "To end the day gently, unwind in an onsen — Japan’s natural hot springs. These thermal baths, often nestled in authentic settings, relax the muscles and let you fully absorb the magic of an unforgettable day of skiing."
+  },
+  "day6": {
+    "title": "Day 6 – Endless powder and immersion in Japanese art of living",
+    "p1": "After a first day already rich in sensations, continue your adventure on the slopes of Happo‑One in Japan’s Alps — a 1998 Olympic venue — or across Hokkaido’s vast ski areas, the northern island swept by Siberian winds and renowned for some of the lightest snow in the world.",
+    "p2": "The morning begins by picking up your skipasses (paid with your personal bank card, activating the included insurance), then heading out for another full day of powder skiing. Depending on piste conditions and weather, explore backcountry for the freedom of off‑piste, or enjoy modern resorts offering an endless variety of terrain for all levels.",
+    "p3": "At lunchtime, stop at a local mountain hut, where simple, hearty cuisine helps you recharge while admiring snowy panoramas.",
+    "p4": "In the evening, discovery continues over an authentic Japanese dinner: flamboyant Teppan‑yaki, friendly Izakaya, local barbecue or comforting ramen — each meal becomes a culinary journey in itself.",
+    "p5": "The day ends in the serenity of an onsen, a traditional hot‑spring bath. The mineral hot water soothes tired muscles and offers a unique moment of relaxation, under the stars or facing pristine mountains — a perfect way to conclude another exceptional day of skiing in Japan."
+  },
+  "day7": {
+    "title": "Day 7 – Last runs and return to Tokyo",
+    "p1": "For this final day, enjoy your last moments on Japan’s slopes. Whether on the legendary Happo‑One resort in the Japanese Alps — a 1998 Olympic venue — or on Hokkaido’s pristine mountains near Siberia, savor this unique, world‑class powder one last time.",
+    "p2": "The morning is dedicated to a half‑day of skiing. After purchasing your skipass, string together your final runs, enjoying every turn as a memory to take home. It’s the perfect opportunity to imprint these spectacular landscapes and the unique atmosphere of Japan’s mountains.",
+    "p3": "Early afternoon, head back to Tokyo. Depending on the time available, share a quick lunch at the station or airport at one of the many Japanese eateries, then grab a light dinner before departure.",
+    "p4": "In the evening, board your overnight flight from Haneda to Paris, your mind still full of images of temples, neon lights, powder snow and onsen. A gentle return that wraps up an exceptional week of cultural discovery and outstanding skiing in Japan."
+  },
   "day3": {
     "title": "Day 3 – Imperial heritage, ski shops and breathtaking panoramas",
     "p1": "Your third day in Tokyo begins with the discovery of Tokyo Station, a true railway cathedral and one of the world's largest stations. With its 800 shops, underground galleries and restaurants, it’s both practical and fascinating — a perfect illustration of the capital’s fast pace.",

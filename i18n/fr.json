@@ -39,6 +39,29 @@
     "p4": "La fin d’après-midi est consacrée à la prise en main et au réglage du matériel de ski (skis et bâtons, hors chaussures), afin que chacun puisse débuter les journées de glisse en toute sérénité.",
     "p5": "La soirée s’ouvre sur un dîner convivial dans un Izakaya, ces tavernes japonaises où l’on partage une multitude de plats et boissons dans une ambiance chaleureuse. Pour conclure cette première journée en montagne, rien de tel qu’un moment de détente dans un onsen, bain thermal japonais aux vertus relaxantes, idéal pour récupérer et se préparer aux aventures enneigées du lendemain."
   },
+  "day5": {
+    "title": "Jour 5 – Première trace dans la poudreuse japonaise",
+    "p1": "Cette journée marque le véritable début de l’aventure sur neige. Direction les Alpes japonaises avec la station mythique de Happo-One, haut lieu du ski international et site des Jeux Olympiques de 1998, ou bien les pentes immaculées d’Hokkaido, l’île la plus septentrionale du Japon, célèbre pour sa neige légère portée par les vents de Sibérie.",
+    "p2": "Sur place, vous achetez vos skipass (règlement par carte bancaire personnelle, permettant d’activer les assurances incluses). Puis vient le moment tant attendu : une journée entière consacrée au ski de poudreuse. Selon les conditions, vous explorez les domaines skiables (resorts), testez le backcountry ou profitez simplement de pistes parfaites pour la glisse. La neige japonaise, réputée pour son incroyable légèreté et son abondance, promet des sensations uniques, que l’on soit skieur confirmé ou amateur de nouvelles expériences.",
+    "p3": "La pause déjeuner se fait dans un refuge local, face aux montagnes, où l’on savoure une cuisine simple et revigorante. L’occasion idéale de reprendre des forces dans une atmosphère chaleureuse avant de repartir pour l’après-midi de ski.",
+    "p4": "En soirée, place à la convivialité autour d’un dîner traditionnel japonais. Selon la destination et les disponibilités, vous dégustez un Teppan-Yaki (viandes et légumes grillés devant vous), un Izakaya (taverne japonaise aux plats variés), un barbecue local ou encore un grand bol de ramen fumants.",
+    "p5": "Pour terminer la journée en douceur, rien de tel qu’un moment de relaxation dans un onsen, bain thermal japonais naturel. Ces sources chaudes, nichées dans des décors authentiques, permettent de détendre les muscles et d’absorber pleinement la magie d’une journée de ski inoubliable."
+  },
+  "day6": {
+    "title": "Jour 6 – Poudreuse infinie et immersion dans l’art de vivre japonais",
+    "p1": "Après une première journée déjà riche en sensations, vous poursuivez votre aventure sur les pistes de Happo-One, dans les Alpes japonaises, haut lieu des Jeux Olympiques de 1998, ou bien sur les vastes domaines d’Hokkaido, île septentrionale battue par les vents de Sibérie et réputée pour offrir l’une des neiges les plus légères au monde.",
+    "p2": "La matinée débute par la récupération de vos skipass (règlement par carte bancaire personnelle, permettant l’activation de l’assurance intégrée), puis cap sur une nouvelle journée de ski de poudreuse. Selon l’état des pistes et les conditions météo, vous explorez le backcountry pour goûter à la liberté des hors-pistes, ou profitez des resorts modernes offrant une variété infinie de terrains adaptés à tous les niveaux.",
+    "p3": "Le midi, vous faites halte dans un refuge de montagne local, où la cuisine simple et généreuse permet de recharger les batteries tout en admirant les panoramas enneigés.",
+    "p4": "En soirée, la découverte se poursuit autour d’un dîner japonais authentique : Teppan-Yaki flamboyant, Izakaya convivial, barbecue local ou ramen réconfortants, chaque repas devient un voyage culinaire à part entière.",
+    "p5": "La journée se termine dans la sérénité d’un onsen, bain thermal traditionnel. L’eau chaude minérale apaise les muscles sollicités et offre un moment unique de détente, sous les étoiles ou face aux montagnes immaculées. Une façon parfaite de conclure une nouvelle journée de ski d’exception au Japon."
+  },
+  "day7": {
+    "title": "Jour 7 – Derniers runs et retour vers Tokyo",
+    "p1": "Pour cette ultime journée, place aux derniers instants de glisse sur les pistes japonaises. Que ce soit sur le mythique domaine de Happo-One, dans les Alpes japonaises et site des Jeux Olympiques de 1998, ou sur les montagnes immaculées d’Hokkaido, proche de la Sibérie, vous profitez une dernière fois de cette neige poudreuse unique au monde.",
+    "p2": "La matinée est consacrée à une demi-journée de ski. Après l’achat de votre skipass, vous enchaînez les ultimes descentes, en savourant chaque virage comme un souvenir à emporter avec vous. C’est l’occasion idéale de graver dans votre mémoire ces paysages spectaculaires et l’atmosphère si particulière des montagnes japonaises.",
+    "p3": "En début d’après-midi, retour vers Tokyo. Selon le temps disponible, vous partagez un déjeuner rapide à la gare ou à l’aéroport, dans l’une des nombreuses enseignes japonaises, puis un dîner sur le pouce avant le départ.",
+    "p4": "En soirée, vous embarquez à bord de votre vol de nuit depuis Haneda vers Paris, la tête encore pleine d’images de temples, de néons, de poudreuse et d’onsen. Un retour en douceur qui clôture une semaine exceptionnelle entre découverte culturelle et ski d’exception au Japon."
+  },
   "day3": {
     "title": "Jour 3 – Entre patrimoine impérial, ski shops et panoramas à couper le souffle",
     "p1": "Votre troisième journée à Tokyo débute par la découverte de Tokyo Station, véritable cathédrale ferroviaire et plus grande gare du monde. Avec ses 800 boutiques, galeries souterraines et restaurants, c’est un lieu à la fois pratique et fascinant qui illustre parfaitement le rythme effréné de la capitale japonaise.",
