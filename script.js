@@ -620,6 +620,10 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) return;
 
+  // Désactive l'auto-snap sur la page programme (lecture jour par jour)
+  const isProgramme = /programme\.html$/i.test(location.pathname) || /programme/i.test(document.title);
+  if (isProgramme) return;
+
   const container = document.querySelector('.slides');
   if (!container) return;
 
