@@ -826,6 +826,7 @@ img {
 #devis .tags.key .tag { background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.22); }
 #devis .more-collapsible { overflow: hidden; max-height: 0; transition: max-height 360ms cubic-bezier(.22,.61,.36,1); }
 #devis .more-toggle { white-space: nowrap; }
+/* (revert) pas de padding-bottom spécifique mobile pour #devis */
 @media (min-width: 900px) {
   #devis .grid-2 { align-items: start; }
 }
