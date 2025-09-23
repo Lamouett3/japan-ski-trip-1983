@@ -286,58 +286,75 @@ document.getElementById('y').textContent = new Date().getFullYear();
     document.body.appendChild(ov);
 
     const vw = window.innerWidth, vh = window.innerHeight;
-    // Taille de base réduite pour un rendu plus discret
-    const size = Math.max(18, Math.min(48, Math.round(Math.min(vw, vh) * 0.045)));
+    const navEl = document.querySelector('.nav.jpn');
+    const navRect = navEl ? navEl.getBoundingClientRect() : null;
+    const desktop = vw >= 900;
+
+    // Taille calée sur le point du header (un peu réduite pour discrétion)
+    const dotRect = navDot.getBoundingClientRect();
+    const baseSize = Math.max(dotRect.width, dotRect.height) || 12;
+    const size = Math.max(8, Math.round(baseSize * 0.85));
     dot.style.width = dot.style.height = size + 'px';
 
-    const start = { x: -size*2, y: Math.round(vh*0.5 - size/2) };
-    const mid   = { x: Math.round(vw*0.5 - size/2), y: start.y };
-    const navR  = navDot.getBoundingClientRect();
-    const end   = { x: Math.round(navR.left + navR.width/2 - size/2), y: Math.round(navR.top + navR.height/2 - size/2) };
+    // Confinement de l'overlay à la zone du header en desktop pour éviter tout chevauchement avec le titre
+    if (desktop && navRect) {
+      ov.style.top = Math.round(navRect.top) + 'px';
+      ov.style.left = Math.round(navRect.left) + 'px';
+      ov.style.width = Math.round(navRect.width) + 'px';
+      ov.style.height = Math.round(navRect.height) + 'px';
+      ov.style.right = 'auto';
+      ov.style.bottom = 'auto';
+    }
+
+    // Coordonnées finales du point relatives à l'origine de l'overlay
+    const originLeft = (desktop && navRect) ? navRect.left : 0;
+    const originTop  = (desktop && navRect) ? navRect.top  : 0;
+    const end = {
+      x: Math.round(dotRect.left + dotRect.width/2 - originLeft - size/2),
+      y: Math.round(dotRect.top  + dotRect.height/2 - originTop  - size/2)
+    };
+    const start = end;
+    const mid = end;
 
     // Skip heavy motion if user prefers reduced motion
     if (prefersReduced) { ov.style.opacity = '0'; setTimeout(()=> { ov.remove(); }, 60); return; }
 
-    // Pulsations cardiaques x3 directement sur la position finale, avec effet de lueur (glow), puis réduction et fondu
-    // Rythme calmé: un–deux, longue pause, un–deux (fluide)
-    const pulseMs = 1800;   // 1.8s total: un cran plus rapide
-    const brakeMs = 220;    // freinage un peu plus net
+    // Pulsations cardiaques (4 battements au total = 2 cycles complets)
+    const pulseMs = 2200;   // un peu plus lent pour un rythme organique
     const endTx = `translate3d(${Math.round(end.x)}px, ${Math.round(end.y)}px, 0)`;
+    // Taille de repos: scale(1); on animera une légère dilatation/contraction aux battements
     dot.style.transform = `${endTx} scale(1)`;
     // États d'ombre pour simuler l'illumination
-    const glowBase = '0 0 0 2px rgba(0,0,0,.06) inset, 0 8px 28px rgba(0,0,0,.28), 0 0 18px rgba(230,0,38,.35)';
-    const glowPeak = '0 0 0 2px rgba(0,0,0,.06) inset, 0 12px 36px rgba(0,0,0,.28), 0 0 44px rgba(230,0,38,.85)';
+    const glowBase = '0 0 0 2px rgba(0,0,0,.06) inset, 0 12px 36px rgba(0,0,0,.32), 0 0 28px rgba(230,0,38,.55), 0 0 3px rgba(255,255,255,.22)';
+    const glowPeak = '0 0 0 2px rgba(0,0,0,.06) inset, 0 18px 48px rgba(0,0,0,.38), 0 0 120px rgba(230,0,38,1), 0 0 12px rgba(255,255,255,.4)';
     const colorBase = '#e60026';
     const colorPeak = '#ff3045';
 
     const pulseKfs = [
-      // départ
+      // départ — calme
       { transform: `${endTx} scale(1)`, offset: 0, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
-      // un — premier battement (plus tardif)
-      { transform: `${endTx} scale(1.18)`, offset: 0.12, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.24, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
-      // deux — deuxième battement
-      { transform: `${endTx} scale(1.18)`, offset: 0.36, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.48, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
-      // silence — longue pause
-      { transform: `${endTx} scale(1)`,     offset: 0.80, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
-      // un — troisième battement (final)
-      { transform: `${endTx} scale(1.18)`, offset: 0.90, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.08)' },
-      { transform: `${endTx} scale(1)`,     offset: 0.98, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
-      // dernier état (repos)
+      // 1er cycle (lub‑dub): fort (lub)
+      { transform: `${endTx} scale(1.95)`, offset: 0.08, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.35)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.13, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // 1er cycle: faible (dub)
+      { transform: `${endTx} scale(1.65)`,  offset: 0.20, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.18)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.26, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // pause plus longue
+      { transform: `${endTx} scale(1)`,     offset: 0.58, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // 2e cycle (lub‑dub): fort (lub)
+      { transform: `${endTx} scale(1.95)`, offset: 0.66, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.35)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.71, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // 2e cycle: faible (dub)
+      { transform: `${endTx} scale(1.65)`,  offset: 0.78, easing: 'cubic-bezier(.22,.61,.36,1)', 'box-shadow': glowPeak, 'background-color': colorPeak, filter: 'brightness(1.18)' },
+      { transform: `${endTx} scale(1)`,     offset: 0.86, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' },
+      // repos final
       { transform: `${endTx} scale(1)`,     offset: 1, 'box-shadow': glowBase, 'background-color': colorBase, filter: 'brightness(1)' }
     ];
 
     const pulse = dot.animate(pulseKfs, { duration: pulseMs, easing: 'linear', fill: 'forwards' });
     pulse.onfinish = () => {
-      const brake = dot.animate([
-        { transform: `${endTx} scale(1)` },
-        { transform: `${endTx} scale(0.92)` }
-      ], { duration: brakeMs, easing: 'cubic-bezier(.22,.61,.36,1)', fill: 'forwards' });
-      brake.onfinish = () => {
-        const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, easing: 'linear', fill: 'forwards' });
-        fade.onfinish = () => { ov.remove(); window.__INTRO_ACTIVE = false; document.body.style.overflow = prevOverflow || ''; };
-      };
+      const fade = ov.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 280, easing: 'linear', fill: 'forwards' });
+      fade.onfinish = () => { ov.remove(); window.__INTRO_ACTIVE = false; document.body.style.overflow = prevOverflow || ''; };
     };
 
     // Skip on user interaction
