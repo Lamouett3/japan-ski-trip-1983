@@ -275,9 +275,9 @@ img {
 .nav .inner {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 12px 24px;
   /* Taille standard des boutons de la zone droite du header */
   --hdr-btn: clamp(34px, 4.2vw, 40px);
 }
@@ -292,24 +292,32 @@ img {
    sans dépasser la bordure arrondie de la nav */
 @media (min-width: 1200px) {
   .nav .inner {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
   .nav .brand {
     margin-left: -4px;
   }
+
+  /* Desktop: plus d'air entre les liens et les contrôles */
+  .nav .links { gap: 16px; }
+  .nav .inner > :last-child { gap: 12px; }
 }
 
 @media (min-width: 1600px) {
   .nav .inner {
-    padding-left: 4px;
-    padding-right: 4px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
   .nav .brand {
     margin-left: -6px;
   }
+
+  /* Très grands écrans: aération renforcée */
+  .nav .links { gap: 18px; }
+  .nav .inner > :last-child { gap: 14px; }
 }
 
 .brand {
@@ -372,17 +380,17 @@ img {
 .nav .links {
   flex-wrap: nowrap;
   white-space: nowrap;
-  gap: 6px;
+  gap: 12px;
 }
 
 .nav .links a {
-  font-size: clamp(12px, 1.4vw, 14px);
-  padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
+  font-size: clamp(13px, 1.6vw, 16px);
+  padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.4vw, 14px);
 }
 
 .nav .btn {
-  font-size: clamp(12px, 1.4vw, 14px);
-  padding: clamp(6px, 0.8vw, 10px) clamp(8px, 1.2vw, 12px);
+  font-size: clamp(12px, 1.5vw, 15px);
+  padding: clamp(6px, 0.8vw, 10px) clamp(9px, 1.3vw, 13px);
 }
 
 /* ——— Menu burger (mobile) ——— */
