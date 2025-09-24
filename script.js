@@ -204,8 +204,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = 'Lire moins';
-      // Désactive temporairement l'auto-snap si présent
-      try { window.__DISABLE_AUTOSNAP_UNTIL = Date.now() + 4000; } catch(_){}
+      // Désactive l'auto-snap tant que la section est ouverte
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
       // Met en place un observer qui referme si la section sort notablement de la vue
       if (!io) {
         io = new IntersectionObserver((entries) => {
@@ -222,6 +222,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     } else {
       wrap.style.maxHeight = '0px';
       btn.textContent = 'Lire plus';
+      // Réactive l'auto-snap dès fermeture
+      try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
       if (io) { try { io.disconnect(); } catch(_){} io = null; }
     }
   }
@@ -244,8 +246,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = 'Lire moins';
-      // Désactive temporairement l'auto-snap si présent
-      try { window.__DISABLE_AUTOSNAP_UNTIL = Date.now() + 4000; } catch(_){}
+      // Désactive l'auto-snap tant que la section est ouverte
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
       if (!io) {
         io = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -261,6 +263,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     } else {
       wrap.style.maxHeight = '0px';
       btn.textContent = 'Lire plus';
+      // Réactive l'auto-snap dès fermeture
+      try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
       if (io) { try { io.disconnect(); } catch(_){} io = null; }
     }
   }
@@ -282,9 +286,13 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = 'Moins de détails';
+      // Désactive l'auto-snap tant que la section est ouverte
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
     } else {
       wrap.style.maxHeight = '0px';
       btn.textContent = 'Voir détails';
+      // Réactive l'auto-snap dès fermeture
+      try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
     }
   }
   btn.addEventListener('click', () => set(!open));
@@ -749,6 +757,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
 
   function onScroll(){
+    // Si l'auto-snap a été explicitement désactivé (voir sections "Lire plus"), ne rien faire
+    if ((window.__DISABLE_AUTOSNAP_UNTIL || 0) === Number.POSITIVE_INFINITY) return;
     if (isAuto) return;
     const now = performance.now();
     const dy = window.scrollY - lastY;
