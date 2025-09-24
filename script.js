@@ -1007,7 +1007,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   window.addEventListener('resize', update, { passive:true });
   goTo(1, true);
+
+  // Pastilles désormais pilotées directement par i18n; aucun post-traitement requis
 })();
+
+// (supprimé) Sommaire: la pastille affiche directement le libellé via i18n
 
 // === Dots de progression + lien actif nav ===
 (function(){
