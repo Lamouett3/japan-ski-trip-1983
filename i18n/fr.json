@@ -15,11 +15,34 @@
     "viewProgram": "Voir le programme",
     "lead": "<strong>Visitez Tokyo</strong> ces temples, quartiers iconiques et ces saveurs uniques — puis <strong>skiez à Hakuba</strong> et découvrez sa <strong>poudreuse légendaire</strong> dans les stations des <strong>JO 1998</strong>.<br>Encadrement personnalisé par <strong>Jérôme Noviant</strong> (<strong>30 ans d’expérience</strong> au Japon chez Rossignol)."
   },
-  "presentation": {"title": "Présentation — Ski au Japon & culture à Tokyo"},
+  "presentation": {
+    "title": "Présentation — Ski au Japon & culture à Tokyo",
+    "h2": "Une expérience rare, entre sports et traditions japonaises",
+    "p1": "Un séjour pensé pour celles et ceux qui cherchent plus qu’un simple voyage : une immersion intime au cœur du Japon, entre culture millénaire et sensations fortes en poudreuse.",
+    "p2": "<strong>Deux temps forts vous attendent</strong> : Tokyo (culture, gastronomie, quartiers iconiques) et les stations de ski japonaises, célèbres pour leur neige d’une légèreté incomparable et leurs paysages alpins à couper le souffle.",
+    "more": {
+      "p1": "Pendant une semaine, vous découvrirez deux visages du pays :",
+      "list": [
+        "<strong>Tokyo</strong>, effervescente et fascinante, où temples ancestraux côtoient néons futuristes et gastronomie d’exception.",
+        "<strong>Stations de ski japonaises</strong>, réputées pour leur poudreuse unique au monde, leurs onsen apaisants et l’ambiance authentique de leurs villages alpins."
+      ],
+      "p2": "Selon l’enneigement et votre niveau de ski, vous partirez à la découverte de <strong>Hakuba</strong>, joyau des Alpes japonaises et haut lieu des Jeux Olympiques de 1998, ou d’<strong>Hokkaido</strong>, l’île la plus au nord du Japon, où les vents glacés de Sibérie déposent chaque jour une neige fraîche et abondante.",
+      "p3": "Chaque instant est pensé pour créer une expérience inoubliable : flâner dans les ruelles d’Asakusa, partager un repas traditionnel, savourer la poudreuse immaculée au lever du soleil, puis se délasser dans un onsen face aux montagnes enneigées.",
+      "p4": "Ce séjour est volontairement limité à un petit groupe, afin de privilégier la convivialité et la qualité des échanges.",
+      "p5": "À vos côtés, <strong>Jérôme Noviant</strong>, guide passionné qui connaît le Japon comme peu d’étrangers. Après plus de <strong>30 ans</strong> passés chez <strong>Rossignol</strong> en tant que responsable du marché japonais, il vous ouvre les portes d’un pays qu’il a appris à comprendre et à aimer dans ses moindres détails. Ancien champion de ski et grand voyageur, Jérôme met son expertise au service de votre aventure, pour la rendre à la fois sûre, authentique et mémorable."
+    }
+  },
   "summary": {
     "title": "Planning du séjour",
     "cardTokyo": "Tokyo — J1 à J3",
     "cardHakuba": "Hakuba — J4 à J7",
+    "tags": [
+      "Tokyo — centre-ville",
+      "Poudreuse légendaire",
+      "Bistronomie & street food",
+      "Onsen & temples",
+      "Shinkansen"
+    ],
     "j1": "J1 · Arrivée Haneda, Akihabara, Ueno, Shabu‑Shabu",
     "j2": "J2 · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya",
     "j3": "J3 · Palais impérial, Kanda (shops ski), Skytree",
@@ -28,9 +51,79 @@
     "j6": "J6 · Tsugaike (backcountry guidé), BBQ, onsen",
     "j7": "J7 · Derniers runs, retour Tokyo, vol de nuit"
   },
-  "guide": {"title": "Votre guide — Jérôme Noviant"},
+  "guide": {
+    "title": "Votre guide — Jérôme Noviant",
+    "role": "Guide",
+    "p1": "Ancien membre de l’équipe de France (plusieurs fois champion de France et d’Europe dans les années 90), Jérôme a consacré plus de 45 ans de sa vie au ski, dont 30 ans chez Rossignol sur le marché japonais.",
+    "p2": "Il partage une passion profonde pour le Japon et ses montagnes, alliant haut niveau et connaissance intime du pays pour <strong>une aventure sûre, authentique et mémorable</strong>.",
+    "tags": [
+      "Guidage & sécurité",
+      "Expertise technique",
+      "Connexion Japon",
+      "Approche humaine"
+    ],
+    "more": {
+      "p1": "Avec Jérôme, vous découvrez bien plus qu’un voyage : une expérience taillée sur mesure, entre la meilleure neige du monde et la richesse culturelle japonaise.",
+      "list": [
+        "<strong>Guidage & sécurité</strong> : pratique du ski encadrée par un expert du ski mondial.",
+        "<strong>Expertise technique</strong> : conseils personnalisés sur la pratique et le matériel (<em>Brevet d'État français</em>).",
+        "<strong>Expérience unique du Japon</strong> : 30 ans en liens étroits avec le pays et sa culture.",
+        "<strong>Approche humaine</strong> : petit groupe de passionnés, échanges et authenticité."
+      ]
+    }
+  },
   "quote": {"title": "Obtenez votre devis personnalisé et partez l’esprit libre."},
-  "contact": {"title": "Contactez‑moi"},
+  "a11y": {
+    "toggleTheme": "Basculer clair/sombre",
+    "backToTop": "Revenir en haut",
+    "backToTopLabel": "↑ Haut"
+  },
+  "footer": {
+    "copyright": "Séjour Ski Japon — Tous droits réservés."
+  },
+  "quote": {
+    "title": "Obtenez votre devis personnalisé et partez l’esprit libre.",
+    "pricing": "<strong>Tarif indicatif</strong> · 4 990 € / personne — tout compris · <em>hors billets d’avion, skipass et alcools forts</em>",
+    "includesTitle": "Inclus",
+    "includes": [
+      "7 jours sur place (3,5 j Tokyo + 3,5 j ski)",
+      "6 nuits d’hôtels (confort & tradition)",
+      "Dîners & déjeuners en groupe (1 déjeuner libre Tokyo)",
+      "Guiding & onsen",
+      "Matériel mis à disposition : skis et cannes de ski (hors chaussures)"
+    ],
+    "logisticsTitle": "Logistique",
+    "logistics": [
+      "Transferts: taxis, train, <strong>Shinkansen</strong>, métro",
+      "Période idéale: <strong>Décembre et Janvier</strong>",
+      "Personnalisation sur mesure: niveau de ski du groupe, hors‑piste avec guide (en supplément)",
+      "Devis sur‑mesure selon vos attentes"
+    ],
+    "tags": [
+      "8 jours sur place",
+      "7 nuits au Japon",
+      "15 Décembre → 31 Janvier",
+      "Alpes japonaises ou île d’Hokkaido",
+      "Groupe réduit"
+    ],
+    "moreOpen": "Voir détails",
+    "moreClose": "Moins de détails"
+  },
+  "contact": {
+    "title": "Contactez‑moi",
+    "subtitle": "Merci d’indiquer : dates souhaitées, niveau, nombre de personnes, attentes (culture, onsen, backcountry…), aéroport d’arrivée (Haneda conseillé).",
+    "emailPlaceholder": "vous@exemple.com",
+    "emailLabel": "Votre e‑mail",
+    "messageLabel": "Votre message",
+    "sendBtn": "Envoyer",
+    "messagePlaceholder": "Bonjour, je souhaite des informations sur le séjour…",
+    "status": {
+      "sending": "Envoi en cours…",
+      "ok": "Merci, votre message a été envoyé.",
+      "err": "Une erreur est survenue. Vous pouvez aussi écrire à noviant.jerome@gmail.com",
+      "offline": "Réseau indisponible. Réessayez ou écrivez à noviant.jerome@gmail.com"
+    }
+  },
   "day4": {
     "title": "Jour 4 – Des rues de Tokyo aux montagnes enneigées",
     "p1": "La matinée débute par un temps libre dans le quartier animé d’Akihabara, véritable paradis de l’électronique, du gaming et de la culture manga. C’est l’occasion parfaite pour flâner, faire un peu de shopping ou simplement s’imprégner de l’atmosphère électrique de ce lieu incontournable de Tokyo.",

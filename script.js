@@ -85,6 +85,14 @@ window.SHOJI_GLOBAL_ENABLED = false;
         el.innerHTML = val;
       }
     });
+    // Placeholders (inputs, textarea)
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      const val = key.split('.').reduce((o,k)=> (o||{})[k], dict);
+      if (typeof val === 'string') {
+        try { el.placeholder = val; } catch(_){ /* ignore */ }
+      }
+    });
   }
   async function setLang(lang){
     try { localStorage.setItem(storeKey, lang); } catch(e){}
@@ -285,12 +293,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
     wrap.setAttribute('aria-hidden', String(!open));
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
-      btn.textContent = 'Moins de détails';
+      const closer = document.querySelector('[data-i18n="quote.moreClose"]');
+      btn.textContent = closer && closer.textContent.trim() ? closer.textContent.trim() : 'Moins de détails';
       // Désactive l'auto-snap tant que la section est ouverte
       try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
     } else {
       wrap.style.maxHeight = '0px';
-      btn.textContent = 'Voir détails';
+      const opener = document.querySelector('[data-i18n="quote.moreOpen"]');
+      btn.textContent = opener && opener.textContent.trim() ? opener.textContent.trim() : 'Voir détails';
       // Réactive l'auto-snap dès fermeture
       try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
     }

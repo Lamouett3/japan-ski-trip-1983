@@ -15,11 +15,34 @@
     "viewProgram": "View itinerary",
     "lead": "<strong>Explore Tokyo</strong> — temples, iconic districts and world‑class cuisine — then <strong>ski in Hakuba</strong> and discover its <strong>legendary powder</strong> in the <strong>1998 Olympic</strong> resorts.<br>Personalized guidance by <strong>Jérôme Noviant</strong> (<strong>30 years’ experience</strong> in Japan)."
   },
-  "presentation": {"title": "Overview — Ski in Japan & culture in Tokyo"},
+  "presentation": {
+    "title": "Overview — Ski in Japan & culture in Tokyo",
+    "h2": "A rare experience, between skiing and Japanese traditions",
+    "p1": "A trip designed for those who want more than just travel: an intimate immersion in the heart of Japan, between age‑old culture and thrilling powder snow.",
+    "p2": "<strong>Two highlights await you</strong>: Tokyo (culture, food, iconic districts) and Japan’s ski resorts, famed for their feather‑light snow and breathtaking alpine scenery.",
+    "more": {
+      "p1": "Over one week, you’ll discover two faces of the country:",
+      "list": [
+        "<strong>Tokyo</strong>, vibrant and fascinating, where age‑old temples meet futuristic neon and outstanding cuisine.",
+        "<strong>Japan’s ski resorts</strong>, famed for unique powder, soothing onsen and the authentic charm of alpine villages."
+      ],
+      "p2": "Depending on snow conditions and your ski level, you’ll explore <strong>Hakuba</strong> — a jewel of Japan’s Alps and a 1998 Olympic venue — or <strong>Hokkaido</strong>, Japan’s northernmost island, where Siberian winds bring fresh, abundant powder every day.",
+      "p3": "Every moment is crafted to be unforgettable: stroll through Asakusa’s streets, share a traditional meal, carve through pristine morning powder, then unwind in an onsen facing snow‑capped mountains.",
+      "p4": "This trip is intentionally limited to a small group to foster conviviality and quality interactions.",
+      "p5": "By your side is <strong>Jérôme Noviant</strong>, a passionate guide who knows Japan like few foreigners. With over <strong>30 years</strong> at <strong>Rossignol</strong> leading the Japanese market, he opens doors to a country he knows in intimate detail. A former ski champion and avid traveler, Jérôme brings expertise that makes your adventure safe, authentic and memorable."
+    }
+  },
   "summary": {
     "title": "Trip summary (D1 → D7)",
     "cardTokyo": "Tokyo — D1 to D3",
     "cardHakuba": "Hakuba — D4 to D7",
+    "tags": [
+      "Downtown Tokyo",
+      "Legendary powder",
+      "Bistronomy & street food",
+      "Onsen & temples",
+      "Shinkansen"
+    ],
     "j1": "D1 · Arrival Haneda, Akihabara, Ueno, Shabu‑Shabu",
     "j2": "D2 · Asakusa (Sensō‑ji), Tsukiji, Ginza, Shibuya",
     "j3": "D3 · Imperial Palace, Kanda (ski shops), Skytree",
@@ -28,9 +51,79 @@
     "j6": "D6 · Tsugaike (guided backcountry), BBQ, onsen",
     "j7": "D7 · Last runs, return to Tokyo, night flight"
   },
-  "guide": {"title": "Your guide — Jérôme Noviant"},
+  "guide": {
+    "title": "Your guide — Jérôme Noviant",
+    "role": "Guide",
+    "p1": "A former member of the French team (multiple French and European titles in the 90s), Jérôme has devoted over 45 years to skiing, including 30 years with Rossignol in the Japanese market.",
+    "p2": "He brings a deep passion for Japan and its mountains, combining high‑level expertise and intimate knowledge of the country for a <strong>safe, authentic and memorable</strong> adventure.",
+    "tags": [
+      "Guiding & safety",
+      "Technical expertise",
+      "Japan connection",
+      "Human approach"
+    ],
+    "more": {
+      "p1": "With Jérôme, you’ll experience far more than a trip: a tailor‑made adventure between the world’s finest powder snow and Japan’s rich culture.",
+      "list": [
+        "<strong>Guiding & safety</strong>: skiing supervised by a world‑class expert.",
+        "<strong>Technical expertise</strong>: personalized advice on technique and equipment (<em>French State diploma</em>).",
+        "<strong>Unique experience of Japan</strong>: 30 years of close ties with the country and its culture.",
+        "<strong>Human approach</strong>: small group of enthusiasts, genuine interactions."
+      ]
+    }
+  },
   "quote": {"title": "Get your personalized quote and travel with peace of mind."},
-  "contact": {"title": "Contact me"},
+  "a11y": {
+    "toggleTheme": "Toggle light/dark",
+    "backToTop": "Back to top",
+    "backToTopLabel": "↑ Top"
+  },
+  "footer": {
+    "copyright": "Japan Ski Trip — All rights reserved."
+  },
+  "quote": {
+    "title": "Get your personalized quote and travel with peace of mind.",
+    "pricing": "<strong>Indicative price</strong> · €4,990 / person — all inclusive · <em>excluding flights, skipass and spirits</em>",
+    "includesTitle": "Included",
+    "includes": [
+      "7 days on site (3.5 d Tokyo + 3.5 d skiing)",
+      "6 hotel nights (comfort & tradition)",
+      "Group dinners & lunches (1 free lunch in Tokyo)",
+      "Guiding & onsen",
+      "Equipment provided: skis and poles (excluding boots)"
+    ],
+    "logisticsTitle": "Logistics",
+    "logistics": [
+      "Transfers: taxis, train, <strong>Shinkansen</strong>, subway",
+      "Best time: <strong>December and January</strong>",
+      "Tailor‑made: group skill level, off‑piste with guide (optional)",
+      "Custom quote based on your expectations"
+    ],
+    "tags": [
+      "8 days on site",
+      "7 nights in Japan",
+      "Dec 15 → Jan 31",
+      "Japanese Alps or Hokkaido island",
+      "Small group"
+    ],
+    "moreOpen": "Show details",
+    "moreClose": "Hide details"
+  },
+  "contact": {
+    "title": "Contact me",
+    "subtitle": "Please include: desired dates, skill level, number of people, preferences (culture, onsen, backcountry…), arrival airport (Haneda recommended).",
+    "emailPlaceholder": "you@example.com",
+    "emailLabel": "Your email",
+    "messageLabel": "Your message",
+    "sendBtn": "Send",
+    "messagePlaceholder": "Hello, I’d like information about the trip…",
+    "status": {
+      "sending": "Sending…",
+      "ok": "Thank you, your message has been sent.",
+      "err": "An error occurred. You can also write to noviant.jerome@gmail.com",
+      "offline": "Network unavailable. Try again or write to noviant.jerome@gmail.com"
+    }
+  },
   "day4": {
     "title": "Day 4 – From Tokyo streets to snowy mountains",
     "p1": "The morning starts with free time in lively Akihabara — a paradise of electronics, gaming and manga culture. It’s the perfect chance to wander, do a little shopping, or simply soak up the electric atmosphere of this iconic Tokyo district.",
