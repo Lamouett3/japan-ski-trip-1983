@@ -5,9 +5,12 @@
   --radius: 18px;
   --shadow: 0 12px 40px rgba(0, 0, 0, .35);
   --focus: 0 0 0 3px rgba(76, 201, 240, .5);
-  --slide-h: 100svh;
-  --slide-pad: clamp(24px, 4vw, 56px);
-  --content-w: min(860px, 92vw);
+  /* Viewport height fallback for Safari/iOS */
+  --vh: 1vh;
+  --slide-h: calc(var(--vh) * 100);
+  /* Fallback values for older browsers */
+  --slide-pad: 24px;
+  --content-w: 92vw;
   /* Text shadows for readability on image backgrounds */
   --txtshadow-soft: 0 1px 3px rgba(0, 0, 0, .45);
   --txtshadow-strong: 0 2px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
@@ -20,6 +23,32 @@
   --shoji-grid: rgba(0, 0, 0, 0.07);
   --shoji-frame: rgba(139, 92, 52, 0.18);
   --shoji-edge: rgba(139, 92, 52, 0.24);
+}
+
+/* Prefer dynamic svh when supported */
+@supports (height: 100svh) {
+  :root { --slide-h: 100svh; }
+}
+
+/* Use clamp/min when supported */
+@supports (width: clamp(1px, 1vw, 2px)) {
+  :root { --slide-pad: clamp(24px, 4vw, 56px); }
+}
+@supports (width: min(10px, 5vw)) {
+  :root { --content-w: min(860px, 92vw); }
+}
+
+/* Fallbacks when min() is unsupported (older Safari) */
+@supports not (width: min(10px, 5vw)) {
+  @media (min-width: 900px) {
+    #guide .slide-inner { width: 94vw; max-width: 1040px; }
+  }
+  @media (min-width: 900px) {
+    #presentation .presentation-text { max-width: 94vw; }
+  }
+  @media (min-width: 900px) {
+    #devis .quote-text { max-width: 90vw; }
+  }
 }
 
 [data-theme="light"] {
@@ -822,7 +851,7 @@ img {
 #guide .more-toggle { white-space: nowrap; }
 
 @media (min-width: 900px) {
-  #guide .slide-inner { width: min(1040px, 94vw); }
+#guide .slide-inner { width: min(1040px, 94vw); }
   /* split points into two columns on desktop for a balanced block */
   #guide .list { column-count: 2; column-gap: 20px; }
   #guide .list li { break-inside: avoid; }
@@ -1087,7 +1116,7 @@ body[data-page="programme"] .slide-inner li {
 
   /* Centre verticalement le bloc et borne sa largeur pour une lecture optimale */
   #devis .quote-inner { display: grid; place-items: center; min-height: var(--slide-h); }
-  #devis .quote-text { max-width: min(760px, 90vw); margin: 0 auto; }
+#devis .quote-text { max-width: min(760px, 90vw); margin: 0 auto; }
   /* Garde les listes lisibles à gauche à l'intérieur du bloc centré */
   #devis .quote-text .list { text-align: left; }
   #devis .quote-text .grid-2 { gap: clamp(12px, 2vw, 20px); }

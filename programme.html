@@ -141,7 +141,7 @@
 
   <div class="toolbar" aria-live="polite">
     <button class="btn" id="theme2" aria-pressed="true" title="Basculer clair/sombre">🌗</button>
-    <a class="btn" href="#top" title="Revenir en haut" onclick="document.getElementById('top')?.scrollIntoView({behavior:'smooth'}); return false;">↑ Haut</a>
+    <a class="btn" href="#top" title="Revenir en haut" onclick="var t=document.getElementById('top'); if(t){ t.scrollIntoView({behavior:'smooth'}); } return false;">↑ Haut</a>
   </div>
 
   <script src="script.js"></script>

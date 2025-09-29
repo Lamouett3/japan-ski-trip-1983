@@ -117,6 +117,55 @@ window.SHOJI_GLOBAL_ENABLED = false;
   }
 })();
 
+// === Viewport height fix (iOS Safari 100vh) ===
+(function(){
+  function setVH(){
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+})();
+
+// === Flex gap fallback for older Safari ===
+(function(){
+  // Test flex gap support
+  const flex = document.createElement('div');
+  flex.style.display = 'flex';
+  flex.style.flexDirection = 'column';
+  flex.style.rowGap = '1px';
+  flex.appendChild(document.createElement('div'));
+  flex.appendChild(document.createElement('div'));
+  document.body.appendChild(flex);
+  const supported = flex.scrollHeight === 1;
+  document.body.removeChild(flex);
+  if (supported) return;
+
+  function applyFallback(container){
+    const cs = getComputedStyle(container);
+    if (cs.display.indexOf('flex') === -1) return;
+    const dir = cs.flexDirection || 'row';
+    const rowGap = parseFloat(cs.rowGap) || 0;
+    const colGap = parseFloat(cs.columnGap) || 0;
+    const children = Array.from(container.children);
+    if (!children.length) return;
+    if ((dir === 'row' || dir === 'row-reverse') && colGap > 0){
+      children.forEach((el, i) => { el.style.marginRight = (i === children.length - 1 ? 0 : colGap) + 'px'; });
+    }
+    if ((dir === 'column' || dir === 'column-reverse') && rowGap > 0){
+      children.forEach((el, i) => { el.style.marginBottom = (i === children.length - 1 ? 0 : rowGap) + 'px'; });
+    }
+  }
+  function run(){
+    document.querySelectorAll('*').forEach(applyFallback);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
+  }
+})();
+
 // === Année footer ===
 document.getElementById('y').textContent = new Date().getFullYear();
 
