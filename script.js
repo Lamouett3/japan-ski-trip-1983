@@ -101,6 +101,7 @@ window.SHOJI_GLOBAL_ENABLED = false;
     try {
       const dict = await loadDict(lang);
       applyDict(dict);
+      try { document.dispatchEvent(new CustomEvent('i18n:applied', { detail: { lang } })); } catch(_){}
     } catch(e) { /* ignore */ }
   }
   window.I18N_setLang = setLang;
@@ -125,6 +126,70 @@ window.SHOJI_GLOBAL_ENABLED = false;
   }
   setVH();
   window.addEventListener('resize', setVH);
+})();
+
+// === Programme: auto-collapsible day details (mobile/tablet) ===
+(function(){
+  const isProgramme = (document.body && document.body.getAttribute('data-page') === 'programme');
+  if (!isProgramme) return;
+  function tOpen(){
+    const el = document.getElementById('i18n-day-open');
+    return (el && el.textContent.trim()) || 'Lire plus';
+  }
+  function tClose(){
+    const el = document.getElementById('i18n-day-close');
+    return (el && el.textContent.trim()) || 'Lire moins';
+  }
+  const sections = Array.from(document.querySelectorAll('section.slide[id^="jour"] .slide-inner'));
+  sections.forEach(inner => {
+    const sid = inner.closest('section')?.id || Math.random().toString(36).slice(2);
+    const ps = Array.from(inner.querySelectorAll(':scope > p'));
+    if (ps.length <= 2) return;
+    const moreId = `${sid}-more`;
+    // Create wrapper and move paragraphs 3..n inside
+    const wrap = document.createElement('div');
+    wrap.className = 'more-collapsible';
+    wrap.id = moreId;
+    wrap.setAttribute('aria-hidden', 'true');
+    for (let i = 2; i < ps.length; i++) {
+      wrap.appendChild(ps[i]);
+    }
+    // Insert after second paragraph
+    ps[1].insertAdjacentElement('afterend', wrap);
+    // Add toggle button
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:10px;justify-content:center;margin-top:10px';
+    const btn = document.createElement('button');
+    btn.className = 'btn outline more-toggle';
+    btn.id = `${sid}-more-btn`;
+    btn.setAttribute('aria-controls', moreId);
+    btn.setAttribute('aria-expanded', 'false');
+    btn.textContent = tOpen();
+    btnRow.appendChild(btn);
+    wrap.insertAdjacentElement('afterend', btnRow);
+
+    let open = false;
+    function set(openNow){
+      open = openNow;
+      btn.setAttribute('aria-expanded', String(open));
+      wrap.setAttribute('aria-hidden', String(!open));
+      if (open) {
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        btn.textContent = tClose();
+      } else {
+        wrap.style.maxHeight = '0px';
+        btn.textContent = tOpen();
+      }
+    }
+    btn.addEventListener('click', () => set(!open));
+    window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+    document.addEventListener('i18n:applied', () => { btn.textContent = open ? tClose() : tOpen(); });
+    // Default state: open on desktop (>=900px), collapsed on smaller
+    const mq = window.matchMedia('(min-width: 900px)');
+    function applyByViewport(){ set(mq.matches); }
+    try { mq.addEventListener('change', applyByViewport, { passive: true }); } catch(_) { mq.addListener(applyByViewport); }
+    applyByViewport();
+  });
 })();
 
 // === Flex gap fallback for older Safari ===

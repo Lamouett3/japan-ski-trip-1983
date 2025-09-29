@@ -81,6 +81,10 @@
   "footer": {
     "copyright": "Japan Ski Trip — All rights reserved."
   },
+  "day": {
+    "moreOpen": "Read more",
+    "moreClose": "Read less"
+  },
   "quote": {
     "title": "Get your personalized quote and travel with peace of mind.",
     "pricing": "<strong>Indicative price</strong> · €4,990 / person — all inclusive · <em>excluding flights, skipass and spirits</em>",

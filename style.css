@@ -88,6 +88,9 @@ html {
   scroll-behavior: smooth
 }
 
+/* Generic collapsible used across pages (programme, etc.) */
+.more-collapsible { overflow: hidden; max-height: 0; transition: max-height 360ms cubic-bezier(.22,.61,.36,1); }
+
 body {
   margin: 0;
   background: var(--bg);

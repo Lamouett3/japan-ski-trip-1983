@@ -81,6 +81,10 @@
   "footer": {
     "copyright": "Séjour Ski Japon — Tous droits réservés."
   },
+  "day": {
+    "moreOpen": "Lire plus",
+    "moreClose": "Lire moins"
+  },
   "quote": {
     "title": "Obtenez votre devis personnalisé et partez l’esprit libre.",
     "pricing": "<strong>Tarif indicatif</strong> · 4 990 € / personne — tout compris · <em>hors billets d’avion, skipass et alcools forts</em>",
