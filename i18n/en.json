@@ -36,6 +36,10 @@
     "title": "Trip summary (D1 → D7)",
     "cardTokyo": "Tokyo — D1 to D3",
     "cardHakuba": "Hakuba — D4 to D7",
+    "pillTokyo": "Tokyo",
+    "pillTransfer": "Transfer",
+    "pillSki": "Ski",
+    "pillFinale": "Final day",
     "tags": [
       "Downtown Tokyo",
       "Legendary powder",

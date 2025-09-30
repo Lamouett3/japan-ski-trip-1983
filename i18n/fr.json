@@ -36,6 +36,10 @@
     "title": "Planning du séjour",
     "cardTokyo": "Tokyo — J1 à J3",
     "cardHakuba": "Hakuba — J4 à J7",
+    "pillTokyo": "Tokyo",
+    "pillTransfer": "Transfert",
+    "pillSki": "Ski",
+    "pillFinale": "Finale",
     "tags": [
       "Tokyo — centre-ville",
       "Poudreuse légendaire",
