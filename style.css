@@ -88,6 +88,36 @@ html {
   scroll-behavior: smooth
 }
 
+/* Mobile/tablet: avoid mid-word hyphenation; wrap at spaces only */
+@media (max-width: 899px) {
+  /* Stack hero title parts on separate lines on mobile/tablet */
+  #top h1 .stack { display: block; }
+  #top h1 br { display: none; }
+  /* Smaller hero title on mobile/tablet */
+  #top h1 { font-size: clamp(22px, 7vw, 32px); line-height: 1.1; }
+
+  .slide h1,
+  .slide h2,
+  .slide h3,
+  .slide h4,
+  .slide p,
+  .lead,
+  .kicker,
+  .tag,
+  .rec-desc,
+  .rec-pill,
+  li,
+  a,
+  label,
+  .btn {
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+    hyphens: none !important;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+}
+
 /* Generic collapsible used across pages (programme, etc.) */
 .more-collapsible { overflow: hidden; max-height: 0; transition: max-height 360ms cubic-bezier(.22,.61,.36,1); }
 
