@@ -11,6 +11,8 @@
   /* Fallback values for older browsers */
   --slide-pad: 24px;
   --content-w: 92vw;
+  /* Form controls */
+  --control-h: 48px;
   /* Text shadows for readability on image backgrounds */
   --txtshadow-soft: 0 1px 3px rgba(0, 0, 0, .45);
   --txtshadow-strong: 0 2px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
@@ -216,7 +218,8 @@ img {
 .contact-panel .muted { color: #ffffff; }
 .contact-form { max-width: 720px; margin: 14px auto 0; display: grid; gap: 14px; }
 .contact-form .field { display: grid; gap: 6px; }
-.contact-form label { font-weight: 600; }
+/* Labels de champ (hors radios) en gras */
+.contact-form .field > label { font-weight: 600; }
 .contact-form input[type="text"],
 .contact-form input[type="email"],
 .contact-form input[type="number"],
@@ -230,6 +233,7 @@ img {
   background: color-mix(in oklab, var(--panel), transparent 0%);
   color: var(--text);
   box-shadow: 0 1px 0 rgba(255,255,255,.04) inset, 0 2px 14px rgba(0,0,0,.22);
+  min-height: var(--control-h);
 }
 .contact-form input::placeholder,
 .contact-form textarea::placeholder { color: rgba(255,255,255,.85); opacity: 1; }
@@ -239,6 +243,11 @@ img {
 .contact-form textarea { resize: vertical; min-height: 140px; }
 .contact-msg { text-align: center; font-size: .95rem; }
 
+/* Contact width on desktop */
+@media (min-width: 900px) {
+  #contact .slide-inner.contact-panel { width: 100%; margin: 0 auto; }
+}
+
 /* Radios / Fieldsets */
 .contact-form fieldset.field {
   display: grid;
@@ -247,15 +256,49 @@ img {
   border-radius: 12px;
   padding: 10px 12px;
   background: color-mix(in oklab, var(--panel), transparent 0%);
+  min-height: var(--control-h);
+  align-items: center;
 }
 .contact-form fieldset.field legend {
   padding: 0 4px;
   font-weight: 700;
   color: var(--text);
 }
-.contact-form fieldset.field label { display: flex; align-items: center; gap: 8px; line-height: 1.4; }
+.contact-form fieldset.field label { display: flex; align-items: center; gap: 8px; line-height: 1.4; font-weight: 400; }
+.contact-form fieldset.field label + label { margin-top: 6px; }
 .contact-form input[type="radio"] { width: 18px; height: 18px; accent-color: currentColor; }
 .contact-form .muted { font-size: .85rem; color: rgba(255,255,255,.9); }
+
+/* Mobile-friendly adjustments for contact form */
+@media (max-width: 600px) {
+  .contact-panel { padding: 14px 14px; border-radius: 14px; }
+  .contact-form { gap: 16px; }
+  .contact-form .field { gap: 8px; }
+  .contact-form input[type="text"],
+  .contact-form input[type="email"],
+  .contact-form input[type="number"],
+  .contact-form input[type="tel"],
+  .contact-form select,
+  .contact-form textarea { padding: 12px 14px; font-size: 16px; }
+  .contact-form fieldset.field { padding: 10px 12px; }
+  .contact-form fieldset.field label { align-items: flex-start; }
+  .contact-form input[type="radio"] { width: 20px; height: 20px; margin-top: 2px; }
+  .contact-form .btn { width: 100%; }
+}
+
+/* Desktop alignment: labels on left, inputs same width on right */
+@media (min-width: 900px) {
+  .contact-form .field { grid-template-columns: 220px 1fr; align-items: center; min-height: var(--control-h); }
+  .contact-form .field > label { grid-column: 1; margin: 0; }
+  .contact-form .field > input,
+  .contact-form .field > select,
+  .contact-form .field > textarea { grid-column: 2; width: 100%; }
+  .contact-form .field > .muted { grid-column: 2; }
+
+  .contact-form fieldset.field { grid-template-columns: 220px 1fr; }
+  .contact-form fieldset.field legend { grid-column: 1; }
+  .contact-form fieldset.field label { grid-column: 2; }
+}
 
 /* ============ Nav ============ */
 .nav {
