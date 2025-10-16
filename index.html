@@ -304,12 +304,38 @@
 
         <form action="https://formspree.io/f/xbldzaye" method="POST" class="contact-form" id="contact-form">
           <div class="field">
+            <label for="contact-name" data-i18n="contact.nameLabel">Prénom et nom</label>
+            <input id="contact-name" name="name" type="text" required autocomplete="name" data-i18n-placeholder="contact.namePlaceholder" placeholder="Votre nom complet" />
+            <div class="muted" data-i18n="contact.nameHint">Pour que nous sachions à qui répondre</div>
+          </div>
+          <div class="field">
             <label for="contact-email" data-i18n="contact.emailLabel">Votre e‑mail</label>
             <input id="contact-email" name="email" type="email" required autocomplete="email" data-i18n-placeholder="contact.emailPlaceholder" placeholder="vous@exemple.com" />
+            <div class="muted" data-i18n="contact.emailHint">Afin de pouvoir vous recontacter rapidement</div>
+          </div>
+          <div class="field">
+            <label for="contact-participants" data-i18n="contact.participantsLabel">Nombre de participants</label>
+            <input id="contact-participants" name="participants" type="text" inputmode="numeric" data-i18n-placeholder="contact.participantsPlaceholder" placeholder="Exemple : 1, 2, 4 personnes…" />
+            <div class="muted" data-i18n="contact.participantsHint">Exemple : 1, 2, 4 personnes…</div>
+          </div>
+          <fieldset class="field">
+            <legend data-i18n="contact.participationLabel">Type de participation</legend>
+            <label><input type="radio" name="participation" value="solo" /> <span data-i18n="contact.participation.solo">Je voyage seul(e) et souhaite rejoindre un groupe existant</span></label>
+            <label><input type="radio" name="participation" value="group" /> <span data-i18n="contact.participation.group">Nous sommes un groupe déjà constitué</span></label>
+          </fieldset>
+          <fieldset class="field">
+            <legend data-i18n="contact.subjectLabel">Objet de votre demande</legend>
+            <label><input type="radio" name="subject" value="info" /> <span data-i18n="contact.subject.info">Je souhaite obtenir des informations</span></label>
+            <label><input type="radio" name="subject" value="plan" /> <span data-i18n="contact.subject.plan">Je souhaite organiser un voyage à une date précise</span></label>
+          </fieldset>
+          <div class="field">
+            <label for="contact-period" data-i18n="contact.periodLabel">Période souhaitée</label>
+            <input id="contact-period" name="period" type="text" data-i18n-placeholder="contact.periodPlaceholder" placeholder="Exemple : Décembre 2025, Janvier 2026, ou “hiver prochain”" />
           </div>
           <div class="field">
             <label for="contact-message" data-i18n="contact.messageLabel">Votre message</label>
             <textarea id="contact-message" name="message" rows="6" required data-i18n-placeholder="contact.messagePlaceholder" placeholder="Bonjour, je souhaite des informations sur le séjour…"></textarea>
+            <div class="muted" data-i18n="contact.messageHint">Parlez‑nous de votre projet, de vos envies (ski, culture, gastronomie, onsen…), ou posez vos questions ici.</div>
           </div>
           <input type="hidden" name="_subject" value="Demande de devis — Japan Ski Trip" />
           <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />

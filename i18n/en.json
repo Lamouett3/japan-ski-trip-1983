@@ -121,10 +121,30 @@
     "title": "Contact me",
     "subtitle": "Please include: desired dates, skill level, number of people, preferences (culture, onsen, backcountry…), arrival airport (Haneda recommended).",
     "emailPlaceholder": "you@example.com",
+    "nameLabel": "First and last name",
+    "namePlaceholder": "Your full name",
+    "nameHint": "So we know who to reply to",
     "emailLabel": "Your email",
+    "emailHint": "So we can get back to you quickly",
+    "participantsLabel": "Number of participants",
+    "participantsPlaceholder": "Example: 1, 2, 4 people…",
+    "participantsHint": "Example: 1, 2, 4 people…",
+    "participationLabel": "Type of participation",
+    "participation": {
+      "solo": "I’m traveling solo and wish to join an existing group",
+      "group": "We are an already formed group"
+    },
+    "subjectLabel": "Purpose of your request",
+    "subject": {
+      "info": "I’d like to get information",
+      "plan": "I’d like to organize a trip on a specific date"
+    },
+    "periodLabel": "Desired period",
+    "periodPlaceholder": "Example: December 2025, January 2026, or ‘next winter’",
     "messageLabel": "Your message",
     "sendBtn": "Send",
     "messagePlaceholder": "Hello, I’d like information about the trip…",
+    "messageHint": "Tell us about your project, what you’re looking for (ski, culture, gastronomy, onsen…), or ask your questions here.",
     "status": {
       "sending": "Sending…",
       "ok": "Thank you, your message has been sent.",
