@@ -218,43 +218,37 @@ img {
 .contact-mail { margin: 4px 0 0; font-size: .9rem; opacity: .85; }
 .contact-panel h2 { text-shadow: var(--txtshadow-strong); text-align: center; }
 .contact-heading {
-  --bg1: rgba(255,255,255,.10);
-  --bg2: rgba(255,255,255,.06);
   margin: 10px auto 16px;
   width: fit-content;
   max-width: min(620px, 92%);
   text-align: center;
-  background: linear-gradient(180deg, var(--bg1), var(--bg2));
-  backdrop-filter: blur(6px) saturate(140%);
-  -webkit-backdrop-filter: blur(6px) saturate(140%);
-  border: 1px solid rgba(255,255,255,.16);
-  padding: clamp(8px, 1.4vw, 12px) clamp(14px, 2.4vw, 20px);
-  border-radius: 20px;
+  /* Style kicker */
+  background: var(--pill);
+  border: 1px solid var(--line);
+  padding: clamp(6px, 1.2vw, 10px) clamp(12px, 2.2vw, 18px);
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: clamp(18px, 4.4vw, 26px);
+  letter-spacing: .2px;
+  text-shadow: none;
   cursor: pointer;
-  transition: box-shadow .2s ease, transform .15s ease, background .2s ease, border-color .2s ease;
   position: relative;
-  box-shadow: 0 10px 24px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.12);
-  font-size: clamp(20px, 4.8vw, 28px);
+  transition: background .2s ease, border-color .2s ease;
 }
 .contact-heading::after {
   content: '';
-  width: 9px; height: 9px;
-  border-right: 2px solid rgba(255,255,255,.95);
-  border-bottom: 2px solid rgba(255,255,255,.95);
+  width: 8px; height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
   transform: rotate(45deg);
   display: inline-block; margin-left: 8px; vertical-align: middle;
-  opacity: .95;
+  opacity: .9;
   transition: transform .2s ease;
 }
 #contact-toggle[aria-expanded="true"]::after { transform: rotate(-135deg); }
-.contact-heading:hover {
-  background: rgba(255,255,255,.10);
-  border-color: rgba(255,255,255,.28);
-  box-shadow: 0 12px 28px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.10);
-  transform: translateY(-1px);
-}
-.contact-heading:active { transform: translateY(0); }
-.contact-heading:focus-visible { outline: none; box-shadow: var(--focus), 0 0 0 1px rgba(255,255,255,.24) inset; }
+.contact-heading:hover { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.28); }
+.contact-heading:focus-visible { outline: none; box-shadow: var(--focus); }
 .contact-panel h2,
 .contact-panel p,
 .contact-panel label,
