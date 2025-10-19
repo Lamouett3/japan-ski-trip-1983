@@ -653,7 +653,7 @@ img {
   text-align: center;
 }
 
-.guest-display { position: relative; min-height: 160px; }
+.guest-display { position: relative; min-height: clamp(160px, 28vh, 360px); }
 
 .guest-card { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); will-change: transform, opacity; max-width: min(800px, 92vw); text-align: left; padding: 14px 16px; border-radius: 16px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 10px 26px rgba(0,0,0,.28); }
 
