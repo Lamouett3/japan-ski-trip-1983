@@ -615,6 +615,87 @@ document.getElementById('y').textContent = new Date().getFullYear();
   });
 })();
 
+// === Contact: Date range popover for period ===
+(function(){
+  const input = document.getElementById('contact-period');
+  if (!input) return;
+  const host = input.closest('.field');
+  if (!host) return;
+
+  function t(key, fallback){
+    const dictEl = document.querySelector(`[data-i18n="${key}"]`);
+    return (dictEl && dictEl.textContent.trim()) || fallback;
+  }
+
+  let pop = null;
+  function fmt(val){ return val || ''; }
+  function parseCurrent(){
+    const v = (input.value || '').split(/\s*(?:→|->|to)\s*/);
+    return { from: v[0] || '', to: v[1] || '' };
+  }
+  function open(){
+    if (pop) return;
+    host.classList.add('open');
+    input.setAttribute('aria-expanded', 'true');
+    pop = document.createElement('div');
+    pop.className = 'date-popover';
+    const lblFrom = t('contact.period.from','Du');
+    const lblTo = t('contact.period.to','Au');
+    const btnApply = t('contact.period.apply','Appliquer');
+    const btnClear = t('contact.period.clear','Effacer');
+    const cur = parseCurrent();
+    pop.innerHTML = `
+      <div class="row">
+        <div>
+          <label>${lblFrom}</label>
+          <input type="date" id="range-from" value="${fmt(cur.from)}" />
+        </div>
+        <div>
+          <label>${lblTo}</label>
+          <input type="date" id="range-to" value="${fmt(cur.to)}" />
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn gray" id="range-clear">${btnClear}</button>
+        <button type="button" class="btn" id="range-apply">${btnApply}</button>
+      </div>
+    `;
+    host.appendChild(pop);
+    const from = pop.querySelector('#range-from');
+    const to = pop.querySelector('#range-to');
+    pop.querySelector('#range-clear').addEventListener('click', ()=>{ input.value=''; close(); });
+    pop.querySelector('#range-apply').addEventListener('click', ()=>{
+      const f = from.value || '';
+      const t2 = to.value || '';
+      input.value = (f && t2) ? `${f} → ${t2}` : (f || t2);
+      close();
+    });
+    setTimeout(()=>{ from && from.focus(); }, 0);
+    setTimeout(()=> document.addEventListener('click', onDocClick), 0);
+    document.addEventListener('keydown', onKey);
+  }
+  function close(){
+    if (!pop) return;
+    input.setAttribute('aria-expanded', 'false');
+    try { document.removeEventListener('click', onDocClick); } catch(_){}
+    try { document.removeEventListener('keydown', onKey); } catch(_){}
+    pop.remove();
+    pop = null;
+    host.classList.remove('open');
+  }
+  function onDocClick(e){
+    if (!pop) return;
+    if (e.target === input || pop.contains(e.target)) return;
+    close();
+  }
+  function onKey(e){ if (e.key === 'Escape') close(); }
+
+  input.addEventListener('focus', open);
+  input.addEventListener('click', open);
+  // Update labels on language change
+  document.addEventListener('i18n:applied', ()=>{ if (pop){ const wasOpen=true; close(); if (wasOpen) open(); } });
+})();
+
 // === Inject backgrounds + Parallax au scroll ===
 (function() {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1226,4 +1307,30 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }, { passive: true });
   window.addEventListener('resize', () => { updateActive(); }, { passive: true });
   updateActive();
+})();
+// === Contact: reveal/hide entire form by clicking title ===
+(function(){
+  const wrap = document.getElementById('contact-wrap');
+  const btn = document.getElementById('contact-toggle');
+  const panel = document.getElementById('contact-panel');
+  if (!wrap || !btn) return;
+  let open = false;
+  function set(openNow){
+    open = openNow;
+    btn.setAttribute('aria-expanded', String(open));
+    wrap.setAttribute('aria-hidden', String(!open));
+    if (open) {
+      wrap.style.maxHeight = wrap.scrollHeight + 'px';
+      if (panel) panel.classList.remove('collapsed');
+    } else {
+      wrap.style.maxHeight = '0px';
+      if (panel) panel.classList.add('collapsed');
+    }
+  }
+  btn.addEventListener('click', () => set(!open));
+  btn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); set(!open); }
+  });
+  window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+  set(false);
 })();

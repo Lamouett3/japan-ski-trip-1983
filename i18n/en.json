@@ -141,10 +141,21 @@
     },
     "periodLabel": "Desired period",
     "periodPlaceholder": "Example: December 2025, January 2026, or ‘next winter’",
+    "period": {
+      "from": "From",
+      "to": "To",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
     "messageLabel": "Your message",
     "sendBtn": "Send",
     "messagePlaceholder": "Hello, I’d like information about the trip…",
     "messageHint": "Tell us about your project, what you’re looking for (ski, culture, gastronomy, onsen…), or ask your questions here.",
+    "group": {
+      "contact": "Contact details",
+      "project": "Your project",
+      "message": "Message"
+    },
     "status": {
       "sending": "Sending…",
       "ok": "Thank you, your message has been sent.",
