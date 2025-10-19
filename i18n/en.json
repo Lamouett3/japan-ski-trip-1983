@@ -203,6 +203,24 @@
     "p5": "Late afternoon, make your way to Tokyo Skytree, Japan’s tallest tower. From its observation decks, take in sweeping city views and, weather permitting, an unforgettable sunset over Mount Fuji — a moment to remember.",
     "p6": "The evening ends in the lively Ueno district with a friendly dinner in a local brasserie — a perfect way to wrap up three days of discovery in Tokyo, between tradition, gastronomy and modernity."
   },
+  "guestbook": {
+    "title": "Guestbook",
+    "ctaOpen": "Leave a review",
+    "form": {
+      "title": "Leave a review",
+      "nameLabel": "Your name",
+      "namePlaceholder": "Your first or last name",
+      "textLabel": "Your comment",
+      "textPlaceholder": "Your feedback about the trip…",
+      "starsLabel": "Your rating",
+      "submit": "Send",
+      "cancel": "Cancel"
+    },
+    "seeds": [
+      {"name": "Camille", "text": "An unforgettable trip: magical powder and flawless organization!", "stars": 5},
+      {"name": "Alex", "text": "Tokyo + ski: the perfect balance between culture and slopes.", "stars": 5}
+    ]
+  },
   "day2": {
     "title": "Day 2 \u2013 Traditions, gastronomy and Tokyo's effervescence",
     "p1": "The second day begins in the Asakusa district, Tokyo's historic heart. You will discover the majestic Sens\u014d-ji temple, the city's oldest, famous for its Kaminarimon gate and five-storey pagoda. The spiritual atmosphere here contrasts with the lively Nakamise street, lined with small craft shops and local food stalls.",

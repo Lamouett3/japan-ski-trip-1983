@@ -1347,3 +1347,163 @@ document.getElementById('y').textContent = new Date().getFullYear();
   document.addEventListener('i18n:applied', () => { if (open && wrap.style.maxHeight !== 'none') wrap.style.maxHeight = wrap.scrollHeight + 'px'; });
   set(false);
 })();
+// === Guestbook (Livre d'or): cycle testimonials + form ===
+(async function(){
+  const root = document.documentElement;
+  const wrap = document.getElementById('guestbook');
+  if (!wrap) return;
+  const display = document.getElementById('guest-display');
+  const seed = document.getElementById('guest-seed');
+  const openBtn = document.getElementById('guest-open');
+  const pop = document.getElementById('guest-form');
+  const form = document.getElementById('guest-form-el');
+  const cancel = document.getElementById('guest-cancel');
+
+  let items = [];
+  const APIS = ['/api/guestbook', '/.netlify/functions/guestbook'];
+  // Only show user-submitted entries; seeds remain i18n examples
+  async function load(){
+    // Try server first
+    for (const API of APIS) {
+      try {
+        const res = await fetch(API, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
+        if (res.ok) {
+          const data = await res.json();
+          items = Array.isArray(data) ? data : [];
+          persistLocal();
+          return;
+        }
+      } catch(_) { /* try next */ }
+    }
+    // Fallback local
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem('guestbook')||'[]'); } catch(_){ saved = []; }
+    items = Array.isArray(saved) ? saved : [];
+  }
+  function persistLocal(){
+    try { localStorage.setItem('guestbook', JSON.stringify(items)); } catch(_){ }
+  }
+  async function saveRemote(entry){
+    for (const API of APIS) {
+      try {
+        const res = await fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entry) });
+        if (res.ok) return;
+      } catch(_) { /* try next */ }
+    }
+  }
+  async function resetRemote(){
+    for (const API of APIS) {
+      try {
+        const res = await fetch(API, { method: 'DELETE' });
+        if (res.ok || res.status === 204) return true;
+      } catch(_) { /* try next */ }
+    }
+    return false;
+  }
+
+  const DISPLAY_MS = 3200; // time an item stays fully visible
+  const TRANSITION_MS = 380; // should match CSS guest-out duration
+  let idx = 0, timer = null, showing = null, running = false;
+  function starStr(n){ return '★★★★★'.slice(0,n) + '☆☆☆☆☆'.slice(n); }
+  function renderCard(it){
+    const card = document.createElement('div');
+    card.className = 'guest-card enter';
+    card.innerHTML = `<div class="stars">${starStr(Math.max(1,Math.min(5, it.stars||5)))}</div>
+      <div class="text">${it.text}</div>
+      <div class="name">— ${it.name}</div>`;
+    return card;
+  }
+  function show(i){
+    if (!items.length){ display.innerHTML = ''; showing = null; return; }
+    if (items.length === 1){
+      const it = items[0];
+      if (!showing){
+        const only = renderCard(it);
+        display.innerHTML = '';
+        display.appendChild(only);
+        showing = only;
+      } else {
+        showing.querySelector('.stars').textContent = starStr(Math.max(1,Math.min(5, it.stars||5)));
+        showing.querySelector('.text').textContent = it.text;
+        showing.querySelector('.name').textContent = '— ' + it.name;
+      }
+      return;
+    }
+    const it = items[i % items.length];
+    const next = renderCard(it);
+    const prev = showing;
+    display.appendChild(next);
+    // Let the browser paint the new card before animating the previous out
+    requestAnimationFrame(() => {
+      if (prev) {
+        prev.classList.remove('enter');
+        prev.classList.add('leave');
+        setTimeout(()=>{ try { prev.remove(); } catch(_){ } }, TRANSITION_MS + 40);
+      }
+    });
+    showing = next;
+  }
+  function stopCycle(){ running = false; clearTimeout(timer); timer = null; }
+  function scheduleNext(){
+    clearTimeout(timer);
+    if (!running) return;
+    timer = setTimeout(()=>{
+      if (items.length <= 1) { stopCycle(); return; }
+      idx = (idx+1) % items.length;
+      show(idx);
+      // After showing next, wait display time again
+      scheduleNext();
+    }, DISPLAY_MS);
+  }
+  function startCycle(){
+    stopCycle();
+    if (items.length > 1){ running = true; scheduleNext(); }
+  }
+
+  function openForm(){ pop.hidden = false; try { document.getElementById('guest-name').focus(); } catch(_){ } }
+  function closeForm(){ pop.hidden = true; }
+  if (openBtn) openBtn.addEventListener('click', openForm);
+  if (cancel) cancel.addEventListener('click', closeForm);
+  if (pop) pop.addEventListener('click', (e)=>{ if (e.target === pop) closeForm(); });
+  if (form) form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const name = (document.getElementById('guest-name').value||'').trim();
+    const text = (document.getElementById('guest-text').value||'').trim();
+    const stars = Number((form.querySelector('input[name="stars"]:checked')||{}).value||'5');
+    if (!name || !text) return;
+    const entry = { name, text, stars };
+    items.push(entry);
+    persistLocal();
+    saveRemote(entry);
+    closeForm();
+    idx = items.length - 1;
+    show(idx);
+    startCycle();
+    form.reset();
+  });
+
+  // Init + refresh on language change (to get seeded translations)
+  async function init(){
+    await load();
+    display.innerHTML = '';
+    if (items.length === 0) { return; }
+    idx = 0;
+    show(idx);
+    startCycle();
+  }
+  await init();
+  document.addEventListener('i18n:applied', () => { stopCycle(); init(); });
+
+  // Dev helper: reset guestbook if requested via URL ?resetGuestbook=1
+  try {
+    const sp = new URLSearchParams(location.search);
+    if (sp.get('resetGuestbook') === '1') {
+      items = [];
+      persistLocal();
+      await resetRemote();
+      stopCycle();
+      display.innerHTML = '';
+      console.info('Guestbook reset done');
+    }
+  } catch(_){}
+})();

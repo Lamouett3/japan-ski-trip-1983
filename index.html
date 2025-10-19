@@ -245,6 +245,55 @@
 
     <!-- J1–J7 déplacés vers programme.html -->
 
+    <!-- Livre d'or / Guestbook -->
+    <section class="slide" id="guestbook" data-bg="images/pexels-pixabay-302100.jpg" data-pos="center 45%" data-overlay="0.5">
+      <div class="slide-bg"></div><div class="slide-overlay"></div>
+      <div class="slide-inner">
+        <h2 data-i18n="guestbook.title">Livre d’or</h2>
+        <div class="guestbox">
+          <div id="guest-display" class="guest-display" aria-live="polite"></div>
+          <div class="guest-actions">
+            <button class="btn" id="guest-open" data-i18n="guestbook.ctaOpen">Laisser un avis</button>
+          </div>
+        </div>
+
+        <!-- Seed testimonials (hidden, translated via i18n then read by JS) -->
+        <ul id="guest-seed" hidden aria-hidden="true">
+          <li><span class="n" data-i18n="guestbook.seeds.0.name">Camille</span><span class="t" data-i18n="guestbook.seeds.0.text">Un séjour inoubliable: poudreuse magique et organisation parfaite !</span><span class="s" data-stars="5"></span></li>
+          <li><span class="n" data-i18n="guestbook.seeds.1.name">Alexandre</span><span class="t" data-i18n="guestbook.seeds.1.text">Tokyo + ski: équilibre idéal entre culture et glisse.</span><span class="s" data-stars="5"></span></li>
+        </ul>
+
+        <!-- Form popover -->
+        <div id="guest-form" class="guest-popover" role="dialog" aria-modal="true" aria-labelledby="guest-title" hidden>
+          <h3 id="guest-title" class="guest-title" data-i18n="guestbook.form.title">Laisser un avis</h3>
+          <form id="guest-form-el">
+            <div class="field">
+              <label for="guest-name" data-i18n="guestbook.form.nameLabel">Votre nom</label>
+              <input id="guest-name" type="text" required data-i18n-placeholder="guestbook.form.namePlaceholder" placeholder="Votre prénom ou nom" />
+            </div>
+            <div class="field">
+              <label for="guest-text" data-i18n="guestbook.form.textLabel">Votre commentaire</label>
+              <textarea id="guest-text" rows="3" required data-i18n-placeholder="guestbook.form.textPlaceholder" placeholder="Votre avis sur le séjour…"></textarea>
+            </div>
+            <div class="field">
+              <span class="lab" data-i18n="guestbook.form.starsLabel">Votre note</span>
+              <div class="stars" id="guest-stars">
+                <label><input type="radio" name="stars" value="1" /><span>★☆☆☆☆</span></label>
+                <label><input type="radio" name="stars" value="2" /><span>★★☆☆☆</span></label>
+                <label><input type="radio" name="stars" value="3" /><span>★★★☆☆</span></label>
+                <label><input type="radio" name="stars" value="4" /><span>★★★★☆</span></label>
+                <label><input type="radio" name="stars" value="5" checked /><span>★★★★★</span></label>
+              </div>
+            </div>
+            <div class="actions">
+              <button type="button" class="btn gray" id="guest-cancel" data-i18n="guestbook.form.cancel">Annuler</button>
+              <button type="submit" class="btn" id="guest-submit" data-i18n="guestbook.form.submit">Envoyer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- Devis & Personnalisation (fond montagne neutre pour lisibilité) -->
     <section class="slide" id="devis" data-bg="images/pexels-pixabay-210547.jpg" data-pos="center 45%" data-overlay="0.6">
       <div class="slide-bg"></div><div class="slide-overlay"></div>

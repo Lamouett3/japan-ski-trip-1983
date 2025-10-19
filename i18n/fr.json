@@ -203,6 +203,24 @@
     "p5": "En fin de journée, direction la Tokyo Skytree, la plus haute tour du Japon. Depuis ses plateformes d’observation, vous profitez d’une vue panoramique sur la ville et, si le temps le permet, d’un coucher de soleil inoubliable sur le mont Fuji. Un moment suspendu qui restera gravé dans les mémoires.",
     "p6": "La soirée s’achève dans le quartier animé d’Ueno, autour d’un dîner convivial dans une brasserie locale, pour clore en beauté ces trois jours de découverte de Tokyo entre traditions, gastronomie et modernité."
   },
+  "guestbook": {
+    "title": "Livre d’or",
+    "ctaOpen": "Laisser un avis",
+    "form": {
+      "title": "Laisser un avis",
+      "nameLabel": "Votre nom",
+      "namePlaceholder": "Votre prénom ou nom",
+      "textLabel": "Votre commentaire",
+      "textPlaceholder": "Votre avis sur le séjour…",
+      "starsLabel": "Votre note",
+      "submit": "Envoyer",
+      "cancel": "Annuler"
+    },
+    "seeds": [
+      {"name": "Camille", "text": "Un séjour inoubliable: poudreuse magique et organisation parfaite !", "stars": 5},
+      {"name": "Alexandre", "text": "Tokyo + ski: équilibre idéal entre culture et glisse.", "stars": 5}
+    ]
+  },
   "day1": {
     "title": "Jour 1 – Arrivée à Tokyo, immersion entre Akihabara et Ueno",
     "p1": "À votre arrivée à l’aéroport d’Haneda, vous êtes chaleureusement accueillis avant votre transfert vers Akihabara, surnommée Electric City, haut lieu de l’électronique, des mangas et de la pop culture japonaise. C’est le point de départ idéal pour plonger dans l’énergie unique de Tokyo.",
