@@ -1446,10 +1446,12 @@ document.getElementById('y').textContent = new Date().getFullYear();
         display.innerHTML = '';
         display.appendChild(only);
         showing = only;
+        try { display.style.minHeight = Math.max(160, showing.offsetHeight + 24) + 'px'; } catch(_){}
       } else {
         showing.querySelector('.stars').textContent = starStr(Math.max(1,Math.min(5, it.stars||5)));
         showing.querySelector('.text').textContent = it.text;
         showing.querySelector('.name').textContent = '— ' + it.name;
+        try { display.style.minHeight = Math.max(160, showing.offsetHeight + 24) + 'px'; } catch(_){}
       }
       return;
     }
@@ -1457,6 +1459,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     const next = renderCard(it);
     const prev = showing;
     display.appendChild(next);
+    // Adjust container height to avoid overlap with actions
+    try { display.style.minHeight = Math.max(160, next.offsetHeight + 24) + 'px'; } catch(_){}
     // Let the browser paint the new card before animating the previous out
     requestAnimationFrame(() => {
       if (prev) {
@@ -1517,6 +1521,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
   await init();
   document.addEventListener('i18n:applied', () => { stopCycle(); init(); });
+  window.addEventListener('resize', ()=>{ if (showing){ try { display.style.minHeight = Math.max(160, showing.offsetHeight + 24) + 'px'; } catch(_){} } }, { passive:true });
 
   // Dev helper: reset guestbook if requested via URL ?resetGuestbook=1
   try {
