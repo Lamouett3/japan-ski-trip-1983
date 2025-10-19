@@ -14,8 +14,8 @@
   /* Form controls */
   --control-h: 48px;
   /* Text shadows for readability on image backgrounds */
-  --txtshadow-soft: 0 1px 3px rgba(0, 0, 0, .45);
-  --txtshadow-strong: 0 2px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
+  --txtshadow-soft: 0 4px 3px rgba(0, 0, 0, .45);
+  --txtshadow-strong: 0 8px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
   /* Couleur des titres (fixe, identique en light/dark sauf override spécifique) */
   --heading-color: #ffffff;
   /* Vignette de fondu aux bords haut/bas */
