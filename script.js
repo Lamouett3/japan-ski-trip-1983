@@ -1145,6 +1145,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   let index = 1; // commence sur la 1ère carte réelle
   const DEFAULT_MS = 380;
+  const AUTO_MS = 3600; // tempo d'affichage entre slides
+  let autoTimer = null;
+  let interacting = false;
   function setTransition(ms){
     if (!ms || ms <= 0) {
       track.style.transition = 'none';
@@ -1163,13 +1166,15 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (immediate) setTransition(0);
     update();
     if (immediate) { void track.offsetWidth; setTransition(DEFAULT_MS); }
+    // resynchronise l'auto-play si actif
+    scheduleAuto();
   }
   // Navigation via dots (mappe vers index réel + offset clone)
   dots.querySelectorAll('button').forEach((b, i)=> b.addEventListener('click', ()=> goTo(i+1)) );
 
   // Swipe (infinite)
   let startX=0, curX=0, dragging=false, moved=false, pid=null;
-  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; pid=e.pointerId; startX=e.clientX; curX=startX; setTransition(0); track.classList.add('dragging'); });
+  track.addEventListener('pointerdown', (e)=>{ dragging=true; moved=false; interacting=true; clearTimeout(autoTimer); pid=e.pointerId; startX=e.clientX; curX=startX; setTransition(0); track.classList.add('dragging'); });
   track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 6) { moved=true; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
   function endDrag(){ if(!dragging) return; dragging=false; track.classList.remove('dragging'); const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} const adx = Math.abs(dx); if (adx > w*0.15) { // momentum: plus on glisse loin, plus l'anim est rapide
         const t = Math.max(0, Math.min(1, (adx - w*0.15) / (w*0.85))); // 0..1
@@ -1180,7 +1185,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
         // snap back vite mais doux
         setTransition(220);
         update();
-      } } else { setTransition(220); update(); } }
+      } } else { setTransition(220); update(); } interacting=false; scheduleAuto(); }
   track.addEventListener('pointerup', endDrag);
   track.addEventListener('pointerleave', endDrag);
   track.addEventListener('pointercancel', ()=>{ dragging=false; track.classList.remove('dragging'); setTransition(DEFAULT_MS); update(); });
@@ -1195,7 +1200,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // Trackpad (macOS) — empêche le geste "page précédente" en capturant le wheel horizontal
   // et déclenche un slide next/prev avec un petit cooldown
   let wheelBusy = false;
-  const WHEEL_COOLDOWN = 320;
+  const WHEEL_COOLDOWN = 480;
   carousel.addEventListener('wheel', (e) => {
     const ax = Math.abs(e.deltaX), ay = Math.abs(e.deltaY);
     if (ax > ay && ax > 2) {
@@ -1203,15 +1208,34 @@ document.getElementById('y').textContent = new Date().getFullYear();
       e.preventDefault();
       if (wheelBusy) return;
       wheelBusy = true;
+      interacting = true; clearTimeout(autoTimer);
       const dir = e.deltaX > 0 ? 1 : -1;
       setTransition(260);
       goTo(index + dir);
-      setTimeout(()=>{ wheelBusy = false; }, WHEEL_COOLDOWN);
+      setTimeout(()=>{ wheelBusy = false; interacting = false; scheduleAuto(); }, WHEEL_COOLDOWN);
     }
   }, { passive: false });
 
   window.addEventListener('resize', update, { passive:true });
   goTo(1, true);
+
+  // Auto-play: avance quand l'utilisateur n'interagit pas
+  function scheduleAuto(){
+    clearTimeout(autoTimer);
+    if (interacting) return;
+    autoTimer = setTimeout(()=>{
+      if (interacting) return scheduleAuto();
+      setTransition(260);
+      goTo(index + 1);
+    }, AUTO_MS);
+  }
+  // Pause/reprise sur focus/hover
+  carousel.addEventListener('mouseenter', ()=>{ interacting = true; clearTimeout(autoTimer); });
+  carousel.addEventListener('mouseleave', ()=>{ interacting = false; scheduleAuto(); });
+  document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { interacting=true; clearTimeout(autoTimer);} else { interacting=false; scheduleAuto(); } });
+  // Dots click also pauses briefly then resumes
+  dots.addEventListener('click', ()=>{ interacting = true; clearTimeout(autoTimer); setTimeout(()=>{ interacting=false; scheduleAuto(); }, 600); });
+  scheduleAuto();
 
   // Pastilles désormais pilotées directement par i18n; aucun post-traitement requis
 })();
