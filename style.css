@@ -436,6 +436,10 @@ img {
 #guestbook .slide-inner { width: var(--content-w); text-align: center; }
 .guest-display { min-height: 140px; display: grid; place-items: center; }
 .guest-card { display: inline-block; max-width: min(800px, 92vw); text-align: left; padding: 14px 16px; border-radius: 16px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 10px 26px rgba(0,0,0,.28); }
+.guest-card { color: #ffffff; }
+.guest-card .text,
+.guest-card .name,
+.guest-card .stars { text-shadow: var(--txtshadow-soft); }
 .guest-card .name { font-weight: 800; }
 .guest-card .stars { color: #ffde59; letter-spacing: 1px; }
 .guest-actions { margin-top: 12px; display: grid; place-items: center; }
