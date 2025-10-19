@@ -266,7 +266,29 @@ img {
 }
 .contact-form fieldset.field label { display: flex; align-items: center; gap: 8px; line-height: 1.4; font-weight: 400; }
 .contact-form fieldset.field label + label { margin-top: 6px; }
-.contact-form input[type="radio"] { width: 18px; height: 18px; accent-color: currentColor; }
+.contact-form input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,.9);
+  border-radius: 50%;
+  background: transparent;
+  display: inline-grid;
+  place-content: center;
+  flex: 0 0 20px;
+}
+.contact-form input[type="radio"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 120ms ease-in-out;
+  background: #ffffff;
+}
+.contact-form input[type="radio"]:checked::before { transform: scale(1); }
+.contact-form input[type="radio"]:focus-visible { outline: none; box-shadow: var(--focus); }
 .contact-form .muted { font-size: .85rem; color: rgba(255,255,255,.9); }
 
 /* Mobile-friendly adjustments for contact form */
