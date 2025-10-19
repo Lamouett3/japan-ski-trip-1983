@@ -1320,10 +1320,22 @@ document.getElementById('y').textContent = new Date().getFullYear();
     btn.setAttribute('aria-expanded', String(open));
     wrap.setAttribute('aria-hidden', String(!open));
     if (open) {
+      // Expand with animation, then allow auto height for dynamic content
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
+      const onEnd = () => {
+        if (open) wrap.style.maxHeight = 'none';
+        wrap.removeEventListener('transitionend', onEnd);
+      };
+      wrap.addEventListener('transitionend', onEnd);
       if (panel) panel.classList.remove('collapsed');
     } else {
-      wrap.style.maxHeight = '0px';
+      // If currently auto, set to current height first to animate close
+      if (wrap.style.maxHeight === 'none') {
+        wrap.style.maxHeight = wrap.scrollHeight + 'px';
+        requestAnimationFrame(() => { wrap.style.maxHeight = '0px'; });
+      } else {
+        wrap.style.maxHeight = '0px';
+      }
       if (panel) panel.classList.add('collapsed');
     }
   }
@@ -1332,5 +1344,6 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); set(!open); }
   });
   window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+  document.addEventListener('i18n:applied', () => { if (open && wrap.style.maxHeight !== 'none') wrap.style.maxHeight = wrap.scrollHeight + 'px'; });
   set(false);
 })();
