@@ -131,7 +131,7 @@
     "participantsHint": "Exemple : 1, 2, 4 personnes…",
     "participationLabel": "Type de participation",
     "participation": {
-      "solo": "Je voyage seul(e) et souhaite rejoindre un groupe existant",
+      "solo": "Ok pour rejoindre un groupe déjà constitué.",
       "group": "Nous sommes un groupe déjà constitué"
     },
     "subjectLabel": "Objet de votre demande",
