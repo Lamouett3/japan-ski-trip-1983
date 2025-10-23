@@ -1223,8 +1223,10 @@ document.getElementById('y').textContent = new Date().getFullYear();
   function scheduleAuto(){
     clearTimeout(autoTimer);
     if (interacting) return;
+    if (window.__CAROUSEL_PAUSE) return;
     autoTimer = setTimeout(()=>{
       if (interacting) return scheduleAuto();
+      if (window.__CAROUSEL_PAUSE) return scheduleAuto();
       setTransition(260);
       goTo(index + 1);
     }, AUTO_MS);
@@ -1235,6 +1237,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
   document.addEventListener('visibilitychange', ()=>{ if (document.hidden) { interacting=true; clearTimeout(autoTimer);} else { interacting=false; scheduleAuto(); } });
   // Dots click also pauses briefly then resumes
   dots.addEventListener('click', ()=>{ interacting = true; clearTimeout(autoTimer); setTimeout(()=>{ interacting=false; scheduleAuto(); }, 600); });
+  // Pause/reprise globales (depuis d'autres modules, ex: contact)
+  document.addEventListener('carousel:pause', ()=>{ clearTimeout(autoTimer); });
+  document.addEventListener('carousel:resume', ()=>{ scheduleAuto(); });
   scheduleAuto();
 
   // Pastilles désormais pilotées directement par i18n; aucun post-traitement requis
@@ -1352,6 +1357,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
       };
       wrap.addEventListener('transitionend', onEnd);
       if (panel) panel.classList.remove('collapsed');
+      // Désactive auto-snap/auto-carrousels pendant l'ouverture du formulaire
+      try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
+      try { window.__CAROUSEL_PAUSE = true; document.dispatchEvent(new Event('carousel:pause')); } catch(_){}
     } else {
       // If currently auto, set to current height first to animate close
       if (wrap.style.maxHeight === 'none') {
@@ -1361,6 +1369,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
         wrap.style.maxHeight = '0px';
       }
       if (panel) panel.classList.add('collapsed');
+      // Réactive auto-snap/auto-carrousels
+      try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
+      try { window.__CAROUSEL_PAUSE = false; document.dispatchEvent(new Event('carousel:resume')); } catch(_){}
     }
   }
   btn.addEventListener('click', () => set(!open));
