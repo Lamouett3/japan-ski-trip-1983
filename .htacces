@@ -1,0 +1,9 @@
+RewriteEngine On
+
+# http -> https
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# www -> sans www (si tu veux sans www)
+RewriteCond %{HTTP_HOST} ^www\.japanskitrip\.fr$ [NC]
+RewriteRule ^ https://japanskitrip.fr%{REQUEST_URI} [L,R=301]
