@@ -160,6 +160,31 @@ body {
   font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial
 }
 
+/* Scroll snap natif, fluide et compatible navigateurs
+   - proximity: laisse l'utilisateur contrôler, évite les à-coups
+   - désactivable via .no-snap (accessibilité ou debug) */
+html, body {
+  scroll-snap-type: y proximity;
+}
+
+.no-snap, .no-snap body, .no-snap .slides {
+  scroll-snap-type: none !important;
+}
+
+.slides {
+  /* S'assure que le conteneur principal respecte le snap */
+  scroll-snap-type: y proximity;
+}
+
+.slide {
+  /* Chaque section s'aligne proprement au début du viewport */
+  scroll-snap-align: start;
+  /* Prévenir les chevauchements avec la nav sticky si nécessaire */
+  scroll-margin-top: 16px;
+  /* Hauteur d'écran par défaut, s'étire si contenu plus grand */
+  min-height: var(--slide-h);
+}
+
 /* Bloque les interactions et le scroll pendant l'ouverture shoji initiale */
 body.shoji-opening {
   overflow: hidden;

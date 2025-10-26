@@ -795,8 +795,10 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (window.__SNAP_ACTIVE || window.__INTRO_ACTIVE) return; // fige le parallax pendant snap/intro
     const vh = window.innerHeight;
     const vw = window.innerWidth || 1024;
-    const depth = vw <= 360 ? 0.10 : (vw <= 480 ? 0.14 : 0.18); // parallax adouci sur petits écrans
-    const maxShift = vh * 0.22; // clamp pour éviter de dévoiler le bord
+    // Parallax plus doux pour ne pas contrarier le scroll-snap natif
+    // Règle: très léger sur petits écrans, moyen sur desktop
+    const depth = vw <= 360 ? 0.06 : (vw <= 480 ? 0.08 : 0.12);
+    const maxShift = vh * (vw < 768 ? 0.12 : 0.18); // limite plus stricte en mobile
     bgEls.forEach((el) => {
       const rect = el.parentElement.getBoundingClientRect();
       const centerDelta = (rect.top + rect.height/2) - vh/2;
@@ -810,8 +812,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (sommaire) {
       const r = sommaire.getBoundingClientRect();
       const cDelta = (r.top + r.height/2) - vh/2;
-      const f = vw <= 360 ? 0.06 : (vw <= 480 ? 0.08 : 0.10);
-      const max = vh * 0.16;
+      const f = vw <= 360 ? 0.04 : (vw <= 480 ? 0.06 : 0.08);
+      const max = vh * (vw < 768 ? 0.10 : 0.14);
       const off = Math.max(-max, Math.min(max, cDelta * f));
       sommaire.querySelectorAll('.rec-media').forEach((m) => {
         m.style.transform = `translate3d(0, ${off}px, 0) scale(1.08)`;
@@ -839,7 +841,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if (!hero) return;
     const vh = window.innerHeight;
     const vw = window.innerWidth || 1024;
-    const factor = vw <= 360 ? 0.08 : (vw <= 480 ? 0.1 : 0.12);
+    // Parallax vidéo adouci
+    const factor = vw <= 360 ? 0.05 : (vw <= 480 ? 0.075 : 0.10);
     const rect = hero.getBoundingClientRect();
     const centerDelta = (rect.top + rect.height/2) - vh/2;
     const offset = centerDelta * factor; // plus doux sur petits écrans
@@ -862,134 +865,14 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // plus d'auto‑ouverture shoji sur la slide HERO
 })();
 
-// === Auto-snap doux à la fin du scroll ===
+// === Scroll-snap natif: pas d'auto-snap JS pour éviter les conflits ===
 (function(){
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
-
-  // Désactive l'auto-snap sur la page programme (lecture jour par jour)
+  const root = document.documentElement;
+  if (prefersReduced) { root.classList.add('no-snap'); return; }
   const isProgramme = /programme\.html$/i.test(location.pathname) || /programme/i.test(document.title);
-  if (isProgramme) return;
-
-  const container = document.querySelector('.slides');
-  if (!container) return;
-
-  let rafId = null;
-  let endTimer = null;
-  let isAuto = false;
-  let lastY = window.scrollY;
-  let lastT = performance.now();
-  let velocity = 0; // px/ms (moyenne simple)
-
-  function getTargetY() {
-    const slides = Array.from(container.querySelectorAll('.slide'));
-    if (!slides.length) return null;
-    const vh = window.innerHeight;
-    const vw = window.innerWidth || 1024;
-    const alignToCenter = vw >= 768; // desktop: alignement plus centré
-    let best = null;
-    let bestDist = Infinity;
-    for (const s of slides) {
-      const r = s.getBoundingClientRect();
-      // Mesure par rapport au centre du viewport pour un ressenti plus naturel
-      const dist = Math.abs((r.top + r.height/2) - vh/2);
-      if (dist < bestDist) { bestDist = dist; best = s; }
-    }
-    if (!best) return null;
-    const r = best.getBoundingClientRect();
-    const centerOffset = alignToCenter ? Math.max(0, (vh - Math.min(r.height, vh)) / 2) : 0;
-    // Vise à placer le haut de la slide à "centerOffset" depuis le haut du viewport
-    const target = window.scrollY + r.top - centerOffset;
-    return Math.max(0, target);
-  }
-
-  function easeOutQuint(t){ return 1 - Math.pow(1 - t, 5); }
-
-  function animateTo(targetY, duration){
-    const startY = window.scrollY;
-    const delta = targetY - startY;
-    if (Math.abs(delta) < 2) return;
-    const start = performance.now();
-    isAuto = true;
-    window.__SNAP_ACTIVE = true;
-    // Annule tout snap programmé précédemment
-    if (endTimer) { clearTimeout(endTimer); endTimer = null; }
-    const prevSnap = container.style.scrollSnapType;
-    container.style.scrollSnapType = 'none';
-    // Désactive le scroll-behavior: smooth global le temps de l'anim pour éviter le double-lissage
-    const root = document.documentElement;
-    const prevBehavior = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-
-    function step(now){
-      const t = Math.min(1, (now - start) / duration);
-      const eased = easeOutQuint(t); // freinage plus doux en fin de course
-      window.scrollTo(0, startY + delta * eased);
-      if (t < 1 && isAuto) {
-        rafId = requestAnimationFrame(step);
-      } else {
-        // Petit délai pour éviter que le snap natif recorrige juste après notre anim
-        setTimeout(() => { container.style.scrollSnapType = prevSnap || ''; }, 40);
-        // Restaure le scroll-behavior initial
-        root.style.scrollBehavior = prevBehavior || '';
-        isAuto = false;
-        window.__SNAP_ACTIVE = false;
-      }
-    }
-    rafId = requestAnimationFrame(step);
-  }
-
-  function smoothSnap() {
-    if (isAuto) return;
-    const targetY = getTargetY();
-    if (targetY == null) return;
-    const cur = window.scrollY;
-    const dist = Math.abs(targetY - cur);
-
-    // Si déjà très proche, évite anim inutile
-    if (dist < 14) return;
-
-    // N’anime que si on est raisonnablement près d’un point d’ancrage
-    const vh = window.innerHeight;
-    if (dist > vh * 0.55) return; // snap seulement si on est relativement proche
-
-    // Durée adaptative selon distance et vitesse (inertie perçue)
-    const base = 360 + (dist / vh) * 320; // 360–680ms environ
-    const speedAdj = Math.max(0.8, Math.min(1.15, 1.02 - velocity * 0.22));
-    const duration = Math.max(280, Math.min(1000, base * speedAdj));
-
-    animateTo(targetY, duration);
-  }
-
-  function onScroll(){
-    // Si l'auto-snap a été explicitement désactivé (voir sections "Lire plus"), ne rien faire
-    if ((window.__DISABLE_AUTOSNAP_UNTIL || 0) === Number.POSITIVE_INFINITY) return;
-    if (isAuto) return;
-    const now = performance.now();
-    const dy = window.scrollY - lastY;
-    const dt = Math.max(16, now - lastT);
-    // Vitesse lissée
-    const instV = Math.abs(dy) / dt; // px/ms
-    velocity = velocity * 0.6 + instV * 0.4;
-    lastY = window.scrollY; lastT = now;
-
-    if (endTimer) clearTimeout(endTimer);
-    // Délai selon vitesse: plus on va vite, plus on attend
-    // Attente quasi immédiate avant snap
-    const delay = velocity < 0.05 ? 40 : velocity < 0.2 ? 80 : 120; // quasi immédiat mais évite l'accro
-    endTimer = setTimeout(smoothSnap, delay);
-  }
-
-  function cancelAuto(){
-    if (rafId) cancelAnimationFrame(rafId);
-    isAuto = false;
-    velocity = 0;
-    window.__SNAP_ACTIVE = false;
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('wheel', cancelAuto, { passive: true });
-  window.addEventListener('touchstart', cancelAuto, { passive: true });
+  if (isProgramme) { root.classList.add('no-snap'); return; }
+  // Rien d'autre: CSS gère le snap. Le parallax ci-dessous s'adapte pour ne pas gêner.
 })();
 
 // === Effet Shoji: panneaux qui s'ouvrent au changement de slide ===
