@@ -1396,24 +1396,28 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   let items = [];
   const APIS = ['/api/guestbook', '/.netlify/functions/guestbook'];
+  const GOOGLE_REVIEWS = ['/reviews.php', '/api/google-reviews', '/.netlify/functions/google-reviews'];
+  let sourceGoogle = false;
   // Only show user-submitted entries; seeds remain i18n examples
   async function load(){
     // Try server first
-    for (const API of APIS) {
+    // 1) Prefer Google reviews if available
+    for (const EP of GOOGLE_REVIEWS) {
       try {
-        const res = await fetch(API, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
+        const res = await fetch(EP, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
         if (res.ok) {
           const data = await res.json();
-          items = Array.isArray(data) ? data : [];
-          persistLocal();
-          return;
+          if (Array.isArray(data) && data.length) {
+            items = data.map(r => ({ name: r.name, text: r.text, stars: Number(r.stars||5) || 5 }));
+            sourceGoogle = true;
+            return;
+          }
         }
       } catch(_) { /* try next */ }
     }
-    // Fallback local
-    let saved = [];
-    try { saved = JSON.parse(localStorage.getItem('guestbook')||'[]'); } catch(_){ saved = []; }
-    items = Array.isArray(saved) ? saved : [];
+    // 2) No fallback: clear any previously stored local items
+    try { localStorage.removeItem('guestbook'); } catch(_){}
+    items = [];
   }
   function persistLocal(){
     try { localStorage.setItem('guestbook', JSON.stringify(items)); } catch(_){ }
@@ -1525,6 +1529,9 @@ document.getElementById('y').textContent = new Date().getFullYear();
   async function init(){
     await load();
     display.innerHTML = '';
+    // Toujours masquer l'UI de saisie locale (on ne prend plus d'avis sur le site)
+    try { if (openBtn) openBtn.closest('.guest-actions').style.display = 'none'; } catch(_){}
+    try { if (pop) pop.remove(); } catch(_){}
     if (items.length === 0) { return; }
     idx = 0;
     show(idx);
