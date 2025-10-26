@@ -653,9 +653,25 @@ img {
   text-align: center;
 }
 
-.guest-display { position: relative; min-height: clamp(160px, 28vh, 360px); }
+.guest-display {
+  position: relative;
+  min-height: clamp(160px, 28vh, 360px);
+}
 
-.guest-card { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); will-change: transform, opacity; max-width: min(800px, 92vw); text-align: left; padding: 14px 16px; border-radius: 16px; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.18); box-shadow: 0 10px 26px rgba(0,0,0,.28); }
+.guest-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  max-width: min(800px, 92vw);
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, .28);
+}
 
 .guest-card {
   color: #ffffff;
@@ -683,8 +699,29 @@ img {
 }
 
 /* Animations */
-@keyframes guest-in { from { opacity: 0; transform: translate(-50%, -50%) translateX(12%); } to { opacity: 1; transform: translate(-50%, -50%) translateX(0); } }
-@keyframes guest-out { from { opacity: 1; transform: translate(-50%, -50%) translateX(0); } to { opacity: 0; transform: translate(-50%, -50%) translateX(-12%); } }
+@keyframes guest-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(12%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(0);
+  }
+}
+
+@keyframes guest-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateX(-12%);
+  }
+}
 
 .guest-card.enter {
   animation: guest-in 360ms ease both;
@@ -1587,9 +1624,9 @@ body[data-page="programme"] .slide-inner li {
 /* Programme: améliorer la lisibilité des paragraphes par un fond léger */
 body[data-page="programme"] .slide-inner p {
   background: var(--pill);
-  border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 8px 12px 8px 28px; /* espace pour la pastille */
+  padding: 8px 12px 8px 28px;
+  /* espace pour la pastille */
   display: block;
   width: fit-content;
   max-width: min(900px, 92vw);
@@ -1624,7 +1661,7 @@ body[data-page="programme"] .slide-inner p::before {
   height: 8px;
   border-radius: 999px;
   background: #ffffff;
-  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
   opacity: .95;
 }
 
@@ -2737,7 +2774,6 @@ body[data-page="programme"] .slide-inner h2 {
   font-weight: 800;
   letter-spacing: .2px;
   text-shadow: none;
-  border: 1px solid var(--line);
   font-size: clamp(16px, 2.2vw, 24px);
   line-height: 1.2;
   -webkit-hyphens: none;
