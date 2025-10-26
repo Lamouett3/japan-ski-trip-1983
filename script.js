@@ -100,8 +100,10 @@ window.SHOJI_GLOBAL_ENABLED = false;
     setBtnLabel(lang);
     try {
       const dict = await loadDict(lang);
+      // Expose dictionary globally to avoid relying on hidden HTML helpers
+      try { window.I18N_DICT = dict; } catch(_){}
       applyDict(dict);
-      try { document.dispatchEvent(new CustomEvent('i18n:applied', { detail: { lang } })); } catch(_){}
+      try { document.dispatchEvent(new CustomEvent('i18n:applied', { detail: { lang, dict } })); } catch(_){}
     } catch(e) { /* ignore */ }
   }
   window.I18N_setLang = setLang;
@@ -117,6 +119,8 @@ window.SHOJI_GLOBAL_ENABLED = false;
     });
   }
 })();
+
+// (Mécanique "voir plus" du héro retirée à la demande — affichage i18n natif)
 
 // === Viewport height fix (iOS Safari 100vh) ===
 (function(){
@@ -319,13 +323,23 @@ document.getElementById('y').textContent = new Date().getFullYear();
   let open = false;
   // Observe sortie de section pour refermer et réactiver auto-snap
   let io = null;
+  function labels(){
+    try {
+      const dict = window.I18N_DICT || null;
+      if (dict && dict.a11y && dict.a11y.readMore && dict.a11y.readLess) {
+        return { more: dict.a11y.readMore, less: dict.a11y.readLess };
+      }
+    } catch(_){ }
+    const lang = (document.documentElement.lang || 'fr').toLowerCase();
+    return lang.startsWith('en') ? { more: 'Read more', less: 'Read less' } : { more: 'Lire plus', less: 'Lire moins' };
+  }
   function set(openNow){
     open = openNow;
     btn.setAttribute('aria-expanded', String(open));
     wrap.setAttribute('aria-hidden', String(!open));
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
-      btn.textContent = 'Lire moins';
+      btn.textContent = labels().less;
       // Désactive l'auto-snap tant que la section est ouverte
       try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
       // Met en place un observer qui referme si la section sort notablement de la vue
@@ -343,7 +357,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
       }
     } else {
       wrap.style.maxHeight = '0px';
-      btn.textContent = 'Lire plus';
+      btn.textContent = labels().more;
       // Réactive l'auto-snap dès fermeture
       try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
       if (io) { try { io.disconnect(); } catch(_){} io = null; }
@@ -351,6 +365,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
   btn.addEventListener('click', () => set(!open));
   window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+  // Adapter le libellé quand la langue change
+  document.addEventListener('i18n:applied', () => { btn.textContent = open ? labels().less : labels().more; });
   set(false);
 })();
 
@@ -361,13 +377,23 @@ document.getElementById('y').textContent = new Date().getFullYear();
   if (!wrap || !btn) return;
   let open = false;
   let io = null;
+  function labels(){
+    try {
+      const dict = window.I18N_DICT || null;
+      if (dict && dict.a11y && dict.a11y.readMore && dict.a11y.readLess) {
+        return { more: dict.a11y.readMore, less: dict.a11y.readLess };
+      }
+    } catch(_){ }
+    const lang = (document.documentElement.lang || 'fr').toLowerCase();
+    return lang.startsWith('en') ? { more: 'Read more', less: 'Read less' } : { more: 'Lire plus', less: 'Lire moins' };
+  }
   function set(openNow){
     open = openNow;
     btn.setAttribute('aria-expanded', String(open));
     wrap.setAttribute('aria-hidden', String(!open));
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
-      btn.textContent = 'Lire moins';
+      btn.textContent = labels().less;
       // Désactive l'auto-snap tant que la section est ouverte
       try { window.__DISABLE_AUTOSNAP_UNTIL = Number.POSITIVE_INFINITY; } catch(_){}
       if (!io) {
@@ -384,7 +410,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
       }
     } else {
       wrap.style.maxHeight = '0px';
-      btn.textContent = 'Lire plus';
+      btn.textContent = labels().more;
       // Réactive l'auto-snap dès fermeture
       try { window.__DISABLE_AUTOSNAP_UNTIL = 0; } catch(_){}
       if (io) { try { io.disconnect(); } catch(_){} io = null; }
@@ -392,6 +418,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   }
   btn.addEventListener('click', () => set(!open));
   window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
+  document.addEventListener('i18n:applied', () => { btn.textContent = open ? labels().less : labels().more; });
   set(false);
 })();
 
@@ -533,6 +560,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
   else window.addEventListener('load', play, { once: true });
 })();
 
+// (Mécanique héro mobile retirée — aucun bouton, rendu i18n natif)
+
 // === Menu mobile (hamburger) ===
 (function(){
   const nav = document.querySelector('.nav.jpn');
@@ -569,6 +598,134 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // Init ARIA
   btn.setAttribute('aria-expanded', 'false');
   links.setAttribute('aria-hidden', 'true');
+})();
+
+// === Héro (mobile): n'afficher que le premier <strong>, avec Lire plus/Lire moins ===
+(function(){
+  const hero = document.getElementById('top');
+  if (!hero) return;
+  const mq = window.matchMedia('(max-width: 899px)');
+  const leadSel = '#top .slide-inner > p.lead';
+  let originalHTML = null;
+  let moreWrap = null;
+  let btnRow = null;
+  let btn = null;
+  let open = false;
+
+  function labels(){
+    // 1) Try i18n dictionary if exposed
+    try {
+      const dict = window.I18N_DICT || null;
+      if (dict) {
+        const more = (((dict||{}).a11y||{}).readMore) || null;
+        const less = (((dict||{}).a11y||{}).readLess) || null;
+        if (typeof more === 'string' && typeof less === 'string') return { more, less };
+      }
+    } catch(_){}
+    // 2) Try DOM elements that carry these keys (rare)
+    const moreEl = document.querySelector('[data-i18n="a11y.readMore"]');
+    const lessEl = document.querySelector('[data-i18n="a11y.readLess"]');
+    if (moreEl && lessEl) {
+      const more = moreEl.textContent.trim();
+      const less = lessEl.textContent.trim();
+      if (more && less) return { more, less };
+    }
+    // 3) Fallback by html lang
+    const lang = (document.documentElement.lang || 'fr').toLowerCase();
+    if (lang.startsWith('en')) return { more: 'Read more', less: 'Read less' };
+    return { more: 'Lire plus', less: 'Lire moins' };
+  }
+
+  function splitIntroRest(html){
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html || '';
+    const firstStrong = tmp.querySelector('strong');
+    if (firstStrong){
+      const introHTML = firstStrong.outerHTML;
+      firstStrong.remove();
+      const restHTML = tmp.innerHTML;
+      return { introHTML, restHTML };
+    }
+    // Fallback: split at first <br>
+    const idx = (html || '').toLowerCase().indexOf('<br');
+    if (idx > -1) return { introHTML: html.slice(0, idx), restHTML: html.slice(idx) };
+    return { introHTML: html || '', restHTML: '' };
+  }
+
+  function setOpen(next){
+    open = next;
+    if (!btn || !moreWrap) return;
+    btn.setAttribute('aria-expanded', String(open));
+    moreWrap.setAttribute('aria-hidden', String(!open));
+    const { more, less } = labels();
+    if (open){
+      moreWrap.style.maxHeight = moreWrap.scrollHeight + 'px';
+      btn.textContent = less;
+    } else {
+      moreWrap.style.maxHeight = '0px';
+      btn.textContent = more;
+    }
+  }
+
+  function apply(){
+    const lead = document.querySelector(leadSel);
+    if (!lead) return;
+    // On premier passage, mémoriser la version i18n complète
+    if (originalHTML === null) originalHTML = lead.innerHTML;
+
+    if (!mq.matches){
+      // Desktop: restaurer et masquer bouton éventuel
+      if (originalHTML !== null) lead.innerHTML = originalHTML;
+      if (btnRow) btnRow.style.display = 'none';
+      moreWrap = null; // reconstruit en mobile
+      return;
+    }
+
+    // Mobile: construire l'aperçu (premier <strong>) + reste repliable
+    const { introHTML, restHTML } = splitIntroRest(originalHTML);
+    lead.innerHTML = '';
+    const introSpan = document.createElement('span');
+    introSpan.className = 'hero-lead-intro';
+    introSpan.innerHTML = introHTML;
+    moreWrap = document.createElement('span');
+    moreWrap.className = 'more-collapsible';
+    moreWrap.id = 'hero-lead-more';
+    moreWrap.setAttribute('aria-hidden','true');
+    // Important: span must behave like a box for max-height to work
+    moreWrap.style.display = 'inline-block';
+    const restSpan = document.createElement('span');
+    restSpan.className = 'hero-lead-rest';
+    restSpan.innerHTML = restHTML;
+    moreWrap.appendChild(restSpan);
+    lead.appendChild(introSpan);
+    lead.appendChild(moreWrap);
+
+    if (!btn){
+      btnRow = document.createElement('div');
+      btnRow.style.cssText = 'display:flex;gap:10px;justify-content:center;margin-top:10px';
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn outline more-toggle';
+      btn.id = 'hero-lead-more-btn';
+      btn.setAttribute('aria-controls','hero-lead-more');
+      btn.setAttribute('aria-expanded','false');
+      btn.addEventListener('click', () => setOpen(!open));
+      btnRow.appendChild(btn);
+      lead.insertAdjacentElement('afterend', btnRow);
+    } else {
+      btnRow.style.display = 'flex';
+      if (lead.nextElementSibling !== btnRow) lead.insertAdjacentElement('afterend', btnRow);
+    }
+    setOpen(false);
+  }
+
+  function init(){ apply(); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
+  else init();
+  // Réappliquer après traduction et changement de viewport
+  try { document.addEventListener('i18n:applied', () => { originalHTML = null; apply(); }); } catch(_){}
+  try { mq.addEventListener('change', apply); } catch(_) { mq.addListener(apply); }
+  window.addEventListener('resize', () => { if (open && moreWrap) moreWrap.style.maxHeight = moreWrap.scrollHeight + 'px'; }, { passive:true });
 })();
 
 // === Formulaire de contact (Formspree) ===
@@ -804,6 +961,21 @@ document.getElementById('y').textContent = new Date().getFullYear();
       const offset = Math.max(-maxShift, Math.min(maxShift, raw));
       el.style.transform = `translate3d(0, ${offset}px, 0) scale(1.16)`;
     });
+
+    // Programme: léger contre-mouvement du contenu pour accentuer l'effet
+    const isProgramme = (document.body && document.body.getAttribute('data-page') === 'programme');
+    if (isProgramme) {
+      const inners = document.querySelectorAll('body[data-page="programme"] .slide .slide-inner');
+      const innerFactor = (vw <= 480 ? -0.05 : -0.06); // contre-mouvement doux (négatif = inverse du fond)
+      const innerClamp = vh * 0.08;
+      inners.forEach(inner => {
+        const s = inner.closest('.slide');
+        const r = (s || inner).getBoundingClientRect();
+        const cDelta = (r.top + r.height/2) - vh/2;
+        const off = Math.max(-innerClamp, Math.min(innerClamp, cDelta * innerFactor));
+        inner.style.transform = `translate3d(0, ${off}px, 0)`;
+      });
+    }
 
     // Parallax pour les images du carrousel Sommaire (effet similaire aux autres sections)
     const sommaire = document.getElementById('sommaire');

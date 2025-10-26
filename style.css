@@ -153,6 +153,9 @@ html {
   transition: max-height 360ms cubic-bezier(.22, .61, .36, 1);
 }
 
+/* Ensure hero lead "more" block lays out cleanly when expanded */
+/* .hero-lead-more supprimé (retour au rendu i18n simple) */
+
 body {
   margin: 0;
   background: var(--bg);
@@ -264,7 +267,7 @@ img {
   text-align: center;
   /* Style kicker */
   background: var(--pill);
-  border: 1px solid var(--line);
+  border: 0px solid var(--line);
   padding: clamp(6px, 1.2vw, 10px) clamp(12px, 2.2vw, 18px);
   border-radius: 999px;
   color: var(--muted);
@@ -327,7 +330,6 @@ img {
 }
 
 .contact-form .form-group {
-  border: 1px solid rgba(255, 255, 255, .12);
   border-radius: 14px;
   padding: 14px;
   background: rgba(255, 255, 255, .04);
@@ -367,7 +369,7 @@ img {
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid var(--line);
+  border: 0px solid var(--line);
   background: color-mix(in oklab, var(--panel), transparent 0%);
   color: var(--text);
   box-shadow: 0 1px 0 rgba(255, 255, 255, .04) inset, 0 2px 14px rgba(0, 0, 0, .22);
@@ -412,7 +414,7 @@ img {
 .contact-form fieldset.field {
   display: grid;
   gap: 8px;
-  border: 1px solid rgba(255, 255, 255, .14);
+  border: 0px solid rgba(255, 255, 255, .14);
   border-radius: 12px;
   padding: 10px 12px;
   background: rgba(255, 255, 255, .04);
@@ -433,7 +435,7 @@ img {
   line-height: 1.4;
   font-weight: 400;
   padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, .12);
+  border: 0px solid rgba(255, 255, 255, .12);
   border-radius: 10px;
   background: rgba(255, 255, 255, .03);
   transition: border-color .2s ease, background .2s ease, box-shadow .2s ease;
@@ -554,7 +556,7 @@ img {
 /* CTA button refinement inside contact */
 #contact .contact-form .btn {
   background: linear-gradient(180deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .06));
-  border: 1px solid rgba(255, 255, 255, .24);
+  border: 0px solid rgba(255, 255, 255, .24);
   color: #fff;
   box-shadow: 0 10px 26px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
@@ -1611,6 +1613,7 @@ body[data-page="programme"] .slide-inner {
   text-align: left;
   justify-items: start;
   align-items: start;
+  will-change: transform;
 }
 
 /* Lisibilité accrue du texte sur la page programme */
