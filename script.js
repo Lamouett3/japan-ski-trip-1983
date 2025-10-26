@@ -1398,6 +1398,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const APIS = ['/api/guestbook', '/.netlify/functions/guestbook'];
   const GOOGLE_REVIEWS = ['/reviews.php', '/api/google-reviews', '/.netlify/functions/google-reviews'];
   let sourceGoogle = false;
+  let googlePlaceId = null;
   // Only show user-submitted entries; seeds remain i18n examples
   async function load(){
     // Try server first
@@ -1406,6 +1407,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
       try {
         const res = await fetch(EP, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
         if (res.ok) {
+          try { googlePlaceId = res.headers.get('x-place-id') || googlePlaceId; } catch(_){ }
           const data = await res.json();
           if (Array.isArray(data) && data.length) {
             items = data.map(r => ({ name: r.name, text: r.text, stars: Number(r.stars||5) || 5 }));
@@ -1505,7 +1507,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   function openForm(){ pop.hidden = false; try { document.getElementById('guest-name').focus(); } catch(_){ } }
   function closeForm(){ pop.hidden = true; }
-  if (openBtn) openBtn.addEventListener('click', openForm);
+  // Désactivé: on n'utilise plus le formulaire local des avis
+  // if (openBtn) openBtn.addEventListener('click', openForm);
   if (cancel) cancel.addEventListener('click', closeForm);
   if (pop) pop.addEventListener('click', (e)=>{ if (e.target === pop) closeForm(); });
   if (form) form.addEventListener('submit', async (e)=>{
@@ -1529,9 +1532,20 @@ document.getElementById('y').textContent = new Date().getFullYear();
   async function init(){
     await load();
     display.innerHTML = '';
-    // Toujours masquer l'UI de saisie locale (on ne prend plus d'avis sur le site)
-    try { if (openBtn) openBtn.closest('.guest-actions').style.display = 'none'; } catch(_){}
-    try { if (pop) pop.remove(); } catch(_){}
+    // On n'utilise plus la saisie locale; transforme le bouton en lien Google Reviews
+    try {
+      if (pop) pop.remove();
+      if (openBtn) {
+        const a = openBtn; // bouton réutilisé comme déclencheur d'un lien sortant
+        const href = googlePlaceId
+          ? ('https://search.google.com/local/writereview?placeid=' + encodeURIComponent(googlePlaceId))
+          : 'https://www.google.com/search?sca_esv=50bc830c1331a679&hl=fr&authuser=0&si=AMgyJEtREmoPL4P1I5IDCfuA8gybfVI2d5Uj7QMwYCZHKDZ-E_F8dMnnQfDuhQ6VsgwKTD4V2P9xY8oBvbKDI_bzZk2gLXzLW7H4qSy1BP8XmLrU-VB8VjxT_05TAraqFUWqMWEmUsWTvxveF3cpxsACOnbnBcQ8Dw%3D%3D&q=JAPAN+SKI+TRIP+par+Jerome+Noviant+Avis&sa=X&ved=2ahUKEwi2vrW1k8KQAxXMZqQEHSwKG1UQ0bkNegQIHBAD&biw=1229&bih=716&dpr=2';
+        a.addEventListener('click', (e)=>{
+          e.preventDefault();
+          try { window.open(href, '_blank', 'noopener'); } catch(_) { location.href = href; }
+        }, { once: true });
+      }
+    } catch(_){ }
     if (items.length === 0) { return; }
     idx = 0;
     show(idx);

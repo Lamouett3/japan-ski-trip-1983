@@ -69,6 +69,6 @@ foreach ($reviews as $r) {
   ];
 }
 
+header('X-Place-Id: ' . $PLACE_ID);
 echo json_encode($out);
 ?>
-
