@@ -1,4 +1,6 @@
 <?php
+// Optional config file with constants
+@include_once __DIR__ . '/config.php';
 // Google Places Reviews proxy (PHP) — fetches latest reviews and outputs normalized JSON
 // Configure your Google Places API credentials below or via environment variables.
 
@@ -6,8 +8,8 @@ $GOOGLE_API_KEY = getenv('GOOGLE_PLACES_KEY') ?: '';
 $PLACE_ID = getenv('GOOGLE_PLACE_ID') ?: '';
 
 // Optional: allow overriding via constants if you prefer edit-in-file
-if (defined('GOOGLE_PLACES_KEY')) { $GOOGLE_API_KEY = GOOGLE_PLACES_KEY; }
-if (defined('GOOGLE_PLACE_ID')) { $PLACE_ID = GOOGLE_PLACE_ID; }
+if (defined('GOOGLE_PLACES_KEY') && GOOGLE_PLACES_KEY) { $GOOGLE_API_KEY = GOOGLE_PLACES_KEY; }
+if (defined('GOOGLE_PLACE_ID') && GOOGLE_PLACE_ID) { $PLACE_ID = GOOGLE_PLACE_ID; }
 
 header('Content-Type: application/json; charset=UTF-8');
 header('X-Content-Type-Options: nosniff');
@@ -70,5 +72,8 @@ foreach ($reviews as $r) {
 }
 
 header('X-Place-Id: ' . $PLACE_ID);
+if (defined('GOOGLE_REVIEW_FALLBACK') && GOOGLE_REVIEW_FALLBACK) {
+  header('X-Review-Fallback: ' . GOOGLE_REVIEW_FALLBACK);
+}
 echo json_encode($out);
 ?>

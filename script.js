@@ -1399,6 +1399,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
   const GOOGLE_REVIEWS = ['/reviews.php', '/api/google-reviews', '/.netlify/functions/google-reviews'];
   let sourceGoogle = false;
   let googlePlaceId = null;
+  let GOOGLE_REVIEW_FALLBACK = 'https://www.google.com/search?q=Japan+Ski+Trip+reviews';
   // Only show user-submitted entries; seeds remain i18n examples
   async function load(){
     // Try server first
@@ -1407,7 +1408,11 @@ document.getElementById('y').textContent = new Date().getFullYear();
       try {
         const res = await fetch(EP, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
         if (res.ok) {
-          try { googlePlaceId = res.headers.get('x-place-id') || googlePlaceId; } catch(_){ }
+          try {
+            googlePlaceId = res.headers.get('x-place-id') || googlePlaceId;
+            const fb = res.headers.get('x-review-fallback');
+            if (fb) GOOGLE_REVIEW_FALLBACK = fb;
+          } catch(_){ }
           const data = await res.json();
           if (Array.isArray(data) && data.length) {
             items = data.map(r => ({ name: r.name, text: r.text, stars: Number(r.stars||5) || 5 }));
