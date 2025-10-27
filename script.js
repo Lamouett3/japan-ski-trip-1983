@@ -1341,15 +1341,16 @@ document.getElementById('y').textContent = new Date().getFullYear();
   track.appendChild(firstClone);
 
   let index = 1; // commence sur la 1ère carte réelle
-  const DEFAULT_MS = 380;
-  const AUTO_MS = 3600; // tempo d'affichage entre slides
+  const DEFAULT_MS = 640; // transition plus lente et fluide
+  const AUTO_MS = 6500; // tempo d'affichage entre slides (plus lent)
   let autoTimer = null;
   let interacting = false;
   function setTransition(ms){
     if (!ms || ms <= 0) {
       track.style.transition = 'none';
     } else {
-      track.style.transition = `transform ${ms}ms cubic-bezier(.22,.61,.36,1)`;
+      // courbe plus douce, proche d'un ease-in-out
+      track.style.transition = `transform ${ms}ms cubic-bezier(.25,.8,.25,1)`;
     }
   }
   function effectiveIndex(){ return ((index - 1 + originalCount) % originalCount); }
@@ -1375,14 +1376,15 @@ document.getElementById('y').textContent = new Date().getFullYear();
   track.addEventListener('pointermove', (e)=>{ if(!dragging) return; curX=e.clientX; const dx = curX-startX; const w=carousel.clientWidth; if (!moved && Math.abs(dx) > 6) { moved=true; try{ track.setPointerCapture(pid); }catch(_){} } if (moved){ e.preventDefault(); track.style.transform=`translateX(${-index*w + dx}px)`; } });
   function endDrag(){ if(!dragging) return; dragging=false; track.classList.remove('dragging'); const w=carousel.clientWidth; const dx = curX - startX; if (moved) { try{ track.releasePointerCapture(pid); }catch(_){} const adx = Math.abs(dx); if (adx > w*0.15) { // momentum: plus on glisse loin, plus l'anim est rapide
         const t = Math.max(0, Math.min(1, (adx - w*0.15) / (w*0.85))); // 0..1
-        const dur = Math.round(DEFAULT_MS - (DEFAULT_MS - 180) * t); // 380ms -> 180ms
+        const minDur = 360; // ralenti: garde une transition minimale plus longue
+        const dur = Math.round(DEFAULT_MS - (DEFAULT_MS - minDur) * t); // 640ms -> 360ms
         setTransition(dur);
         goTo(index + (dx<0?1:-1));
       } else {
-        // snap back vite mais doux
-        setTransition(220);
+        // snap back plus doux et plus lent
+        setTransition(360);
         update();
-      } } else { setTransition(220); update(); } interacting=false; scheduleAuto(); }
+      } } else { setTransition(360); update(); } interacting=false; scheduleAuto(); }
   track.addEventListener('pointerup', endDrag);
   track.addEventListener('pointerleave', endDrag);
   track.addEventListener('pointercancel', ()=>{ dragging=false; track.classList.remove('dragging'); setTransition(DEFAULT_MS); update(); });
@@ -1407,7 +1409,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
       wheelBusy = true;
       interacting = true; clearTimeout(autoTimer);
       const dir = e.deltaX > 0 ? 1 : -1;
-      setTransition(260);
+      setTransition(420);
       goTo(index + dir);
       setTimeout(()=>{ wheelBusy = false; interacting = false; scheduleAuto(); }, WHEEL_COOLDOWN);
     }
