@@ -1385,6 +1385,11 @@ img {
   position: relative;
 }
 
+/* Index: snap obligatoire, le scroll s'arrête sur chaque section */
+body:not([data-page="programme"]) .slides {
+  scroll-snap-type: y mandatory;
+}
+
 /* Légers fondus haut/bas pour effacer toute couture visuelle au scroll */
 .slides::before, .slides::after {
   content: "";

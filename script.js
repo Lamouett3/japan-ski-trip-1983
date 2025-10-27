@@ -1042,9 +1042,16 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // Désactive l'auto-snap sur la page programme (lecture jour par jour)
   const isProgramme = /programme\.html$/i.test(location.pathname) || /programme/i.test(document.title);
   if (isProgramme) return;
+  // Désactive en mobile/tablette pour un ressenti plus naturel
+  function isDesktop(){ return (window.innerWidth || 0) >= 900; }
 
   const container = document.querySelector('.slides');
   if (!container) return;
+  // Si le CSS est déjà en snap mandatory (index), laissons le navigateur gérer
+  try {
+    const snap = getComputedStyle(container).scrollSnapType || '';
+    if (snap.includes('mandatory')) return;
+  } catch(_){}
 
   let rafId = null;
   let endTimer = null;
@@ -1075,7 +1082,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     return Math.max(0, target);
   }
 
-  function easeOutQuint(t){ return 1 - Math.pow(1 - t, 5); }
+  // Easing plus doux
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
 
   function animateTo(targetY, duration){
     const startY = window.scrollY;
@@ -1095,7 +1103,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
     function step(now){
       const t = Math.min(1, (now - start) / duration);
-      const eased = easeOutQuint(t); // freinage plus doux en fin de course
+      const eased = easeOutCubic(t); // plus fluide
       window.scrollTo(0, startY + delta * eased);
       if (t < 1 && isAuto) {
         rafId = requestAnimationFrame(step);
@@ -1113,6 +1121,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   function smoothSnap() {
     if (isAuto) return;
+    if (!isDesktop()) return; // pas d'auto-snap hors desktop
     const targetY = getTargetY();
     if (targetY == null) return;
     const cur = window.scrollY;
@@ -1123,12 +1132,12 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
     // N’anime que si on est raisonnablement près d’un point d’ancrage
     const vh = window.innerHeight;
-    if (dist > vh * 0.55) return; // snap seulement si on est relativement proche
+    if (dist > vh * 0.35) return; // seuil plus strict pour être moins agressif
 
     // Durée adaptative selon distance et vitesse (inertie perçue)
-    const base = 360 + (dist / vh) * 320; // 360–680ms environ
-    const speedAdj = Math.max(0.8, Math.min(1.15, 1.02 - velocity * 0.22));
-    const duration = Math.max(280, Math.min(1000, base * speedAdj));
+    const base = 320 + (dist / vh) * 240; // 320–560ms environ
+    const speedAdj = Math.max(0.9, Math.min(1.1, 1.0 - velocity * 0.15));
+    const duration = Math.max(300, Math.min(900, base * speedAdj));
 
     animateTo(targetY, duration);
   }
@@ -1147,8 +1156,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
     if (endTimer) clearTimeout(endTimer);
     // Délai selon vitesse: plus on va vite, plus on attend
-    // Attente quasi immédiate avant snap
-    const delay = velocity < 0.05 ? 40 : velocity < 0.2 ? 80 : 120; // quasi immédiat mais évite l'accro
+    // Attente plus longue avant snap pour un ressenti plus fluide
+    const delay = velocity < 0.05 ? 140 : velocity < 0.2 ? 200 : 260;
     endTimer = setTimeout(smoothSnap, delay);
   }
 
