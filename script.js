@@ -377,6 +377,18 @@ document.getElementById('y').textContent = new Date().getFullYear();
   if (!wrap || !btn) return;
   let open = false;
   let io = null;
+  const mq = window.matchMedia('(max-width: 899px)');
+  const introParas = Array.from(document.querySelectorAll('#guide .slide-inner > p'));
+  function setIntroVisibility(isOpen){
+    const mobile = mq.matches;
+    introParas.forEach(p => {
+      if (!p) return;
+      // En mobile: cachés quand fermé; visibles quand ouvert
+      // En desktop: toujours visibles
+      const show = mobile ? isOpen : true;
+      p.style.display = show ? '' : 'none';
+    });
+  }
   function labels(){
     try {
       const dict = window.I18N_DICT || null;
@@ -391,6 +403,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     open = openNow;
     btn.setAttribute('aria-expanded', String(open));
     wrap.setAttribute('aria-hidden', String(!open));
+    setIntroVisibility(open);
     if (open) {
       wrap.style.maxHeight = wrap.scrollHeight + 'px';
       btn.textContent = labels().less;
@@ -419,7 +432,10 @@ document.getElementById('y').textContent = new Date().getFullYear();
   btn.addEventListener('click', () => set(!open));
   window.addEventListener('resize', () => { if (open) wrap.style.maxHeight = wrap.scrollHeight + 'px'; }, { passive:true });
   document.addEventListener('i18n:applied', () => { btn.textContent = open ? labels().less : labels().more; });
+  // Applique la visibilité initiale (mobile: ne montrer que les tags tant que fermé)
+  setIntroVisibility(false);
   set(false);
+  try { mq.addEventListener('change', () => setIntroVisibility(open)); } catch(_) { mq.addListener(() => setIntroVisibility(open)); }
 })();
 
 // === Devis: Voir détails / Moins de détails ===
