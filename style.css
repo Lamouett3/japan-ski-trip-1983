@@ -2832,6 +2832,13 @@ body[data-page="programme"] .slide-inner h2 {
   background: radial-gradient(80% 60% at 50% 30%, transparent, rgba(0, 0, 0, .35))
 }
 
+/* Guide: recadrage mobile de l'image de fond pour centrer le skieur */
+@media (max-width: 899px) {
+  #guide .slide-bg {
+    background-position: 70% 40% !important; /* décale la fenêtre vers la droite */
+  }
+}
+
 /* === Palette "on-image" pour texte lisible sur photo === */
 /* Par défaut, quand une slide a une image de fond, on adopte une encre claire. */
 .slide[data-ink="light"] {
