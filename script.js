@@ -1037,14 +1037,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
   // Évite les accrocs pendant le snap
   if (!window.__SNAP_ACTIVE) onScrollHero();
 
-  // Fallback si autoplay bloqué
-  heroVideoEl.play && heroVideoEl.play().catch(() => {
-    const img = document.createElement('img');
-    img.src = heroVideoEl.getAttribute('poster') || 'images/hero-poster.jpg';
-    img.alt = 'Montagne enneigée au Japon et Tokyo la nuit';
-    img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover';
-    heroVideoEl.parentNode.replaceChild(img, heroVideoEl);
-  });
+  // Tentative de lecture; si bloqué, on garde simplement la vidéo (pas de fallback image)
+  heroVideoEl.play && heroVideoEl.play().catch(() => {});
 })();
 
   // plus d'auto‑ouverture shoji sur la slide HERO
