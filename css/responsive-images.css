@@ -1,0 +1,346 @@
+/**
+ * responsive-images.css
+ * Styles for optimized responsive images with lazy loading
+ * PHASE 4 - Image Optimization
+ */
+
+/* ============ Base Image Styles ============ */
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: var(--radius, 8px);
+}
+
+/* Prevent layout shift during load */
+img[width] {
+  width: auto;
+  max-width: 100%;
+}
+
+img[height] {
+  height: auto;
+}
+
+/* ============ Responsive Images ============ */
+
+.responsive-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: var(--radius, 8px);
+  /* Fade in after loading */
+  opacity: 1;
+  transition: opacity 300ms ease;
+}
+
+/* Blur-up effect during lazy load */
+.responsive-img[loading="lazy"] {
+  background: var(--pill, #f5f5f5);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.responsive-img.loaded {
+  animation: none;
+}
+
+/* ============ Picture Elements ============ */
+
+picture {
+  display: contents;
+}
+
+/* ============ Image Containers ============ */
+
+.image-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius, 8px);
+  background: var(--pill, #f5f5f5);
+}
+
+/* Aspect ratio containers to prevent layout shift */
+.image-container.aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.image-container.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.image-container.aspect-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+.image-container img,
+.image-container picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============ Gallery Grid ============ */
+
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius, 8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============ Hero Images ============ */
+
+.hero-image {
+  position: relative;
+  width: 100%;
+  min-height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-image picture,
+.hero-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============ Thumbnail Images ============ */
+
+.thumbnail {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 2px solid var(--line, #e5e7eb);
+  transition: border-color 200ms;
+}
+
+.thumbnail:hover {
+  border-color: var(--accent, #111827);
+}
+
+.thumbnail.active {
+  border-color: var(--accent, #111827);
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.1);
+}
+
+/* ============ Avatar Images ============ */
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line, #e5e7eb);
+}
+
+.avatar.lg {
+  width: 80px;
+  height: 80px;
+}
+
+.avatar.sm {
+  width: 32px;
+  height: 32px;
+}
+
+/* Background Images */
+
+.bg-image {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ============ Loading States ============ */
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.image-loading {
+  background: linear-gradient(
+    90deg,
+    var(--pill, #f5f5f5) 0%,
+    var(--line, #e5e7eb) 50%,
+    var(--pill, #f5f5f5) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ============ Error States ============ */
+
+.image-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  background: var(--pill, #f5f5f5);
+  border: 2px dashed var(--line, #e5e7eb);
+  border-radius: var(--radius, 8px);
+  color: var(--muted, #999);
+  text-align: center;
+  padding: 20px;
+}
+
+.image-error::before {
+  content: '⚠️';
+  font-size: 48px;
+  margin-right: 12px;
+}
+
+/* ============ Lightbox Images ============ */
+
+.lightbox-image {
+  cursor: pointer;
+  transition: transform 200ms ease, filter 200ms ease;
+}
+
+.lightbox-image:hover {
+  transform: scale(1.02);
+  filter: brightness(0.95);
+}
+
+/* ============ Responsive Adjustments ============ */
+
+@media (max-width: 768px) {
+  .image-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .hero-image {
+    min-height: 300px;
+  }
+
+  .thumbnail {
+    width: 64px;
+    height: 64px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .avatar.lg {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image {
+    min-height: 250px;
+  }
+}
+
+/* ============ Print Styles ============ */
+
+@media print {
+  /* Show all images in print */
+  img[loading="lazy"] {
+    opacity: 1;
+  }
+
+  picture {
+    display: block;
+  }
+
+  .image-loading {
+    animation: none;
+  }
+}
+
+/* ============ Dark Mode Support ============ */
+
+[data-theme="dark"] .image-error {
+  background: #1a1a1a;
+  border-color: #333;
+  color: #999;
+}
+
+[data-theme="dark"] .thumbnail,
+[data-theme="dark"] .avatar {
+  border-color: #333;
+}
+
+/* ============ High Contrast Mode ============ */
+
+@media (prefers-contrast: more) {
+  .responsive-img {
+    border: 1px solid currentColor;
+  }
+
+  .gallery-item {
+    border: 2px solid currentColor;
+  }
+}
+
+/* ============ Reduced Motion ============ */
+
+@media (prefers-reduced-motion: reduce) {
+  .responsive-img {
+    transition: none;
+  }
+
+  .gallery-item {
+    transition: none;
+  }
+
+  .image-loading {
+    animation: none;
+  }
+
+  .lightbox-image {
+    transition: none;
+  }
+}

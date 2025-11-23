@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://japanskitrip.fr/</loc>
+    <lastmod>2025-11-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Programme (Itinerary) -->
+  <url>
+    <loc>https://japanskitrip.fr/programme.html</loc>
+    <lastmod>2025-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Images referenced on homepage -->
+  <url>
+    <loc>https://japanskitrip.fr/</loc>
+    <lastmod>2025-11-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/AdobeStock_315259160.jpeg</image:loc>
+      <image:title>Tokyo Cityscape Hero Image</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/AdobeStock_518922629.jpeg</image:loc>
+      <image:title>Japan Ski Trip Experience</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/pexels-pixabay-356872.jpg</image:loc>
+      <image:title>Presentation Section Background</image:title>
+    </image:image>
+  </url>
+
+  <!-- Programme images -->
+  <url>
+    <loc>https://japanskitrip.fr/programme.html</loc>
+    <lastmod>2025-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/pexels-axp-photography-500641970-18848570.jpg</image:loc>
+      <image:title>Day 1 - Arrival Tokyo Haneda</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/AdobeStock_318440873.jpeg</image:loc>
+      <image:title>Day 2 - Asakusa Temple Tokyo</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/pexels-imageriesnap-13419257.jpg</image:loc>
+      <image:title>Day 3 - Tokyo Skytree Mount Fuji</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/pexels-jkbrinkhoff-5194487.jpg</image:loc>
+      <image:title>Day 4 - Shinkansen to Mountains</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/shutterstock_1263263161.jpg</image:loc>
+      <image:title>Day 5 - Powder Skiing Happo-One</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/pexels-imageriesnap-8606805.jpg</image:loc>
+      <image:title>Day 6 - Backcountry Tsugaike Onsen</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://japanskitrip.fr/images/AdobeStock_302580214.jpeg</image:loc>
+      <image:title>Day 7 - Final Ski Run Return Tokyo</image:title>
+    </image:image>
+  </url>
+
+</urlset>

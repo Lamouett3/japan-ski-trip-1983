@@ -1,0 +1,40 @@
+# ============ Robots.txt for Japan Ski Trip ============
+# Define crawling rules for search engines and web crawlers
+
+# Allow all crawlers by default
+User-agent: *
+Allow: /
+
+# Disallow sensitive paths
+Disallow: /data/
+Disallow: /api/
+Disallow: /.git/
+Disallow: *.php
+Disallow: /admin/
+Disallow: /config/
+Disallow: /ressources/
+
+# Allow sitemap
+Sitemap: https://japanskitrip.fr/sitemap.xml
+
+# Crawl delay (optional, adjust as needed for shared host)
+Crawl-delay: 1
+
+# Specific crawler rules
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Block aggressive crawlers
+User-agent: MJ12bot
+Allow: /
+Crawl-delay: 10
+
+User-agent: Baiduspider
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /

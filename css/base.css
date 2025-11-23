@@ -1,0 +1,306 @@
+/**
+ * base.css
+ * Design tokens, CSS variables, reset, typography
+ * ~400 lignes
+ */
+
+/* ============ Tokens & Themes ============ */
+
+:root {
+  --maxw: 1200px;
+  --radius: 18px;
+  --shadow: 0 12px 40px rgba(0, 0, 0, .35);
+  --focus: 0 0 0 3px rgba(76, 201, 240, .5);
+  /* Viewport height fallback for Safari/iOS */
+  --vh: 1vh;
+  --slide-h: calc(var(--vh) * 100);
+  /* Fallback values for older browsers */
+  --slide-pad: 24px;
+  --content-w: 92vw;
+  /* Form controls */
+  --control-h: 48px;
+  /* Text shadows for readability on image backgrounds */
+  --txtshadow-soft: 0 4px 3px rgba(0, 0, 0, .45);
+  --txtshadow-strong: 0 8px 6px rgba(0, 0, 0, .55), 0 6px 20px rgba(0, 0, 0, .35);
+  /* Couleur des titres (fixe, identique en light/dark sauf override spécifique) */
+  --heading-color: #ffffff;
+  /* Vignette de fondu aux bords haut/bas */
+  --edge-fade: rgba(0, 0, 0, 0.18);
+  /* Shoji (thème clair par défaut) — ton crème */
+  --shoji-paper: rgba(245, 239, 230, 0.90);
+  --shoji-grid: rgba(0, 0, 0, 0.07);
+  --shoji-frame: rgba(139, 92, 52, 0.18);
+  --shoji-edge: rgba(139, 92, 52, 0.24);
+}
+
+/* Prefer dynamic svh when supported */
+@supports (height: 100svh) {
+  :root {
+    --slide-h: 100svh;
+  }
+}
+
+/* Use clamp/min when supported */
+@supports (width: clamp(1px, 1vw, 2px)) {
+  :root {
+    --slide-pad: clamp(24px, 4vw, 56px);
+  }
+}
+
+@supports (width: min(10px, 5vw)) {
+  :root {
+    --content-w: min(860px, 92vw);
+  }
+}
+
+/* Fallbacks when min() is unsupported (older Safari) */
+@supports not (width: min(10px, 5vw)) {
+  @media (min-width: 900px) {
+    #guide .slide-inner {
+      width: 94vw;
+      max-width: 1040px;
+    }
+  }
+
+  @media (min-width: 900px) {
+    #presentation .presentation-text {
+      max-width: 94vw;
+    }
+  }
+
+  @media (min-width: 900px) {
+    #devis .quote-text {
+      max-width: 90vw;
+    }
+  }
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --bg: #fafafa;
+  --panel: #ffffff;
+  --text: #0e1116;
+  --muted: #4b5563;
+  --line: #e5e7eb;
+  --accent: #111827;
+  --pill: #f5f5f5;
+  --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(0, 0, 0, .06), transparent),
+    radial-gradient(800px 200px at 10% 0%, rgba(234, 179, 8, .15), transparent);
+  --edge-fade: rgba(0, 0, 0, 0.10);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg: #0b0f14;
+  --panel: #11161e;
+  --text: #e8edf5;
+  --muted: #a8b3c7;
+  --line: rgba(255, 255, 255, .08);
+  --accent: #e8edf5;
+  --pill: rgba(255, 255, 255, .06);
+  --hero-grad: radial-gradient(1400px 500px at 60% -10%, rgba(76, 201, 240, .15), transparent),
+    radial-gradient(800px 200px at 10% 0%, rgba(255, 238, 0, .08), transparent);
+  --edge-fade: rgba(0, 0, 0, 0.22);
+  /* Shoji (thème sombre) */
+  --shoji-paper: rgba(16, 20, 27, 0.88);
+  --shoji-grid: rgba(255, 255, 255, 0.08);
+  --shoji-frame: rgba(255, 255, 255, 0.16);
+  --shoji-edge: rgba(255, 255, 255, 0.20);
+}
+
+/* ============ Reset & Base ============ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial;
+  transition: background-color 300ms, color 300ms;
+}
+
+/* Bloque les interactions et le scroll pendant l'ouverture shoji initiale */
+body.shoji-opening {
+  overflow: hidden;
+  touch-action: none;
+}
+
+body.shoji-opening::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1002;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: auto;
+}
+
+/* Synchronisation post-ouverture: garde le shoji local du HERO déjà ouvert, sans animation */
+body.shoji-initial-sync #top .shoji-local .panel {
+  transition: none !important;
+}
+
+body.shoji-initial-sync #top .shoji-local .panel.left {
+  transform: translateX(-102%);
+}
+
+body.shoji-initial-sync #top .shoji-local .panel.right {
+  transform: translateX(102%);
+}
+
+/* ============ Typography ============ */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.2em 0 0.6em 0;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.3rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p {
+  margin: 0 0 1em 0;
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 200ms, opacity 200ms;
+}
+
+a:hover {
+  opacity: 0.7;
+}
+
+a:focus-visible {
+  outline: var(--focus);
+  border-radius: 4px;
+}
+
+/* List styles */
+ul, ol {
+  margin: 1em 0;
+  padding-left: 1.5em;
+}
+
+li {
+  margin: 0.5em 0;
+}
+
+/* ============ Mobile Styles ============ */
+
+@media (max-width: 899px) {
+  /* Stack hero title parts on mobile/tablet */
+  #top h1 .stack {
+    display: block;
+  }
+
+  #top h1 br {
+    display: none;
+  }
+
+  /* Smaller hero title on mobile/tablet */
+  #top h1 {
+    font-size: clamp(22px, 7vw, 32px);
+    line-height: 1.1;
+  }
+
+  .slide h1,
+  .slide h2,
+  .slide h3,
+  .slide h4,
+  .slide p,
+  .lead,
+  .kicker,
+  .tag,
+  .rec-desc,
+  .rec-pill,
+  li,
+  a,
+  label,
+  .btn {
+    -webkit-hyphens: none !important;
+    -ms-hyphens: none !important;
+    hyphens: none !important;
+    word-break: keep-all;
+    overflow-wrap: normal;
+  }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+  h3 { font-size: 1.1rem; }
+  h4 { font-size: 1rem; }
+}
+
+/* ============ Utilities ============ */
+
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border-width: 0 !important;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -40px;
+  z-index: 100;
+  display: inline-block;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: var(--bg);
+  border-radius: var(--radius);
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 200ms;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Collapsible elements */
+.more-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 360ms cubic-bezier(.22, .61, .36, 1);
+}
+
+/* Focus visible outline */
+:focus-visible {
+  outline: var(--focus);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

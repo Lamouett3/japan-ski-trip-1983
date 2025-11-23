@@ -1595,7 +1595,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
 
   let items = [];
   const APIS = ['/api/guestbook', '/.netlify/functions/guestbook'];
-  const GOOGLE_REVIEWS = ['/reviews.php', '/api/google-reviews', '/.netlify/functions/google-reviews'];
+  const GOOGLE_REVIEWS = ['/data/reviews.json', '/reviews.php', '/api/google-reviews', '/.netlify/functions/google-reviews'];
   let sourceGoogle = false;
   let googlePlaceId = null;
   let GOOGLE_REVIEW_FALLBACK = 'https://www.google.com/search?q=Japan+Ski+Trip+reviews';
@@ -1605,18 +1605,29 @@ document.getElementById('y').textContent = new Date().getFullYear();
     // 1) Prefer Google reviews if available
     for (const EP of GOOGLE_REVIEWS) {
       try {
+        console.log('🔍 Chargement des avis depuis:', EP);
         const res = await fetch(EP, { headers: { 'Accept': 'application/json' }, cache: 'no-cache' });
+        console.log('📡 Réponse:', res.status, res.ok);
         if (res.ok) {
           try {
             googlePlaceId = res.headers.get('x-place-id') || googlePlaceId;
             const fb = res.headers.get('x-review-fallback');
             if (fb) GOOGLE_REVIEW_FALLBACK = fb;
           } catch(_){ }
-          const data = await res.json();
-          if (Array.isArray(data) && data.length) {
-            items = data.map(r => ({ name: r.name, text: r.text, stars: Number(r.stars||5) || 5 }));
-            sourceGoogle = true;
-            return;
+          try {
+            const data = await res.json();
+            console.log('✅ JSON parsé, avis reçus:', data);
+            console.log('📊 Type:', Array.isArray(data), 'Longueur:', data.length);
+            if (Array.isArray(data) && data.length) {
+              items = data.map(r => ({ name: r.name, text: r.text, stars: Number(r.stars||5) || 5 }));
+              sourceGoogle = true;
+              console.log('✨ Avis affichés avec succès:', items);
+              return;
+            } else {
+              console.log('⚠️ Pas d\'avis valides dans la réponse');
+            }
+          } catch(parseErr) {
+            console.log('❌ Erreur parsing JSON:', parseErr);
           }
         }
       } catch(_) { /* try next */ }

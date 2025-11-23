@@ -1,0 +1,440 @@
+/**
+ * hero.css
+ * Hero section, video, slides layout
+ * ~300 lignes
+ */
+
+/* ============ Hero Section ============ */
+
+#top {
+  position: relative;
+  min-height: var(--slide-h);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  overflow: hidden;
+}
+
+#top video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+#top .hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 90%;
+  color: white;
+}
+
+#top h1 {
+  font-size: clamp(32px, 8vw, 72px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0;
+  text-shadow: var(--txtshadow-strong);
+  letter-spacing: -1px;
+}
+
+#top .hero-subtitle {
+  font-size: clamp(16px, 3vw, 28px);
+  margin: 16px 0 0 0;
+  opacity: 0.95;
+  text-shadow: var(--txtshadow-soft);
+}
+
+/* Hero lead "more" block */
+#top .hero-lead-more {
+  max-height: 200px;
+  overflow: auto;
+  margin-top: 12px;
+  padding: 12px 0;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ============ Slide Layout ============ */
+
+.slides {
+  scroll-snap-type: y proximity;
+  background: var(--hero-grad);
+  position: relative;
+}
+
+body:not([data-page="programme"]) .slides {
+  scroll-snap-type: y mandatory;
+}
+
+/* Edge fades */
+.slides::before, .slides::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: clamp(16px, 6vh, 64px);
+  pointer-events: none;
+  z-index: 900;
+}
+
+.slides::before {
+  top: 0;
+  background: linear-gradient(to bottom, var(--edge-fade), rgba(0, 0, 0, 0));
+}
+
+.slides::after {
+  bottom: 0;
+  background: linear-gradient(to top, var(--edge-fade), rgba(0, 0, 0, 0));
+}
+
+.slide {
+  position: relative;
+  min-height: var(--slide-h);
+  display: grid;
+  place-items: center;
+  padding: var(--slide-pad-y, var(--slide-pad)) var(--slide-pad-x, var(--slide-pad));
+  border-top: none;
+  border-radius: var(--radius);
+  scroll-snap-align: start;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+}
+
+.slide-inner {
+  width: var(--content-w);
+  max-width: var(--maxw);
+}
+
+/* ============ Slide Text ============ */
+
+.slide h1,
+.slide h2 {
+  text-shadow: var(--txtshadow-strong);
+}
+
+.slide h3,
+.slide h4,
+.slide p,
+.slide .lead,
+.slide li,
+.slide a,
+.slide .kicker,
+.slide .tag,
+.slide .kpi .val,
+.slide .kpi .lab {
+  text-shadow: var(--txtshadow-soft);
+}
+
+.list.check li::before {
+  text-shadow: none;
+}
+
+/* ============ Guide Section ============ */
+
+#guide .slide-inner {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: clamp(12px, 2.4vw, 22px);
+  width: var(--content-w);
+  text-align: left;
+}
+
+#guide h2 {
+  margin-bottom: 10px;
+}
+
+#guide h3 {
+  margin: 10px 0 6px;
+  font-weight: 800;
+}
+
+#guide p {
+  margin: 6px 0;
+  font-size: 1.06rem;
+  line-height: 1.7;
+}
+
+#guide .list {
+  margin-top: 8px;
+}
+
+#guide .list li {
+  padding-left: 26px;
+  font-size: 1.06rem;
+  line-height: 1.7;
+  position: relative;
+}
+
+#guide .list li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .85);
+}
+
+/* Guide header */
+#guide .guide-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+#guide .guide-header .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .85);
+  color: #0e1116;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: .4px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .28);
+}
+
+#guide .guide-header .meta .role {
+  font-size: .9rem;
+  opacity: .9;
+  color: rgba(255, 255, 255, .9);
+}
+
+#guide .guide-header .meta h2 {
+  margin: 0;
+  color: white;
+  text-shadow: var(--txtshadow-soft);
+}
+
+#guide .tags.key .tag {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .22);
+}
+
+#guide .more-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 360ms cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (min-width: 900px) {
+  #guide .slide-inner {
+    width: min(1040px, 94vw);
+  }
+
+  #guide .list {
+    column-count: 2;
+    column-gap: 20px;
+  }
+
+  #guide .list li {
+    break-inside: avoid;
+  }
+}
+
+/* ============ Devis Section ============ */
+
+#devis .slide-inner {
+  width: var(--content-w);
+  text-align: left;
+}
+
+#devis p {
+  margin: 6px 0;
+}
+
+#devis .tags.key .tag {
+  background: rgba(0, 0, 0, .35);
+  border: 1px solid rgba(255, 255, 255, .22);
+}
+
+#devis .more-collapsible {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 360ms cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (min-width: 900px) {
+  #devis .grid-2 {
+    align-items: start;
+  }
+}
+
+/* ============ Hero Video Fix ============ */
+
+#top video.playing {
+  background: transparent;
+}
+
+/* ============ Responsive Slides ============ */
+
+@media (max-width: 768px) {
+  #top h1 {
+    font-size: clamp(24px, 6vw, 36px);
+  }
+
+  #top .hero-subtitle {
+    font-size: clamp(14px, 2.5vw, 18px);
+  }
+
+  .slide {
+    padding: 20px;
+    min-height: auto;
+  }
+
+  .slide-inner {
+    width: 100%;
+  }
+
+  #guide .slide-inner,
+  #devis .slide-inner {
+    width: 100%;
+    padding: 16px;
+  }
+
+  #guide .list {
+    column-count: 1;
+  }
+
+  #guide .guide-header {
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+  }
+
+  #guide .guide-header .avatar {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ============ Presentation Section ============ */
+
+#presentation {
+  background: transparent;
+}
+
+#presentation .slide-inner {
+  width: var(--content-w);
+  text-align: center;
+}
+
+#presentation h2 {
+  margin: 0 0 12px 0;
+  text-shadow: var(--txtshadow-strong);
+}
+
+#presentation .presentation-text {
+  max-width: min(900px, 92vw);
+  margin: 0 auto;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: white;
+  text-shadow: var(--txtshadow-soft);
+}
+
+/* ============ Shoji Section ============ */
+
+#shoji .slide-inner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.shoji-gallery {
+  position: relative;
+  width: min(1200px, 100%);
+  height: 60vh;
+  max-height: 600px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.shoji-item {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  transform: translateX(100%);
+  transition: transform 600ms ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.shoji-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.shoji-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.shoji-prev,
+.shoji-next {
+  background: rgba(255, 255, 255, .3);
+  border: 1px solid rgba(255, 255, 255, .5);
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.shoji-prev:hover,
+.shoji-next:hover {
+  background: rgba(255, 255, 255, .5);
+  border-color: white;
+}
+
+/* ============ Guestbook Section ============ */
+
+#guestbook .slide-inner {
+  width: var(--content-w);
+  text-align: center;
+}
+
+.guest-display {
+  position: relative;
+  min-height: clamp(160px, 28vh, 360px);
+  margin: 20px 0;
+}
+
+/* ============ Animations ============ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Camille M.",
+        "text": "Un séjour inoubliable : poudreuse magique et organisation parfaite ! Jérôme connaît le Japon sur le bout des doigts.",
+        "stars": 5
+    },
+    {
+        "name": "Alexandre D.",
+        "text": "Tokyo + ski : équilibre idéal entre culture et glisse. Les adresses recommandées sont sensationnelles.",
+        "stars": 5
+    },
+    {
+        "name": "Sophie L.",
+        "text": "Encadrement impeccable et poudreuse incroyable à Hakuba. À refaire sans hésiter !",
+        "stars": 5
+    },
+    {
+        "name": "Thomas B.",
+        "text": "Jérôme est un guide exceptionnel avec 30 ans d'expérience. Vraiment une belle expérience.",
+        "stars": 5
+    }
+]

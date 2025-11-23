@@ -1,0 +1,26 @@
+{
+  "name": "japan-ski-trip",
+  "version": "1.0.0",
+  "description": "Premium ski trip guide website for Japan (Tokyo & Hakuba)",
+  "main": "index.html",
+  "scripts": {
+    "minify:css": "csso style.css --output dist/style.min.css --restructure",
+    "minify:js": "terser script.js --output dist/script.min.js --compress unused=false --mangle",
+    "minify": "npm run minify:css && npm run minify:js && echo '✨ Minification complete!'",
+    "build": "npm run minify"
+  },
+  "keywords": [
+    "japan",
+    "ski",
+    "tokyo",
+    "hakuba",
+    "travel",
+    "powder"
+  ],
+  "author": "Jérôme Noviant",
+  "license": "MIT",
+  "devDependencies": {
+    "csso-cli": "^4.1.1",
+    "terser": "^5.31.0"
+  }
+}

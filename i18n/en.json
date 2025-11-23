@@ -96,7 +96,7 @@
   },
   "quote": {
     "title": "Get your personalized quote and travel with peace of mind.",
-    "pricing": "<strong>Indicative price</strong> · €4,990 / person — all inclusive · <em>excluding flights, skipass and spirits</em>",
+    "pricing": "<strong>Indicative price</strong> · <s>€4,990</s> → €4,490 (-10%) / person — all inclusive · <em>excluding flights, skipass and spirits</em>",
     "includesTitle": "Included",
     "includes": [
       "7 days on site (3.5 d Tokyo + 3.5 d skiing)",

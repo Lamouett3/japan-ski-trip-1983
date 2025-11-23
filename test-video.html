@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Hero Video - Sans Flash de Poster</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0e1116;
+            color: #fff;
+            padding: 20px;
+        }
+        
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+            margin-bottom: 40px;
+        }
+        
+        .hero-video {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .hero-video-el {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.03);
+            background: #000;
+        }
+        
+        /* Masque le poster une fois que la vidéo peut jouer */
+        .hero-video-el.playing {
+            background: transparent !important;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, .45), rgba(0, 0, 0, .15) 35%, rgba(0, 0, 0, 0));
+            pointer-events: none;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #4cc9f0;
+        }
+        
+        .info p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .status.loading { background: #ff9500; color: #000; }
+        .status.ready { background: #4caf50; color: #fff; }
+        .status.playing { background: #2196f3; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h2>🎬 Test Hero Video - Solution Anti-Flash</h2>
+        <p><strong>Problème résolu :</strong> Image du poster ne s'affiche plus avant que la vidéo soit prête à jouer.</p>
+        <p><strong>Solutions appliquées :</strong></p>
+        <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>✅ <code>preload="auto"</code> force le téléchargement immédiat de la vidéo</li>
+            <li>✅ <code>poster="images/AdobeStock_315259160.jpeg"</code> sert de fallback seulement</li>
+            <li>✅ CSS classe <code>.playing</code> masque le poster dès que canplay déclenche</li>
+            <li>✅ JavaScript ajoute/retire la classe selon l'état de lecture</li>
+        </ul>
+        <div id="video-status" class="status loading">⏳ Initialisation...</div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-video">
+            <video
+                class="hero-video-el"
+                autoplay
+                muted
+                loop
+                playsinline
+                webkit-playsinline
+                preload="auto"
+                poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Crect fill='%23222' width='1920' height='1080'/%3E%3Ctext x='50%25' y='50%25' font-size='48' fill='%23666' text-anchor='middle' dominant-baseline='middle'%3EChargement vidéo...%3C/text%3E%3C/svg%3E"
+            >
+                <source 
+                    src="https://videos.pexels.com/video-files/3624291/3624291-sd_640_360_24fps.mp4" 
+                    type="video/mp4" 
+                />
+                Votre navigateur ne supporte pas la vidéo HTML5
+            </video>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div>
+                <h1>🗻 Japan Ski Trip</h1>
+                <p>Découvrez les plus beaux domaines de ski du Japon</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="info">
+        <h2>📝 Observations Attendues :</h2>
+        <ol style="margin-left: 20px;">
+            <li><strong>Premier chargement :</strong> Le placeholder gris s'affiche brièvement</li>
+            <li><strong>Après ~2-3 secondes :</strong> La vidéo charge et le flash disparaît</li>
+            <li><strong>État final :</strong> La vidéo joue sans interruption visible</li>
+        </ol>
+    </div>
+
+    <script>
+        const video = document.querySelector('.hero-video-el');
+        const status = document.getElementById('video-status');
+        
+        function updateStatus(state, text) {
+            status.textContent = text;
+            status.className = 'status ' + state;
+        }
+        
+        function handleCanPlay() {
+            video.classList.add('playing');
+            updateStatus('ready', '✅ Vidéo prête (poster masqué)');
+        }
+        
+        function handlePlay() {
+            video.classList.add('playing');
+            updateStatus('playing', '▶️ Vidéo en lecture');
+        }
+        
+        function handlePause() {
+            video.classList.remove('playing');
+            updateStatus('loading', '⏸️ Vidéo en pause');
+        }
+        
+        function handleEnded() {
+            video.classList.remove('playing');
+            updateStatus('ready', '⏹️ Vidéo terminée');
+        }
+        
+        function handleLoadStart() {
+            updateStatus('loading', '⏳ Chargement de la vidéo...');
+        }
+        
+        function handleLoadedMetadata() {
+            updateStatus('loading', '📊 Métadonnées chargées...');
+        }
+        
+        function handleProgress() {
+            // Mise à jour silencieuse (pas de changement du status)
+            if (video.buffered.length > 0) {
+                const percent = (video.buffered.end(0) / video.duration * 100).toFixed(0);
+                if (!status.textContent.includes('%')) {
+                    updateStatus('loading', `📥 Téléchargement ${percent}%`);
+                }
+            }
+        }
+        
+        // Event listeners
+        video.addEventListener('canplay', handleCanPlay);
+        video.addEventListener('play', handlePlay);
+        video.addEventListener('pause', handlePause);
+        video.addEventListener('ended', handleEnded);
+        video.addEventListener('loadstart', handleLoadStart);
+        video.addEventListener('loadedmetadata', handleLoadedMetadata);
+        video.addEventListener('progress', handleProgress);
+        
+        // Si la vidéo est déjà chargée
+        if (video.readyState >= 2) {
+            handleCanPlay();
+        }
+    </script>
+</body>
+</html>

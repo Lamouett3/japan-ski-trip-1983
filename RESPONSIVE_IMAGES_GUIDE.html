@@ -1,0 +1,320 @@
+<!--
+  Responsive Images Implementation Guide
+  PHASE 4 - Image Optimization
+  
+  This file demonstrates how to implement responsive images with WebP fallbacks,
+  lazy loading, and srcset for optimal performance.
+-->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Images - PHASE 4 Guide</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        h1, h2 { color: #0066cc; }
+        
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        
+        .example {
+            background: white;
+            border-left: 4px solid #0066cc;
+            padding: 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .note {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .metric {
+            display: inline-block;
+            background: #0066cc;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🖼️ Responsive Images - PHASE 4 Implementation</h1>
+
+<p><strong>Date:</strong> November 23, 2025</p>
+<p><strong>Project:</strong> Japan Ski Trip Website - Image Optimization</p>
+
+<h2>📊 Benefits</h2>
+
+<div class="metric">-40-50% Smaller Images (WebP)</div>
+<div class="metric">Faster Load Times</div>
+<div class="metric">Better Mobile UX</div>
+<div class="metric">WCAG Accessible</div>
+
+<h2>🎯 Implementation Methods</h2>
+
+<h3>Method 1: Simple <code>&lt;img&gt;</code> with srcset</h3>
+
+<div class="example">
+    <p>Best for: Simple cases, quick implementation</p>
+    <pre>&lt;img src="./images/photo.jpg"
+     srcset="./images/optimized/webp/photo_640w.webp 640w,
+             ./images/optimized/webp/photo_1024w.webp 1024w,
+             ./images/optimized/webp/photo_1440w.webp 1440w"
+     sizes="(max-width: 640px) 100vw,
+            (max-width: 1024px) 100vw,
+            1440px"
+     alt="Descriptive text"
+     loading="lazy"
+     width="1440"
+     height="900"
+     class="responsive-img"></pre>
+</div>
+
+<h3>Method 2: &lt;picture&gt; with WebP Fallback</h3>
+
+<div class="example">
+    <p>Best for: Maximum compatibility, optimal format selection</p>
+    <pre>&lt;picture&gt;
+    &lt;!-- WebP for modern browsers --&gt;
+    &lt;source srcset="./images/optimized/webp/photo_640w.webp 640w,
+                    ./images/optimized/webp/photo_1024w.webp 1024w,
+                    ./images/optimized/webp/photo_1440w.webp 1440w"
+            type="image/webp"
+            sizes="(max-width: 640px) 100vw,
+                   (max-width: 1024px) 100vw,
+                   1440px"&gt;
+    
+    &lt;!-- JPEG fallback for older browsers --&gt;
+    &lt;img src="./images/photo.jpg"
+         alt="Descriptive text"
+         loading="lazy"
+         width="1440"
+         height="900"
+         class="responsive-img"&gt;
+&lt;/picture&gt;</pre>
+</div>
+
+<div class="note">
+    <strong>💡 Tip:</strong> The <code>sizes</code> attribute tells the browser how much space the image will take.
+    The browser then selects the optimal width from srcset.
+</div>
+
+<h3>Method 3: Using CSS Background Images</h3>
+
+<div class="example">
+    <p>Best for: Hero sections, decorative backgrounds</p>
+    <pre>/* CSS */
+.hero {
+    background-image: url('./images/optimized/webp/hero_1440w.webp');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+}
+
+@supports (background-image: url('data:image/webp;base64,...')) {
+    /* WebP supported */
+}
+
+@media (max-width: 1024px) {
+    .hero {
+        background-image: url('./images/optimized/webp/hero_1024w.webp');
+    }
+}
+
+@media (max-width: 640px) {
+    .hero {
+        background-image: url('./images/optimized/webp/hero_640w.webp');
+    }
+}</pre>
+</div>
+
+<h2>📱 Responsive Breakpoints</h2>
+
+<table style="width: 100%; border-collapse: collapse;">
+    <tr style="background: #0066cc; color: white;">
+        <th style="padding: 12px; text-align: left;">Device</th>
+        <th style="padding: 12px; text-align: left;">Width</th>
+        <th style="padding: 12px; text-align: left;">Format</th>
+        <th style="padding: 12px; text-align: left;">Quality</th>
+    </tr>
+    <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 12px;">📱 Mobile</td>
+        <td style="padding: 12px;">640px</td>
+        <td style="padding: 12px;">WebP</td>
+        <td style="padding: 12px;">85%</td>
+    </tr>
+    <tr style="border-bottom: 1px solid #ddd;">
+        <td style="padding: 12px;">📊 Tablet</td>
+        <td style="padding: 12px;">1024px</td>
+        <td style="padding: 12px;">WebP</td>
+        <td style="padding: 12px;">87%</td>
+    </tr>
+    <tr>
+        <td style="padding: 12px;">🖥️ Desktop</td>
+        <td style="padding: 12px;">1440px</td>
+        <td style="padding: 12px;">WebP</td>
+        <td style="padding: 12px;">90%</td>
+    </tr>
+</table>
+
+<h2>⚡ Lazy Loading</h2>
+
+<div class="note">
+    <p>Always add <code>loading="lazy"</code> to defer image loading until near the viewport.</p>
+    <p>This significantly improves initial page load performance.</p>
+</div>
+
+<pre>&lt;img src="./images/photo.jpg"
+     alt="Description"
+     <strong>loading="lazy"</strong>
+     width="1440"
+     height="900"&gt;</pre>
+
+<h2>🔍 Accessibility</h2>
+
+<ul>
+    <li><strong>Always include <code>alt</code> text</strong> - describe the image content</li>
+    <li><strong>Set <code>width</code> and <code>height</code></strong> - prevents layout shift</li>
+    <li><strong>Use semantic images</strong> - meaningful alt text for content images</li>
+    <li><strong>Decorative images</strong> - empty alt="" if purely decorative</li>
+</ul>
+
+<div class="example">
+    <pre>&lt;!-- ✅ Good: Descriptive alt text --&gt;
+&lt;img src="photo.jpg" 
+     alt="Skier descending snowy mountain slope"
+     width="1440" height="900"&gt;
+
+&lt;!-- ❌ Bad: No alt text or generic --&gt;
+&lt;img src="photo.jpg" alt="photo"&gt;</pre>
+</div>
+
+<h2>📥 Integration Steps</h2>
+
+<ol>
+    <li><strong>Run optimization script:</strong>
+        <pre>python3 optimize_images.py</pre>
+    </li>
+    
+    <li><strong>Check output:</strong>
+        <pre>/images/optimized/
+├── webp/          # WebP variants
+│   ├── photo_640w.webp
+│   ├── photo_1024w.webp
+│   └── photo_1440w.webp
+├── jpg/           # JPEG fallbacks
+│   └── photo.jpg
+└── variants.json  # Mapping for easy reference</pre>
+    </li>
+    
+    <li><strong>Update HTML:</strong> Use Method 1, 2, or 3 above
+    </li>
+    
+    <li><strong>Test responsiveness:</strong> Use browser DevTools to simulate different devices
+    </li>
+</ol>
+
+<h2>🧪 Testing</h2>
+
+<div class="example">
+    <p><strong>Chrome DevTools:</strong></p>
+    <ol>
+        <li>Open DevTools (F12)</li>
+        <li>Go to Network tab</li>
+        <li>Resize browser to different widths</li>
+        <li>Reload page</li>
+        <li>Check which image variant was downloaded</li>
+    </ol>
+</div>
+
+<div class="example">
+    <p><strong>WebP Support Check:</strong></p>
+    <pre>// In JavaScript console:
+function canUseWebP() {
+    const canvas = document.createElement('canvas');
+    return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+}
+console.log('WebP supported:', canUseWebP());</pre>
+</div>
+
+<h2>📈 Performance Metrics</h2>
+
+<pre>Expected improvements after optimization:
+
+Before (monolithic images):
+- Images total: ~8-12 MB
+- Initial load: 3-5 seconds (on mobile)
+- Largest Contentful Paint (LCP): 2.5-3.5s
+
+After (optimized with PHASE 4):
+- Images total: ~2-3 MB
+- Initial load: 1-2 seconds (on mobile)
+- Largest Contentful Paint (LCP): 0.8-1.5s
+
+Estimated savings: 65-75% reduction in image bandwidth</pre>
+
+<h2>🔒 Security & Best Practices</h2>
+
+<ul>
+    <li>Always validate image sources - use relative paths only</li>
+    <li>Set appropriate <code>crossorigin</code> attributes if needed</li>
+    <li>Use Content Security Policy to control image sources</li>
+    <li>Compress WebP at quality 85-90% for best balance</li>
+    <li>Include width/height to prevent Cumulative Layout Shift (CLS)</li>
+</ul>
+
+<h2>📚 Resources</h2>
+
+<ul>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture">MDN: Picture Element</a></li>
+    <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img">MDN: Image Element</a></li>
+    <li><a href="https://web.dev/image-optimization/">Google Web.dev: Image Optimization</a></li>
+    <li><a href="https://caniuse.com/webp">Can I use WebP?</a></li>
+</ul>
+
+<hr style="margin: 40px 0; opacity: 0.3;">
+
+<p style="text-align: center; opacity: 0.7;">
+    <strong>PHASE 4 - Image Optimization</strong><br>
+    Part of Japan Ski Trip Website Refactoring (2025)
+</p>
+
+</body>
+</html>
